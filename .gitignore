@@ -13,3 +13,5 @@ web/editor/data/imported/*.gif*.class
 *.pyo
 documents
 /nbproject/private/
+.externalToolBuilders
+.settings

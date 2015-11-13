@@ -4411,19 +4411,19 @@ function touchCancel(event){
 
 /*======================Diagramas de Procesos========================*/
 
-	//TODO Arreglar la seleccion multiple
-	//TODO Corregir autoID o generar la numeracion de forma automatica eliminado y renumeracion
-	//TODO Corregir nivel de los conectores
-	//TODO Buscar en buildgenerate las propiedades de las figuras
-	//TODO console.log(STACK.figures[1].primitives); //Crear metodo a partir de aqui para renombrar
-	//TODO textGetByFigureXY //Revisar para anterior
-	//TODO correjir posiciones en caso de borrado o generar posicion mas baja a partir de busqueda
-	//TODO crear panel nuevo o selector especial para los casos nuevos
-	//TODO opcional crear los grupos nuevos segun(Entrada, salida, simbolos, otros)
-	//TODO opcional agregar parametros de (descripcion, tiempo y distancia)
-	//TODO opcional agregar al lienzo (Nombre del Proceso)
-	//TODO opcional agregar a linea init (Componente Principal, Material Componente Principal) en texto
-	//TODO reparar los "unreachable code after return statement"
+//TODO Arreglar la seleccion multiple
+//TODO Corregir autoID o generar la numeracion de forma automatica eliminado y renumeracion
+//TODO Corregir nivel de los conectores
+//TODO Buscar en buildgenerate las propiedades de las figuras
+//TODO console.log(STACK.figures[1].primitives); //Crear metodo a partir de aqui para renombrar
+//TODO textGetByFigureXY //Revisar para anterior
+//TODO correjir posiciones en caso de borrado o generar posicion mas baja a partir de busqueda
+//TODO crear panel nuevo o selector especial para los casos nuevos
+//TODO opcional crear los grupos nuevos segun(Entrada, salida, simbolos, otros)
+//TODO opcional agregar parametros de (descripcion, tiempo y distancia)
+//TODO opcional agregar al lienzo (Nombre del Proceso)
+//TODO opcional agregar a linea init (Componente Principal, Material Componente Principal) en texto
+//TODO reparar los "unreachable code after return statement"
 
 var coor = [400, 60];
 var lienzo = [800, 600];
@@ -4431,169 +4431,176 @@ var primer = false;
 var savePos = [];
 var finLS = false;
 var finSS = false;
-var lineas = [0,0,0];
+var lineas = [0, 0, 0];
 var reprocesa = false;
 var reproIni = false;
 
-function lineaPrincipal () {
-  	if (!primer) {
-		figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
-		coor[1] += 70;
-		lineas[0]++;//Numero de lineas de entrada
-		lineas[1]++;//Linea de entrada actual
-		primer = true;
-	}
+function lineaPrincipal() {
+    if (!primer) {
+        figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
+        coor[1] += 70;
+        lineas[0]++;//Numero de lineas de entrada
+        lineas[1]++;//Linea de entrada actual
+        primer = true;
+    }
 }
 
 function canvasBuild(figureFunction) {
 
-	createFigureFunction = figureFunction;
-	lineaPrincipal();
+    createFigureFunction = figureFunction;
+    lineaPrincipal();
 
-	if (window.createFigureFunction == window.figure_LineIn) {
-		figureBuild(window.createFigureFunction, coor[0] - 30, coor[1] - 30);
-		conectorBuild();
-		coor[1] -= 40;
-	} else if (window.createFigureFunction == window.figure_LineOut) {
-		figureBuild(window.createFigureFunction, coor[0] + 30, coor[1] - 30);
-		conectorBuild();
-		coor[1] -= 40;
-	} else if (window.createFigureFunction == window.figure_LineDouble) {
-		figureBuild(window.createFigureFunction, coor[0], coor[1] - 10);
-		conectorBuild();
-		coor[1] -= 20;
-	} else {
-		figureBuild(window.createFigureFunction, coor[0], coor[1]);
-		conectorBuild();
-	}
-	cleanStates();
+    if (window.createFigureFunction == window.figure_LineIn) {
+        figureBuild(window.createFigureFunction, coor[0] - 30, coor[1] - 30);
+        conectorBuild();
+        coor[1] -= 40;
+    } else if (window.createFigureFunction == window.figure_LineOut) {
+        figureBuild(window.createFigureFunction, coor[0] + 30, coor[1] - 30);
+        conectorBuild();
+        coor[1] -= 40;
+    } else if (window.createFigureFunction == window.figure_LineDouble) {
+        figureBuild(window.createFigureFunction, coor[0], coor[1] - 10);
+        conectorBuild();
+        coor[1] -= 20;
+    } else {
+        figureBuild(window.createFigureFunction, coor[0], coor[1]);
+        conectorBuild();
+    }
+    cleanStates();
 }
 
 function conectorBuild() {
-	//corregir distribucion del conector
-	if (finLS) {
-		connectorType = Connector.TYPE_JAGGED;
-		connectorPickFirst(coor[0], coor[1] - 50);
-		var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-		History.addUndo(cmdCreateCon);
-		var pos = savePos.pop();
-		connectorPickSecond(pos[0], pos[1]);
-		ordenarJagged(pos);
-		coor = pos;
-		finLS = false;
-	} else if (finSS) {
-		connectorType = Connector.TYPE_JAGGED;
-		var pos = savePos.pop();
-		savePos.push(pos);
-		connectorPickFirst(pos[0], pos[1]);
-		var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-		History.addUndo(cmdCreateCon);
-		connectorPickSecond(coor[0], coor[1] - 20);
-		ordenarJagged(coor);
-		finSS = false;	
-	} else if (reproIni) {
-		connectorType = Connector.TYPE_JAGGED;
+    //corregir distribucion del conector
+    if (finLS) {
+        connectorType = Connector.TYPE_JAGGED;
+        connectorPickFirst(coor[0], coor[1] - 50);
+        var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+        History.addUndo(cmdCreateCon);
         var pos = savePos.pop();
-		connectorPickFirst(pos[0], pos[1]);
-		var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-		History.addUndo(cmdCreateCon);
-		connectorPickSecond(coor[0], coor[1] + 20);
+        connectorPickSecond(pos[0], pos[1]);
+        ordenarJagged(pos);
+        coor = pos;
+        finLS = false;
+    } else if (finSS) {
+        connectorType = Connector.TYPE_JAGGED;
+        var pos = savePos.pop();
+        savePos.push(pos);
+        connectorPickFirst(pos[0], pos[1]);
+        var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+        History.addUndo(cmdCreateCon);
+        connectorPickSecond(coor[0], coor[1] - 20);
+        ordenarJagged(coor);
+        finSS = false;
+    } else if (reproIni) {
+        connectorType = Connector.TYPE_JAGGED;
+        var pos = savePos.pop();
+        connectorPickFirst(pos[0], pos[1]);
+        var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+        History.addUndo(cmdCreateCon);
+        connectorPickSecond(coor[0], coor[1] + 20);
         CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
+        ordenarJagged(pos);
         reproIni = false;
-	}  else if(reprocesa) {
+    } else if (reprocesa) {
         connectorType = Connector.TYPE_STRAIGHT;
         connectorPickFirst(coor[0], coor[1] + 50);
         var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
         History.addUndo(cmdCreateCon);
         connectorPickSecond(coor[0], coor[1] + 20);
-    }  else {
+    } else {
         connectorType = Connector.TYPE_STRAIGHT;
         connectorPickFirst(coor[0], coor[1] - 50);
         var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
         History.addUndo(cmdCreateCon);
         connectorPickSecond(coor[0], coor[1] - 20);
-    } 
+    }
 }
 
 function figureBuild(figureFunction, x, y) {
-	var cmdCreateFig = new FigureCreateCommand(figureFunction, x, y);
-	cmdCreateFig.execute();
-	History.addUndo(cmdCreateFig);
+    var cmdCreateFig = new FigureCreateCommand(figureFunction, x, y);
+    cmdCreateFig.execute();
+    History.addUndo(cmdCreateFig);
 }
 
 function cleanStates() {
-	reprocesa ? coor[1] -= 70 : coor[1] += 70;	
-	growCanvas();
-	state = STATE_NONE;
-	selectedFigureId = -1;
-	selectedConnectorId = -1;
-	mousePressed = false;
-	createFigureFunction = null;
-	setUpEditPanel(canvasProps);
-	draw();
+    reprocesa ? coor[1] -= 70 : coor[1] += 70;
+    growCanvas();
+    state = STATE_NONE;
+    selectedFigureId = -1;
+    selectedConnectorId = -1;
+    mousePressed = false;
+    createFigureFunction = null;
+    setUpEditPanel(canvasProps);
+    draw();
 }
 
 function growCanvas() {
-	if (lienzo[1] <= coor[1]) {
-		lienzo[1] += 100;
-		var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
-		grow.execute();
-	}else if (lienzo[0] <= coor[0]){
-		lienzo[0] += 100;
-		var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
-		grow.execute();
-	//Utilizar el selecionar multiple para seleccionar todas las figuras
-	// y moverlas usar handle.action(lastMove, x, y); de STATE_GROUP_SELECTED
-	// crecer el diagrama primero y despues reducir el valor de coor en x
-	}else if (0 >= coor[0]){
+    if (lienzo[1] <= coor[1]) {
+        lienzo[1] += 100;
+        var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
+        grow.execute();
+    } else if (lienzo[0] <= coor[0]) {
+        lienzo[0] += 100;
+        var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
+        grow.execute();
+        //Utilizar el selecionar multiple para seleccionar todas las figuras
+        // y moverlas usar handle.action(lastMove, x, y); de STATE_GROUP_SELECTED
+        // crecer el diagrama primero y despues reducir el valor de coor en x
+    } else if (0 >= coor[0]) {
 
-	}else if (0 >= coor[1]){
+    } else if (0 >= coor[1]) {
 
-	}
+    }
 }
 
 function dropFigure() {
-	createFigureFunction = null;
-	selectedFigureThumb = null;
-	state = STATE_NONE;
+    createFigureFunction = null;
+    selectedFigureThumb = null;
+    state = STATE_NONE;
 }
 
 function ordenarJagged(pos) {
 
-	var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
+    var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
 
-	if (finLS) {
-		turns[1].x = turns[0].x;
-		turns[1].y = turns[0].y + 30;
-		turns[2].x = turns[1].x + 75;
-		turns[2].y = turns[1].y;
-		if (turns[3].y != pos[1]) {
-			turns[3].x = turns[2].x;
-			turns[3].y = pos[1];
-		} else {
-			turns[3] = turns[2];
-		}
-		turns[4].x = pos[0];
-		turns[4].y = pos[1];
-	} else if (finSS) {
-		turns[1] = turns[0];
-		turns[2].y = turns[1].y;
-		turns[3] = turns[2];
-	} else if (reprocesa){
-        turns[1].y += 15;
-        turns[2].x -= 75;
+    if (finLS) {
+        turns[1].x = turns[0].x;
+        turns[1].y = turns[0].y + 30;
+        turns[2].x = turns[1].x + 75;
         turns[2].y = turns[1].y;
-        var turn4 = turns[3];
-        turns.push(turn4);
+        if (turns[3].y != pos[1]) {
+            turns[3].x = turns[2].x;
+            turns[3].y = pos[1];
+        } else {
+            turns[3] = turns[2];
+        }
+        turns[4].x = pos[0];
+        turns[4].y = pos[1];
+    } else if (finSS) {
+        turns[1] = turns[0];
+        turns[2].y = turns[1].y;
+        turns[3] = turns[2];
+     } else if (reprocesa) {
+     	reproIni ? turns[1].y = turns[0].y + 15 : turns[1].y = turns[0].y - 15;
+		turns[2].y = turns[1].y;
+		if (pos[1] != turns[0].y) {
+			turns[2].x = turns[1].x - 75;
+			turns[3].x = turns[2].x;
+			turns[3].y = pos[1] - 15;
+			var turn4 = turns[3].clone();
+			var turn5 = turns.pop();
+			turn4.x = pos[0];
+			turns.push(turn4, turn5);
+		}		
     }
 }
 
 var selectEspecial = 'entrada';
 
-function setEspecial(nombre){
+function setEspecial(nombre) {
     var div = document.getElementById(nombre);
-    if(div != null){
-        if(selectEspecial != null){
+    if (div != null) {
+        if (selectEspecial != null) {
             var currentEspecial = document.getElementById(selectEspecial);
             currentEspecial.style.display = 'none';
         }
@@ -4604,182 +4611,182 @@ function setEspecial(nombre){
 }
 
 function especial(accion) {
-	var clean = true;
-	switch(accion) {
-	case 'newLE':
-		lineaPrincipal();
-		figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
-		conectorBuild();
-		coor[1] -= 20;
-		savePos.push(coor);
-		lineas[0]++;
-		coor = [coor[0] - (150 * (lineas[0] - lineas[1])), 60];
-		figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
-		lineas[1]++;
-		break;
-	case 'endLE':
-		//Agregar limite minimo
-		if (lineas[1] != 1) {
-			finLS = true;
-			conectorBuild();
-			lineas[1]--;
-			coor[1] -= 20;
-		} else {
-			clean = false;
-		}
-		break;
-	case 'newLS':
-		lineas[2]++;
-		figureBuild(window.figure_NewSS, coor[0], coor[1] - 20);
-		conectorBuild();
-		coor[1] -= 20;
-		savePos.push(coor);
-		coor = [coor[0] + 150, coor[1]];
-		finSS = true;
-		coor[1] -= 30;
-		break;
-	case 'endLS':
-		//Condicion de linea de entrada secundaria
-		if (lineas[2] != 0) {
-			lineas[2]--;
-			var pos = savePos.pop();
-			coor = pos;
-			coor[1] -= 20;
-		} else {
-			clean = false;
-		}
-		break;
-
-	case 'repetir':
-		var error = true;
-		var textError = "";
-		if (document.getElementById('repIn').value != "" && document.getElementById('repOut').value != "") {
-			var figIni = STACK.figureGetById(document.getElementById('repIn').value);
-			var figFin = STACK.figureGetById(document.getElementById('repOut').value);
-			if (figFin != figIni) {
-				var coorIn = [figIni.rotationCoords[0].x - 20, figIni.rotationCoords[0].y];
-				var coorOut = [figFin.rotationCoords[0].x - 20, figFin.rotationCoords[0].y];
-				if (coorIn[0] == coorOut[0]) {
-					if (coorIn[1] > coorOut[1]) {
-						//Agregar condicion del triangulo
-						connectorType = Connector.TYPE_JAGGED;
-						connectorPickFirst(coorIn[0], coorIn[1]);
-						var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-						History.addUndo(cmdCreateCon);
-						connectorPickSecond(coorOut[0], coorOut[1]);
-						CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
-						error = false;
-					} else {
-						textError = "La repetcion no puede ser inversa";
-					}
-				} else {
-					textError = "La repetcion debe ser en la misma linea";
-				}
-			} else {
-				textError = "El proceso no puede ser el mismo";
-			}
-		} else {
-			textError = "Los valores no pueden ser nulos";
-		}
-		if (error) {
-			var div = document.getElementById('error');
-			div.innerHTML = textError;
-			div.style.display = 'block';
-			clean = false;
-		}
-		break;
-		
-	case 'reproIn':
-        var error = true;
-        var textError = "";
-        if (!reprocesa){
-    		if (document.getElementById('proIn').value != "") {
-                savePos.push(coor);
-    			var figIni = STACK.figureGetById(document.getElementById('proIn').value);
-    			var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + 20];
-    			coor = [coorIn[0] + 150, coorIn[1] - 20];
-    			savePos.push(coorIn);
-    			reprocesa = true;
-                reproIni = true;
-    			clean = false;
-                error = false;
-    		} else {
-                textError = "El valor no pueden ser nulo";
+    var clean = true;
+    switch (accion) {
+        case 'newLE':
+            lineaPrincipal();
+            figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
+            conectorBuild();
+            coor[1] -= 20;
+            savePos.push(coor);
+            lineas[0]++;
+            coor = [coor[0] - (150 * (lineas[0] - lineas[1])), 60];
+            figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
+            lineas[1]++;
+            break;
+        case 'endLE':
+            //Agregar limite minimo
+            if (lineas[1] != 1) {
+                finLS = true;
+                conectorBuild();
+                lineas[1]--;
+                coor[1] -= 20;
+            } else {
+                clean = false;
             }
-        } else {
-            textError = "Ya esta creando un reproceso";
-        }
-        if (error){
-            var div = document.getElementById('error');
-            div.innerHTML = textError;
-            div.style.display = 'block';
-            clean = false;
-        }   
-		break;
-		
-	case 'reproOut':
-        var error = true;
-        var textError = "";       
-            if (!reproIni){
-                if (document.getElementById('proOut').value != "") {
-                    if (reprocesa){
-                    var figFin = STACK.figureGetById(document.getElementById('proOut').value);
-                    var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - 20];                         
-                    connectorType = Connector.TYPE_JAGGED;
-                    connectorPickFirst(coor[0], coor[1] + 50);
-                    var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-                    History.addUndo(cmdCreateCon);
-                    connectorPickSecond(coorOut[0], coorOut[1]);
-                    CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
-                    coor = savePos.pop();
-                    coor[1]-=70;
-                    reprocesa = false;
-                    error = false;
+            break;
+        case 'newLS':
+            lineas[2]++;
+            figureBuild(window.figure_NewSS, coor[0], coor[1] - 20);
+            conectorBuild();
+            coor[1] -= 20;
+            savePos.push(coor);
+            coor = [coor[0] + 150, coor[1]];
+            finSS = true;
+            coor[1] -= 30;
+            break;
+        case 'endLS':
+            //Condicion de linea de entrada secundaria
+            if (lineas[2] != 0) {
+                lineas[2]--;
+                var pos = savePos.pop();
+                coor = pos;
+                coor[1] -= 20;
+            } else {
+                clean = false;
+            }
+            break;
+
+        case 'repetir':
+            var error = true;
+            var textError = "";
+            if (document.getElementById('repIn').value != "" && document.getElementById('repOut').value != "") {
+                var figIni = STACK.figureGetById(document.getElementById('repIn').value);
+                var figFin = STACK.figureGetById(document.getElementById('repOut').value);
+                if (figFin != figIni) {
+                    var coorIn = [figIni.rotationCoords[0].x - 20, figIni.rotationCoords[0].y];
+                    var coorOut = [figFin.rotationCoords[0].x - 20, figFin.rotationCoords[0].y];
+                    if (coorIn[0] == coorOut[0]) {
+                        if (coorIn[1] > coorOut[1]) {
+                            //Agregar condicion del triangulo
+                            connectorType = Connector.TYPE_JAGGED;
+                            connectorPickFirst(coorIn[0], coorIn[1]);
+                            var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+                            History.addUndo(cmdCreateCon);
+                            connectorPickSecond(coorOut[0], coorOut[1]);
+                            CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
+                            error = false;
+                        } else {
+                            textError = "La repetcion no puede ser inversa";
+                        }
+                    } else {
+                        textError = "La repetcion debe ser en la misma linea";
+                    }
                 } else {
-                    textError = "No se encuentra en un reproceso";                   
+                    textError = "El proceso no puede ser el mismo";
                 }
             } else {
-                textError = "El valor no pueden ser nulo";
+                textError = "Los valores no pueden ser nulos";
             }
-        } else {
-            textError = "Debe haber al menos un proceso";
-        }
-        if (error){
-            var div = document.getElementById('error');
-            div.innerHTML = textError;
-            div.style.display = 'block';
-            clean = false;
-        }        
-		break;
-		
-	}
-	if (clean) {
-		cleanStates();
-	}
+            if (error) {
+                var div = document.getElementById('error');
+                div.innerHTML = textError;
+                div.style.display = 'block';
+                clean = false;
+            }
+            break;
+
+        case 'reproIn':
+            var error = true;
+            var textError = "";
+            if (!reprocesa) {
+                if (document.getElementById('proIn').value != "") {
+                    savePos.push(coor);
+                    var figIni = STACK.figureGetById(document.getElementById('proIn').value);
+                    var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + 20];
+                    coor = [coorIn[0] + 150, coorIn[1] - 20];
+                    savePos.push(coorIn);
+                    reprocesa = true;
+                    reproIni = true;
+                    clean = false;
+                    error = false;
+                } else {
+                    textError = "El valor no pueden ser nulo";
+                }
+            } else {
+                textError = "Ya esta creando un reproceso";
+            }
+            if (error) {
+                var div = document.getElementById('error');
+                div.innerHTML = textError;
+                div.style.display = 'block';
+                clean = false;
+            }
+            break;
+
+        case 'reproOut':
+            var error = true;
+            var textError = "";
+            if (!reproIni) {
+                if (document.getElementById('proOut').value != "") {
+                    if (reprocesa) {
+                        var figFin = STACK.figureGetById(document.getElementById('proOut').value);
+                        var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - 20];
+                        connectorType = Connector.TYPE_JAGGED;
+                        connectorPickFirst(coor[0], coor[1] + 50);
+                        var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+                        History.addUndo(cmdCreateCon);
+                        connectorPickSecond(coorOut[0], coorOut[1]);
+                        CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
+                        ordenarJagged(coorOut);
+                        coor = savePos.pop();
+                        coor[1] -= 70;
+                        reprocesa = false;
+                        error = false;
+                    } else {
+                        textError = "No se encuentra en un reproceso";
+                    }
+                } else {
+                    textError = "El valor no pueden ser nulo";
+                }
+            } else {
+                textError = "Debe haber al menos un proceso";
+            }
+            if (error) {
+                var div = document.getElementById('error');
+                div.innerHTML = textError;
+                div.style.display = 'block';
+                clean = false;
+            }
+            break;
+
+    }
+    if (clean) {
+        cleanStates();
+    }
 }
 
 var stackSelct = -1;
 var stackFigure = -1;
 
 function cargarFiguras(selectId) {
-	var select = document.getElementById(selectId);
-	if (select.length != stackSelct || stackFigure != STACK.figures.length) {
-		var names = [];
-		var ids = [];
-		for (var i = 0; i < STACK.figures.length; i++) {
-			names[i] = STACK.figures[i].primitives[1].str;
-			ids[i] = STACK.figures[i].id;
-		}
-		var cont = 0;
-		for (var i = 0; i < STACK.figures.length; i++) {
-			if (names[i] != "Text" && names[i] != undefined) {
-				select.options[cont] = new Option(names[i], ids[i]);
-				cont++;
-			}
-		}
-		stackSelct = cont;
-		stackFigure = STACK.figures.length;
-	}
-	document.getElementById('error').style.display = 'none';
+    var select = document.getElementById(selectId);
+    if (select.length != stackSelct || stackFigure != STACK.figures.length) {
+        var names = [];
+        var ids = [];
+        for (var i = 0; i < STACK.figures.length; i++) {
+            names[i] = STACK.figures[i].primitives[1].str;
+            ids[i] = STACK.figures[i].id;
+        }
+        var cont = 0;
+        for (var i = 0; i < STACK.figures.length; i++) {
+            if (names[i] != "Text" && names[i] != undefined) {
+                select.options[cont] = new Option(names[i], ids[i]);
+                cont++;
+            }
+        }
+        stackSelct = cont;
+        stackFigure = STACK.figures.length;
+    }
+    document.getElementById('error').style.display = 'none';
 }
-

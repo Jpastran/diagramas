@@ -4431,7 +4431,7 @@ var primer = false;
 var savePos = [];
 var finLS = false;
 var finSS = false;
-var lineas = [0, 0, 0];
+var lineas = [0, 0, 0, 0]; //[2] funcion en salida, [3] funcion en trayecto.
 var reprocesa = false;
 var reproIni = false;
 
@@ -4592,6 +4592,10 @@ function ordenarJagged(pos) {
 			turn4.x = pos[0];
 			turns.push(turn4, turn5);
 		}		
+    }else if (opciones){
+    	turns[1].y = coor[1];
+    	turns[2].y = coor[1];
+    	turns[3].y = coor[1];
     }
 }
 
@@ -4610,161 +4614,198 @@ function setEspecial(nombre) {
     }
 }
 
+var trayecto = [];
+var opciones = false;
+
 function especial(accion) {
-    var clean = true;
-    switch (accion) {
-        case 'newLE':
-            lineaPrincipal();
-            figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
-            conectorBuild();
-            coor[1] -= 20;
-            savePos.push(coor);
-            lineas[0]++;
-            coor = [coor[0] - (150 * (lineas[0] - lineas[1])), 60];
-            figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
-            lineas[1]++;
-            break;
-        case 'endLE':
-            //Agregar limite minimo
-            if (lineas[1] != 1) {
-                finLS = true;
-                conectorBuild();
-                lineas[1]--;
-                coor[1] -= 20;
-            } else {
-                clean = false;
-            }
-            break;
-        case 'newLS':
-            lineas[2]++;
-            figureBuild(window.figure_NewSS, coor[0], coor[1] - 20);
-            conectorBuild();
-            coor[1] -= 20;
-            savePos.push(coor);
-            coor = [coor[0] + 150, coor[1]];
-            finSS = true;
-            coor[1] -= 30;
-            break;
-        case 'endLS':
-            //Condicion de linea de entrada secundaria
-            if (lineas[2] != 0) {
-                lineas[2]--;
-                var pos = savePos.pop();
-                coor = pos;
-                coor[1] -= 20;
-            } else {
-                clean = false;
-            }
-            break;
+	var clean = true;
+	switch (accion) {
+	case 'newLE':
+		lineaPrincipal();
+		figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
+		conectorBuild();
+		coor[1] -= 20;
+		savePos.push(coor);
+		lineas[0]++;
+		coor = [coor[0] - (150 * (lineas[0] - lineas[1])), 60];
+		figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
+		lineas[1]++;
+		break;
+	case 'endLE':
+		//Agregar limite minimo
+		if (lineas[1] != 1) {
+			finLS = true;
+			conectorBuild();
+			lineas[1]--;
+			coor[1] -= 20;
+		} else {
+			clean = false;
+		}
+		break;
+	case 'newLS':
+		lineas[2]++;
+		figureBuild(window.figure_NewSS, coor[0], coor[1] - 20);
+		conectorBuild();
+		coor[1] -= 20;
+		savePos.push(coor);
+		coor = [coor[0] + 150, coor[1]];
+		finSS = true;
+		coor[1] -= 30;
+		break;
+	case 'endLS':
+		//Condicion de linea de entrada secundaria
+		if (lineas[2] != 0) {
+			lineas[2]--;
+			var pos = savePos.pop();
+			coor = pos;
+			coor[1] -= 20;
+		} else {
+			clean = false;
+		}
+		break;
 
-        case 'repetir':
-            var error = true;
-            var textError = "";
-            if (document.getElementById('repIn').value != "" && document.getElementById('repOut').value != "") {
-                var figIni = STACK.figureGetById(document.getElementById('repIn').value);
-                var figFin = STACK.figureGetById(document.getElementById('repOut').value);
-                if (figFin != figIni) {
-                    var coorIn = [figIni.rotationCoords[0].x - 20, figIni.rotationCoords[0].y];
-                    var coorOut = [figFin.rotationCoords[0].x - 20, figFin.rotationCoords[0].y];
-                    if (coorIn[0] == coorOut[0]) {
-                        if (coorIn[1] > coorOut[1]) {
-                            //Agregar condicion del triangulo
-                            connectorType = Connector.TYPE_JAGGED;
-                            connectorPickFirst(coorIn[0], coorIn[1]);
-                            var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-                            History.addUndo(cmdCreateCon);
-                            connectorPickSecond(coorOut[0], coorOut[1]);
-                            CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
-                            error = false;
-                        } else {
-                            textError = "La repetcion no puede ser inversa";
-                        }
-                    } else {
-                        textError = "La repetcion debe ser en la misma linea";
-                    }
-                } else {
-                    textError = "El proceso no puede ser el mismo";
-                }
-            } else {
-                textError = "Los valores no pueden ser nulos";
-            }
-            if (error) {
-                var div = document.getElementById('error');
-                div.innerHTML = textError;
-                div.style.display = 'block';
-                clean = false;
-            }
-            break;
+	case 'repetir':
+		var error = true;
+		var textError = "";
+		if (document.getElementById('repIn').value != "" && document.getElementById('repOut').value != "") {
+			var figIni = STACK.figureGetById(document.getElementById('repIn').value);
+			var figFin = STACK.figureGetById(document.getElementById('repOut').value);
+			if (figFin != figIni) {
+				var coorIn = [figIni.rotationCoords[0].x - 20, figIni.rotationCoords[0].y];
+				var coorOut = [figFin.rotationCoords[0].x - 20, figFin.rotationCoords[0].y];
+				if (coorIn[0] == coorOut[0]) {
+					if (coorIn[1] > coorOut[1]) {
+						//Agregar condicion del triangulo
+						connectorType = Connector.TYPE_JAGGED;
+						connectorPickFirst(coorIn[0], coorIn[1]);
+						var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+						History.addUndo(cmdCreateCon);
+						connectorPickSecond(coorOut[0], coorOut[1]);
+						CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
+						error = false;
+					} else {
+						textError = "La repetcion no puede ser inversa";
+					}
+				} else {
+					textError = "La repetcion debe ser en la misma linea";
+				}
+			} else {
+				textError = "El proceso no puede ser el mismo";
+			}
+		} else {
+			textError = "Los valores no pueden ser nulos";
+		}
+		if (error) {
+			var div = document.getElementById('error');
+			div.innerHTML = textError;
+			div.style.display = 'block';
+			clean = false;
+		}
+		break;
 
-        case 'reproIn':
-            var error = true;
-            var textError = "";
-            if (!reprocesa) {
-                if (document.getElementById('proIn').value != "") {
-                    savePos.push(coor);
-                    var figIni = STACK.figureGetById(document.getElementById('proIn').value);
-                    var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + 20];
-                    coor = [coorIn[0] + 150, coorIn[1] - 20];
-                    savePos.push(coorIn);
-                    reprocesa = true;
-                    reproIni = true;
-                    clean = false;
-                    error = false;
-                } else {
-                    textError = "El valor no pueden ser nulo";
-                }
-            } else {
-                textError = "Ya esta creando un reproceso";
-            }
-            if (error) {
-                var div = document.getElementById('error');
-                div.innerHTML = textError;
-                div.style.display = 'block';
-                clean = false;
-            }
-            break;
+	case 'reproIn':
+		var error = true;
+		var textError = "";
+		if (!reprocesa) {
+			if (document.getElementById('proIn').value != "") {
+				savePos.push(coor);
+				var figIni = STACK.figureGetById(document.getElementById('proIn').value);
+				var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + 20];
+				coor = [coorIn[0] + 150, coorIn[1] - 20];
+				savePos.push(coorIn);
+				reprocesa = true;
+				reproIni = true;
+				clean = false;
+				error = false;
+			} else {
+				textError = "El valor no pueden ser nulo";
+			}
+		} else {
+			textError = "Ya esta creando un reproceso";
+		}
+		if (error) {
+			var div = document.getElementById('error');
+			div.innerHTML = textError;
+			div.style.display = 'block';
+			clean = false;
+		}
+		break;
 
-        case 'reproOut':
-            var error = true;
-            var textError = "";
-            if (!reproIni) {
-                if (document.getElementById('proOut').value != "") {
-                    if (reprocesa) {
-                        var figFin = STACK.figureGetById(document.getElementById('proOut').value);
-                        var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - 20];
-                        connectorType = Connector.TYPE_JAGGED;
-                        connectorPickFirst(coor[0], coor[1] + 50);
-                        var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-                        History.addUndo(cmdCreateCon);
-                        connectorPickSecond(coorOut[0], coorOut[1]);
-                        CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
-                        ordenarJagged(coorOut);
-                        coor = savePos.pop();
-                        coor[1] -= 70;
-                        reprocesa = false;
-                        error = false;
-                    } else {
-                        textError = "No se encuentra en un reproceso";
-                    }
-                } else {
-                    textError = "El valor no pueden ser nulo";
-                }
-            } else {
-                textError = "Debe haber al menos un proceso";
-            }
-            if (error) {
-                var div = document.getElementById('error');
-                div.innerHTML = textError;
-                div.style.display = 'block';
-                clean = false;
-            }
-            break;
+	case 'reproOut':
+		//Añadir limitador de hacia abajo
+		var error = true;
+		var textError = "";
+		if (!reproIni) {
+			if (document.getElementById('proOut').value != "") {
+				if (reprocesa) {
+					var figFin = STACK.figureGetById(document.getElementById('proOut').value);
+					var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - 20];
+					connectorType = Connector.TYPE_JAGGED;
+					connectorPickFirst(coor[0], coor[1] + 50);
+					var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+					History.addUndo(cmdCreateCon);
+					connectorPickSecond(coorOut[0], coorOut[1]);
+					CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
+					ordenarJagged(coorOut);
+					coor = savePos.pop();
+					coor[1] -= 70;
+					reprocesa = false;
+					error = false;
+				} else {
+					textError = "No se encuentra en un reproceso";
+				}
+			} else {
+				textError = "El valor no pueden ser nulo";
+			}
+		} else {
+			textError = "Debe haber al menos un proceso";
+		}
+		if (error) {
+			var div = document.getElementById('error');
+			div.innerHTML = textError;
+			div.style.display = 'block';
+			clean = false;
+		}
+		break;
 
-    }
-    if (clean) {
-        cleanStates();
-    }
+	case 'trayGen':
+		var lines = document.getElementById('trayNum').value;
+		figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
+		conectorBuild();
+		coor[1] -= 20;
+		savePos.push(coor);
+		var ini = coor[0] - ((lines * 50) - 50);
+		for (var i=0; i < lines; i++) {
+			trayecto[i] = [ini + (100 * i),coor[1] + 30];
+		}
+		opciones = true;
+		for (var i=0; i < trayecto.length; i++) {
+			figureBuild(window.figure_EndSS, trayecto[i][0], trayecto[i][1]);
+			var centro = (lines / 2) + 0.5 == (i + 1);
+			centro ? connectorType = Connector.TYPE_STRAIGHT : connectorType = Connector.TYPE_JAGGED;		
+			connectorPickFirst(coor[0], coor[1]);
+			connectorPickSecond(trayecto[i][0], trayecto[i][1]);
+			if (!centro){
+				ordenarJagged();
+			}
+		}
+		coor[1] += 10;
+		opciones = false;
+		coor[0] = trayecto[0][0];
+		break;
+		
+	case 'trayFin':
+		break;
+		
+	case 'trayUnir':
+		break;
+
+	}
+	if (clean) {
+		cleanStates();
+	}
 }
+
 
 var stackSelct = -1;
 var stackFigure = -1;

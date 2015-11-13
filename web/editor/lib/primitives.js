@@ -75,7 +75,7 @@ Point.load = function(o){
     var newPoint = new Point(Number(o.x), Number(o.y));
     newPoint.style = Style.load(o.style);
     return newPoint;
-}
+};
 
 
 /**Creates an array of points from an array of {JSONObject}s
@@ -88,7 +88,7 @@ Point.loadArray = function(v){
         newPoints.push(Point.load(v[i]));
     }
     return newPoints;
-}
+};
 
 
 /**Clones an array of points
@@ -101,7 +101,7 @@ Point.cloneArray = function(v){
         newPoints.push(v[i].clone());
     }
     return newPoints;
-}
+};
 
 Point.prototype = {
     constructor : Point,
@@ -256,7 +256,7 @@ Line.load = function(o){
 
     newLine.style = Style.load(o.style);
     return newLine;
-}
+};
 
 Line.prototype = {
     contructor: Line,
@@ -295,7 +295,7 @@ Line.prototype = {
                 var p = this.startPoint.clone();
 
                 //translate to origin of start
-                p.transform(Matrix.translationMatrix(-this.startPoint.x,-this.startPoint.y))
+                p.transform(Matrix.translationMatrix(-this.startPoint.x,-this.startPoint.y));
 
                 //move it north by incremental dashlengths
                 p.transform(Matrix.translationMatrix(0, -i));
@@ -304,7 +304,7 @@ Line.prototype = {
                 p.transform(Matrix.rotationMatrix(angle));
 
                 //translate back
-                p.transform(Matrix.translationMatrix(this.startPoint.x,this.startPoint.y))
+                p.transform(Matrix.translationMatrix(this.startPoint.x,this.startPoint.y));
 
                 if (move==false){
                     context.lineTo(p.x, p.y);
@@ -467,10 +467,10 @@ Line.prototype = {
         //<line x1="0" y1="0" x2="300" y2="300" style="stroke:rgb(99,99,99);stroke-width:2"/>
         var result = "\n" + repeat("\t", INDENTATION) + '<line x1="' + this.startPoint.x + '" y1="' + this.startPoint.y + '" x2="' + this.endPoint.x  + '" y2="' + this.endPoint.y + '"';
         result += this.style.toSVG();
-        result += " />"
+        result += " />";
         return  result;
     }
-}
+};
 
 
 
@@ -651,7 +651,7 @@ Polyline.prototype = {
 
 
     contains:function(x, y){
-        return Util.isPointInside(new Point(x, y), this.getPoints())
+        return Util.isPointInside(new Point(x, y), this.getPoints());
     },
 
 
@@ -689,7 +689,7 @@ Polyline.prototype = {
 
         return result;
     }
-}
+};
 
 
 /**
@@ -721,7 +721,7 @@ Polygon.load = function(o){
     newPolygon.points = Point.loadArray(o.points);
     newPolygon.style = Style.load(o.style);
     return newPolygon;
-}
+};
 
 
 Polygon.prototype = {
@@ -748,7 +748,7 @@ Polygon.prototype = {
         if(this.points.length > 1){
             context.moveTo(this.points[0].x, this.points[0].y);
             for(var i=1; i<this.points.length; i++){
-                context.lineTo(this.points[i].x, this.points[i].y)
+                context.lineTo(this.points[i].x, this.points[i].y);
             }
         }
         context.closePath();
@@ -879,7 +879,7 @@ Polygon.prototype = {
         +  ' />';
         return result;
     }
-}
+};
 
 
 /**
@@ -921,7 +921,7 @@ DottedPolygon.load = function(o){
     newPolygon.points = Point.loadArray(o.points);
     newPolygon.style = Style.load(o.style);
     return newPolygon;
-}
+};
 
 
 DottedPolygon.prototype = {
@@ -1064,7 +1064,7 @@ DottedPolygon.prototype = {
         
         return result;
     }
-}
+};
 
 
 /**
@@ -1255,7 +1255,7 @@ QuadCurve.prototype = {
         var high=polls;
         var i=(high-low)/2;
         while(i >= low && i <= high && high-low>0.01){//high-low indicates>0.01 stops us from taking increasingly tiny steps
-            i=low+(high-low)/2 //we want the mid point
+            i=low+(high-low)/2; //we want the mid point
 
             //don't fully understand this
             var t = i / polls;
@@ -1316,8 +1316,8 @@ QuadCurve.prototype = {
      **/
     deprecated_contains:function(x, y){
         return this.near(x,y,3);
-        points=[this.startPoint,this.controlPoint,this.endPoint];
-        return Util.isPointInside(new Point(x,y),points);
+        /*points=[this.startPoint,this.controlPoint,this.endPoint];
+        return Util.isPointInside(new Point(x,y),points);*/
     },
 
     /**
@@ -1501,7 +1501,7 @@ CubicCurve.load = function(o){
 
     newCubic.style = Style.load(o.style);
     return newCubic;
-}
+};
 
 
 CubicCurve.prototype = {
@@ -1732,7 +1732,7 @@ CubicCurve.prototype = {
         result += '" ' + this.style.toSVG() +  '  />';
         return result;
     }
-}
+};
 
 
 /**
@@ -1794,16 +1794,16 @@ function Arc(x, y, radius, startAngle, endAngle, direction, styleFlag){
     for (var i = 0; i < numControlPoints; i++) {
         if (i < 1)
         {
-            this.startPoint = new Point(x + radius * Math.cos(arcLength * i),y + radius * Math.sin(arcLength * i))
+            this.startPoint = new Point(x + radius * Math.cos(arcLength * i),y + radius * Math.sin(arcLength * i));
         }
-        var startPoint=new Point(x + radius * Math.cos(arcLength * i),y + radius * Math.sin(arcLength * i))
+        var startPoint=new Point(x + radius * Math.cos(arcLength * i),y + radius * Math.sin(arcLength * i));
 
         //control radius formula
         //where does it come from, why does it work?
         var controlRadius = radius / Math.cos(arcLength * .5);
 
         //the control point is plotted halfway between the arcLength and uses the control radius
-        var controlPoint=new Point(x + controlRadius * Math.cos(arcLength * (i + 1) - arcLength * .5),y + controlRadius * Math.sin(arcLength * (i + 1) - arcLength * .5))
+        var controlPoint=new Point(x + controlRadius * Math.cos(arcLength * (i + 1) - arcLength * .5),y + controlRadius * Math.sin(arcLength * (i + 1) - arcLength * .5));
         if (i == (numControlPoints - 1))
         {
             this.endPoint = new Point(x + radius * Math.cos(arcLength * (i + 1)),y + radius * Math.sin(arcLength * (i + 1)));
@@ -1857,7 +1857,7 @@ Arc.load = function(o){
     newArc.endAngle = o.endAngle;
     newArc.startAngle = o.startAngle;
     newArc.middle = Point.load(o.middle);
-    newArc.radius = o.radius
+    newArc.radius = o.radius;
     newArc.curves = QuadCurve.loadArray(o.curves);
 
     /*we need to load these 'computed' values as they are computed only in constructor :(
@@ -1872,7 +1872,7 @@ Arc.load = function(o){
     newArc.direction = o.direction;
 
     return newArc;
-}
+};
 
 /**Creates a {Arc} out of an Array of JSON parsed object
  *@param {Array} v - an {Array} of JSON parsed objects
@@ -1887,7 +1887,7 @@ Arc.loadArray = function(v){
     }
 
     return newArcs;
-}
+};
 
 
 
@@ -2039,7 +2039,7 @@ Arc.prototype = {
      **/
     toSVG: function(){
         var r = "\n" + repeat("\t", INDENTATION) + '<path d="';
-        r += ' M' + this.curves[0].startPoint.x  + ',' + this.curves[0].startPoint.y
+        r += ' M' + this.curves[0].startPoint.x  + ',' + this.curves[0].startPoint.y;
         for(var i=0; i<this.curves.length; i++){
             r += ' Q' + this.curves[i].controlPoint.x  + ',' + this.curves[i].controlPoint.y
             + ' ' + this.curves[i].endPoint.x + ',' + this.curves[i].endPoint.y;
@@ -2049,7 +2049,7 @@ Arc.prototype = {
         r += '/>';
         return r;
     }
-}
+};
 
 
 
@@ -2121,7 +2121,7 @@ Ellipse.load = function(o){
     newEllipse.style = Style.load(o.style);
 
     return newEllipse;
-}
+};
 
 
 Ellipse.prototype = {
@@ -2185,7 +2185,7 @@ Ellipse.prototype = {
         }
         return Util.isPointInside(new Point(x,y), points);
 
-        return false;
+        //return false;
     },
 
     near:function(x,y,radius){
@@ -2273,7 +2273,7 @@ Ellipse.prototype = {
     getBounds:function(){
         return Util.getBounds(this.getPoints());
     }
-}
+};
 
 
 
@@ -2327,7 +2327,7 @@ function DashedArc(x, y, radius, startAngle, endAngle, direction, styleFlag, das
  **/
 DashedArc.load = function(o){
     var newDashedArc = new DashedArc(100,100,30,0,360,false,0,6); //fake dashed (if we do not use it we got errors - endless loop)
-    newDashedArc.style.fillStyle="#ffffff"
+    newDashedArc.style.fillStyle="#ffffff";
 
     newDashedArc.arc = Arc.load(o.arc);
     newDashedArc.style = newDashedArc.arc.style; //strange but...
@@ -2336,7 +2336,7 @@ DashedArc.load = function(o){
 
 
     return newDashedArc;
-}
+};
 
 
 DashedArc.prototype = {
@@ -2404,17 +2404,17 @@ DashedArc.prototype = {
 
     paint:function(context){
         this.style.setupContext(context);
-        context.lineCap="round"//this.style.lineCap;
+        context.lineCap="round";//this.style.lineCap;
         for(var i=0; i<this.lines.length; i++){
             context.beginPath();
             this.lines[i].paint(context);
             context.stroke();
         }
         this.style.strokeStyle=null;
-        this.arc.paint(context)
+        this.arc.paint(context);
     }
 
-}
+};
 
 
 /**
@@ -2457,40 +2457,40 @@ Path.load = function(o){
         /**We can not use instanceof Point construction as
          *the JSON objects are typeless... so JSONObject are simply objects */
         if(o.primitives[i].oType == 'Point'){
-            newPath.primitives.push(Point.load(o.primitives[i]))
+            newPath.primitives.push(Point.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Line'){
-            newPath.primitives.push(Line.load(o.primitives[i]))
+            newPath.primitives.push(Line.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Polyline'){
-            newPath.primitives.push(Polyline.load(o.primitives[i]))
+            newPath.primitives.push(Polyline.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Polygon'){
-            newPath.primitives.push(Polygon.load(o.primitives[i]))
+            newPath.primitives.push(Polygon.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'QuadCurve'){
-            newPath.primitives.push(QuadCurve.load(o.primitives[i]))
+            newPath.primitives.push(QuadCurve.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'CubicCurve'){
-            newPath.primitives.push(CubicCurve.load(o.primitives[i]))
+            newPath.primitives.push(CubicCurve.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Arc'){
-            newPath.primitives.push(Arc.load(o.primitives[i]))
+            newPath.primitives.push(Arc.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Ellipse'){
-            newPath.primitives.push(Ellipse.load(o.primitives[i]))
+            newPath.primitives.push(Ellipse.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'DashedArc'){
-            newPath.primitives.push(DashedArc.load(o.primitives[i]))
+            newPath.primitives.push(DashedArc.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Path'){
-            newPath.primitives.push(Path.load(o.primitives[i]))
+            newPath.primitives.push(Path.load(o.primitives[i]));
         }
 
     }
 
     return newPath;
-}
+};
 
 
 Path.prototype = {
@@ -2558,7 +2558,7 @@ Path.prototype = {
                 ret.primitives[i].parentFigure=ret;
             }
         }
-        ret.style=this.style
+        ret.style=this.style;
         return ret;
     },
 
@@ -2606,7 +2606,7 @@ Path.prototype = {
                     context.quadraticCurveTo(primitive.controlPoint.x, primitive.controlPoint.y, primitive.endPoint.x, primitive.endPoint.y);
                 }
                 else if(primitive instanceof CubicCurve){
-                    context.bezierCurveTo(primitive.controlPoint1.x, primitive.controlPoint1.y, primitive.controlPoint2.x, primitive.controlPoint2.y, primitive.endPoint.x, primitive.endPoint.y)
+                    context.bezierCurveTo(primitive.controlPoint1.x, primitive.controlPoint1.y, primitive.controlPoint2.x, primitive.controlPoint2.y, primitive.endPoint.x, primitive.endPoint.y);
                 }
             }
             context.fill();
@@ -2640,11 +2640,11 @@ Path.prototype = {
                 //Log.info("quadcurve");
                 }
                 else if(primitive instanceof CubicCurve){
-                    context.bezierCurveTo(primitive.controlPoint1.x, primitive.controlPoint1.y, primitive.controlPoint2.x, primitive.controlPoint2.y, primitive.endPoint.x, primitive.endPoint.y)
+                    context.bezierCurveTo(primitive.controlPoint1.x, primitive.controlPoint1.y, primitive.controlPoint2.x, primitive.controlPoint2.y, primitive.endPoint.x, primitive.endPoint.y);
                 //Log.info("cubiccurve");
                 }
                 else if(primitive instanceof Arc){
-                    context.arc(primitive.startPoint.x, primitive.startPoint.y, primitive.radius, primitive.startAngleRadians, primitive.endAngleRadians, true)
+                    context.arc(primitive.startPoint.x, primitive.startPoint.y, primitive.radius, primitive.startAngleRadians, primitive.endAngleRadians, true);
                 //Log.info("arc" + primitive.startPoint.x + " " + primitive.startPoint.y);
                 }
                 else
@@ -2752,7 +2752,7 @@ Path.prototype = {
         return result;
     }
 
-}
+};
 
 
 
@@ -2818,40 +2818,40 @@ Figure.load = function(o){
         /**We can not use instanceof Point construction as
          *the JSON objects are typeless... so JSONObject are simply objects */
         if(o.primitives[i].oType == 'Point'){
-            newFigure.addPrimitive(Point.load(o.primitives[i]))
+            newFigure.addPrimitive(Point.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Line'){
-            newFigure.addPrimitive(Line.load(o.primitives[i]))
+            newFigure.addPrimitive(Line.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Polyline'){
-            newFigure.addPrimitive(Polyline.load(o.primitives[i]))
+            newFigure.addPrimitive(Polyline.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Polygon'){
-            newFigure.addPrimitive(Polygon.load(o.primitives[i]))
+            newFigure.addPrimitive(Polygon.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'DottedPolygon'){
-            newFigure.addPrimitive(DottedPolygon.load(o.primitives[i]))
+            newFigure.addPrimitive(DottedPolygon.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'QuadCurve'){
-            newFigure.addPrimitive(QuadCurve.load(o.primitives[i]))
+            newFigure.addPrimitive(QuadCurve.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'CubicCurve'){
-            newFigure.addPrimitive(CubicCurve.load(o.primitives[i]))
+            newFigure.addPrimitive(CubicCurve.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Arc'){
-            newFigure.addPrimitive(Arc.load(o.primitives[i]))
+            newFigure.addPrimitive(Arc.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Ellipse'){
-            newFigure.addPrimitive(Ellipse.load(o.primitives[i]))
+            newFigure.addPrimitive(Ellipse.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'DashedArc'){
-            newFigure.addPrimitive(DashedArc.load(o.primitives[i]))
+            newFigure.addPrimitive(DashedArc.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Text'){
-            newFigure.addPrimitive(Text.load(o.primitives[i]))
+            newFigure.addPrimitive(Text.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Path'){
-            newFigure.addPrimitive(Path.load(o.primitives[i]))
+            newFigure.addPrimitive(Path.load(o.primitives[i]));
         }
         else if(o.primitives[i].oType == 'Figure'){
             newFigure.addPrimitive(Figure.load(o.primitives[i])); //kinda recursevly
@@ -2869,7 +2869,7 @@ Figure.load = function(o){
 
 
     return newFigure ;
-}
+};
 
 /**Creates a new {Array} of {Figure}s out of JSON parsed object
  *@param {JSONObject} v - the JSON parsed object
@@ -2885,7 +2885,7 @@ Figure.loadArray = function(v){
     }
 
     return newFigures;
-}
+};
 
 Figure.prototype = {
     
@@ -3243,7 +3243,7 @@ Figure.prototype = {
 
         return tempSVG;
     }
-}
+};
 
 /**
  * Implements a NURBS component in Diagramo
@@ -3617,7 +3617,7 @@ if(typeof(document) == 'undefined'){ //test only from console
     print(p);
     print("\n");
     p.transform(R90);
-    print(p)
+    print(p);
 
     print("\n--==Line==--\n");
     l = new Line(new Point(10, 23), new Point(34, 50));
@@ -3637,20 +3637,20 @@ if(typeof(document) == 'undefined'){ //test only from console
 
 
     print("\n--==Quad curve==--\n");
-    q = new QuadCurve(new Point(75,25), new Point(25,25), new Point(25,62))
-    print(q)
+    q = new QuadCurve(new Point(75,25), new Point(25,25), new Point(25,62));
+    print(q);
 
     print("\n");
     q.transform(R90);
-    print(q)
+    print(q);
 
     print("\n--==Cubic curve==--\n");
-    q = new CubicCurve(new Point(75,40), new Point(75,37), new Point(70,25), new Point(50,25))
-    print(q)
+    q = new CubicCurve(new Point(75,40), new Point(75,37), new Point(70,25), new Point(50,25));
+    print(q);
 
     print("\n");
     q.transform(R90);
-    print(q)
+    print(q);
 
     print("\n--==Figure==--\n");
     f = new Figure();

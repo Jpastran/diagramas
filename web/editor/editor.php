@@ -304,8 +304,18 @@ $page = 'editor';
                     </div>
                     <div id="trayectos" style=" display: none">
                         <img src="lib/sets/trayectos.png" class="especial" />
-                        <input type="button" value="Añadir"/>
-                        <input type="button" value="Finalizar"/>
+                        <div class="label" id="trayIni" style=" display: block">
+                        	Generar
+							<input type="number" id="trayNum" min="2" step="1" max="6" style="width: 120px;">
+                       	 	<input type="button" value="Generar" onclick="especial('trayGen')"/>
+                        </div>	
+                        <div class="label" id="trayFin" style=" display: none">
+                        	Finalizar
+                        	<input type="button" value="Siguiente" onclick="especial('trayFin')"/><br>
+                        	Unir Opcion
+                        	<select id="trayUL" style="width: 120px;"></select>
+                        	<input type="button" value="Reunir" onclick="especial('trayUnir')"/>
+                        </div>	
                     </div>
                     <div id="error" class="error" style=" display: none"></div>
                 </div>

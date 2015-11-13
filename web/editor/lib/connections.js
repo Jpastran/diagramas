@@ -600,7 +600,7 @@ Connector.prototype = {
         this.jaggedReloaded();
         return;
 
-        
+    	/*    
         //reference to the start and end
         var endPoint=this.turningPoints.pop();
         var startPoint=this.turningPoints[0];
@@ -779,7 +779,7 @@ Connector.prototype = {
             this.turningPoints.push(new Point(startPoint.x,yMove));
             this.turningPoints.push(new Point(endPoint.x,yMove));
         }*/
-
+		/*
         //add the endPoints we have changed to the line
         this.turningPoints.push(new Point(endPoint.x,endPoint.y));
         for(var i=0; i<endPoints.length; i++){
@@ -790,7 +790,7 @@ Connector.prototype = {
         //if our line was supposed to go backwards, lets reverse it
         if(swapped){
             this.turningPoints = this.turningPoints.reverse();
-        }
+        }*/
     },
 
 

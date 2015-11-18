@@ -4415,32 +4415,31 @@ function touchCancel(event){
 //TODO Corregir autoID o generar la numeracion de forma automatica eliminado y renumeracion
 //TODO Corregir nivel de los conectores
 //TODO Buscar en buildgenerate las propiedades de las figuras
-//TODO console.log(STACK.figures[1].primitives); //Crear metodo a partir de aqui para renombrar
-//TODO textGetByFigureXY //Revisar para anterior
+//TODO console.log(STACK.figures[1].primitives); //Crear metodo a partir de aqui para renombrar en caso de borrado
 //TODO correjir posiciones en caso de borrado o generar posicion mas baja a partir de busqueda
-//TODO crear panel nuevo o selector especial para los casos nuevos
 //TODO opcional crear los grupos nuevos segun(Entrada, salida, simbolos, otros)
 //TODO opcional agregar parametros de (descripcion, tiempo y distancia)
 //TODO opcional agregar al lienzo (Nombre del Proceso)
 //TODO opcional agregar a linea init (Componente Principal, Material Componente Principal) en texto
-//TODO reparar los "unreachable code after return statement"
 
 var coor = [400, 60];
 var lienzo = [800, 600];
-var primer = false;
+var lineas = [0, 0, 0, 0, 0]; //[0][1]funcion en entrada, [2]funcion en salida, [3][4]funcion en trayecto.
 var savePos = [];
+var trayecto = [];
+var primer = false;
 var finLS = false;
 var finSS = false;
-var lineas = [0, 0, 0, 0]; //[2] funcion en salida, [3] funcion en trayecto.
 var reprocesa = false;
 var reproIni = false;
+var opciones = false;
 
 function lineaPrincipal() {
     if (!primer) {
         figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
         coor[1] += 70;
         lineas[0]++;//Numero de lineas de entrada
-        lineas[1]++;//Linea de entrada actual
+        lineas[1]++;//Linea de entrada actual y principal = 1
         primer = true;
     }
 }
@@ -4470,7 +4469,7 @@ function canvasBuild(figureFunction) {
 }
 
 function conectorBuild() {
-    //corregir distribucion del conector
+    //TODO simplificar el codigo de conector para ahorrar
     if (finLS) {
         connectorType = Connector.TYPE_JAGGED;
         connectorPickFirst(coor[0], coor[1] - 50);
@@ -4524,13 +4523,14 @@ function figureBuild(figureFunction, x, y) {
 
 function cleanStates() {
     reprocesa ? coor[1] -= 70 : coor[1] += 70;
-    growCanvas();
     state = STATE_NONE;
     selectedFigureId = -1;
     selectedConnectorId = -1;
     mousePressed = false;
     createFigureFunction = null;
-    setUpEditPanel(canvasProps);
+    growCanvas();
+    setUpEditPanel(canvasProps);//TODO Añadir eliminadores de carga
+    errorDiv('');
     draw();
 }
 
@@ -4580,22 +4580,22 @@ function ordenarJagged(pos) {
         turns[1] = turns[0];
         turns[2].y = turns[1].y;
         turns[3] = turns[2];
-     } else if (reprocesa) {
-     	reproIni ? turns[1].y = turns[0].y + 15 : turns[1].y = turns[0].y - 15;
-		turns[2].y = turns[1].y;
-		if (pos[1] != turns[0].y) {
-			turns[2].x = turns[1].x - 75;
-			turns[3].x = turns[2].x;
-			turns[3].y = pos[1] - 15;
-			var turn4 = turns[3].clone();
-			var turn5 = turns.pop();
-			turn4.x = pos[0];
-			turns.push(turn4, turn5);
-		}		
-    }else if (opciones){
-    	turns[1].y = coor[1];
-    	turns[2].y = coor[1];
-    	turns[3].y = coor[1];
+    } else if (reprocesa) {
+        reproIni ? turns[1].y = turns[0].y + 15 : turns[1].y = turns[0].y - 15;
+        turns[2].y = turns[1].y;
+        if (pos[1] != turns[0].y) {
+            turns[2].x = turns[1].x - 75;
+            turns[3].x = turns[2].x;
+            turns[3].y = pos[1] - 15;
+            var turn4 = turns[3].clone();
+            var turn5 = turns.pop();
+            turn4.x = pos[0];
+            turns.push(turn4, turn5);
+        }
+    } else if (opciones) {
+        turns[1].y = coor[1];
+        turns[2].y = coor[1];
+        turns[3].y = coor[1];
     }
 }
 
@@ -4608,204 +4608,259 @@ function setEspecial(nombre) {
             var currentEspecial = document.getElementById(selectEspecial);
             currentEspecial.style.display = 'none';
         }
-        div.style.display = 'block';
         selectEspecial = nombre;
-        document.getElementById('error').style.display = 'none';
+        div.style.display = 'block';
+        errorDiv('');
+        if (nombre == 'repeticion') {
+            cargarFiguras('repIn');
+            cargarFiguras('repOut');
+        } else if (nombre == 'reproceso') {
+            cargarFiguras('proIn');
+            cargarFiguras('proOut');
+        }
     }
 }
 
-var trayecto = [];
-var opciones = false;
-
 function especial(accion) {
-	var clean = true;
-	switch (accion) {
-	case 'newLE':
-		lineaPrincipal();
-		figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
-		conectorBuild();
-		coor[1] -= 20;
-		savePos.push(coor);
-		lineas[0]++;
-		coor = [coor[0] - (150 * (lineas[0] - lineas[1])), 60];
-		figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
-		lineas[1]++;
-		break;
-	case 'endLE':
-		//Agregar limite minimo
-		if (lineas[1] != 1) {
-			finLS = true;
-			conectorBuild();
-			lineas[1]--;
-			coor[1] -= 20;
-		} else {
-			clean = false;
-		}
-		break;
-	case 'newLS':
-		lineas[2]++;
-		figureBuild(window.figure_NewSS, coor[0], coor[1] - 20);
-		conectorBuild();
-		coor[1] -= 20;
-		savePos.push(coor);
-		coor = [coor[0] + 150, coor[1]];
-		finSS = true;
-		coor[1] -= 30;
-		break;
-	case 'endLS':
-		//Condicion de linea de entrada secundaria
-		if (lineas[2] != 0) {
-			lineas[2]--;
-			var pos = savePos.pop();
-			coor = pos;
-			coor[1] -= 20;
-		} else {
-			clean = false;
-		}
-		break;
+    var clean = true;
+    if (primer) {
+        //TODO Preguntar las acciones que se pueden dentro de otras
+        switch (accion) {
 
-	case 'repetir':
-		var error = true;
-		var textError = "";
-		if (document.getElementById('repIn').value != "" && document.getElementById('repOut').value != "") {
-			var figIni = STACK.figureGetById(document.getElementById('repIn').value);
-			var figFin = STACK.figureGetById(document.getElementById('repOut').value);
-			if (figFin != figIni) {
-				var coorIn = [figIni.rotationCoords[0].x - 20, figIni.rotationCoords[0].y];
-				var coorOut = [figFin.rotationCoords[0].x - 20, figFin.rotationCoords[0].y];
-				if (coorIn[0] == coorOut[0]) {
-					if (coorIn[1] > coorOut[1]) {
-						//Agregar condicion del triangulo
-						connectorType = Connector.TYPE_JAGGED;
-						connectorPickFirst(coorIn[0], coorIn[1]);
-						var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-						History.addUndo(cmdCreateCon);
-						connectorPickSecond(coorOut[0], coorOut[1]);
-						CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
-						error = false;
-					} else {
-						textError = "La repetcion no puede ser inversa";
-					}
-				} else {
-					textError = "La repetcion debe ser en la misma linea";
-				}
-			} else {
-				textError = "El proceso no puede ser el mismo";
-			}
-		} else {
-			textError = "Los valores no pueden ser nulos";
-		}
-		if (error) {
-			var div = document.getElementById('error');
-			div.innerHTML = textError;
-			div.style.display = 'block';
-			clean = false;
-		}
-		break;
+            case 'newLE':
+                figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
+                conectorBuild();
+                coor[1] -= 20;
+                savePos.push(coor);
+                lineas[0]++;
+                coor = [coor[0] - (150 * (lineas[0] - lineas[1])), 60];
+                figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
+                lineas[1]++;
+                document.getElementById('btnLE').disabled = false;
+                especialSelect(true);
+                break;
 
-	case 'reproIn':
-		var error = true;
-		var textError = "";
-		if (!reprocesa) {
-			if (document.getElementById('proIn').value != "") {
-				savePos.push(coor);
-				var figIni = STACK.figureGetById(document.getElementById('proIn').value);
-				var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + 20];
-				coor = [coorIn[0] + 150, coorIn[1] - 20];
-				savePos.push(coorIn);
-				reprocesa = true;
-				reproIni = true;
-				clean = false;
-				error = false;
-			} else {
-				textError = "El valor no pueden ser nulo";
-			}
-		} else {
-			textError = "Ya esta creando un reproceso";
-		}
-		if (error) {
-			var div = document.getElementById('error');
-			div.innerHTML = textError;
-			div.style.display = 'block';
-			clean = false;
-		}
-		break;
+            case 'endLE'://TODO agregar el minimo de un proceso
+                if (lineas[1] != 1) {
+                    finLS = true;
+                    conectorBuild();
+                    lineas[1]--;
+                    coor[1] -= 20;
+                    if (lineas[1] == 1) {
+                        document.getElementById('btnLE').disabled = true;
+                        especialSelect(false);
+                    }
+                }
+                break;
 
-	case 'reproOut':
-		//Añadir limitador de hacia abajo
-		var error = true;
-		var textError = "";
-		if (!reproIni) {
-			if (document.getElementById('proOut').value != "") {
-				if (reprocesa) {
-					var figFin = STACK.figureGetById(document.getElementById('proOut').value);
-					var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - 20];
-					connectorType = Connector.TYPE_JAGGED;
-					connectorPickFirst(coor[0], coor[1] + 50);
-					var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-					History.addUndo(cmdCreateCon);
-					connectorPickSecond(coorOut[0], coorOut[1]);
-					CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
-					ordenarJagged(coorOut);
-					coor = savePos.pop();
-					coor[1] -= 70;
-					reprocesa = false;
-					error = false;
-				} else {
-					textError = "No se encuentra en un reproceso";
-				}
-			} else {
-				textError = "El valor no pueden ser nulo";
-			}
-		} else {
-			textError = "Debe haber al menos un proceso";
-		}
-		if (error) {
-			var div = document.getElementById('error');
-			div.innerHTML = textError;
-			div.style.display = 'block';
-			clean = false;
-		}
-		break;
+            case 'newLS':
+                if (lineas[1] == 1) {
+                    lineas[2]++;//Numero de salidas activas
+                    figureBuild(window.figure_NewSS, coor[0], coor[1] - 20);
+                    conectorBuild();
+                    coor[1] -= 20;
+                    savePos.push(coor);
+                    coor = [coor[0] + 150, coor[1]];
+                    finSS = true;
+                    coor[1] -= 30;
+                    document.getElementById('btnLS').disabled = false;
+                    especialSelect(true);
+                } else {
+                    errorDiv('Solo se permite en la linea principal');
+                    clean = false;
+                }
+                break;
 
-	case 'trayGen':
-		var lines = document.getElementById('trayNum').value;
-		figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
-		conectorBuild();
-		coor[1] -= 20;
-		savePos.push(coor);
-		var ini = coor[0] - ((lines * 50) - 50);
-		for (var i=0; i < lines; i++) {
-			trayecto[i] = [ini + (100 * i),coor[1] + 30];
-		}
-		opciones = true;
-		for (var i=0; i < trayecto.length; i++) {
-			figureBuild(window.figure_EndSS, trayecto[i][0], trayecto[i][1]);
-			var centro = (lines / 2) + 0.5 == (i + 1);
-			centro ? connectorType = Connector.TYPE_STRAIGHT : connectorType = Connector.TYPE_JAGGED;		
-			connectorPickFirst(coor[0], coor[1]);
-			connectorPickSecond(trayecto[i][0], trayecto[i][1]);
-			if (!centro){
-				ordenarJagged();
-			}
-		}
-		coor[1] += 10;
-		opciones = false;
-		coor[0] = trayecto[0][0];
-		break;
-		
-	case 'trayFin':
-		break;
-		
-	case 'trayUnir':
-		break;
+            case 'endLS':
+                if (lineas[2] != 0) {
+                    lineas[2]--;
+                    var pos = savePos.pop();
+                    coor = pos;
+                    coor[1] -= 20;
+                    if (lineas[2] == 0) {
+                        document.getElementById('btnLS').disabled = true;
+                        especialSelect(false);
+                    }
+                }
+                break;
 
-	}
-	if (clean) {
-		cleanStates();
-	}
+            case 'repetir'://TODO la repeticion se hacen en la parte superior, en rotationCoords[1] usa el superior.
+                var error = true;
+                var textError = "";
+                if (document.getElementById('repIn').value != "" && document.getElementById('repOut').value != "") {
+                    var figIni = STACK.figureGetById(document.getElementById('repIn').value);
+                    var figFin = STACK.figureGetById(document.getElementById('repOut').value);
+                    if (figFin != figIni) {
+                        var coorIn = [figIni.rotationCoords[0].x - 20, figIni.rotationCoords[0].y];
+                        var coorOut = [figFin.rotationCoords[0].x - 20, figFin.rotationCoords[0].y];
+                        if (figIni.primitives[1].str.split("", 1) == 'A') {
+                            coorIn[0] += 10;
+                        }
+                        if (figFin.primitives[1].str.split("", 1) == 'A') {
+                            coorOut[0] += 10;
+                        }
+                        console.log(coorIn, coorOut);
+                        if (coorIn[0] == coorOut[0]) {
+                            if (coorIn[1] > coorOut[1]) {
+                                connectorType = Connector.TYPE_JAGGED;
+                                connectorPickFirst(coorIn[0], coorIn[1]);
+                                var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+                                History.addUndo(cmdCreateCon);
+                                connectorPickSecond(coorOut[0], coorOut[1]);
+                                CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
+                                error = false;
+                            } else {
+                                textError = "La repetcion no puede ser inversa";
+                            }
+                        } else {
+                            textError = "La repetcion debe ser en la misma linea";
+                        }
+                    } else {
+                        textError = "El proceso no puede ser el mismo";
+                    }
+                } else {
+                    textError = "Los valores no pueden ser nulos";
+                }
+                if (error) {
+                    errorDiv(textError);
+                    clean = false;
+                }
+                break;
+
+            case 'reproIn'://TODO Añadir limitador de linea
+                var error = true;
+                var textError = "";
+                if (document.getElementById('proIn').value != "") {
+                    savePos.push(coor);
+                    var figIni = STACK.figureGetById(document.getElementById('proIn').value);
+                    var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + 20];
+                    coor = [coorIn[0] + 150, coorIn[1] - 20];
+                    savePos.push(coorIn);
+                    reprocesa = true;
+                    reproIni = true;
+                    clean = false;
+                    error = false;
+                    document.getElementById('btnRepOut').disabled = false;
+                    document.getElementById('btnRepIn').disabled = true;
+                    especialSelect(true);
+                } else {
+                    textError = "El valor no pueden ser nulo";
+                }
+                if (error) {
+                    errorDiv(textError);
+                    clean = false;
+                }
+                break;
+
+            case 'reproOut'://TODO Añadir limitador de hacia abajo y de linea
+                var error = true;
+                var textError = "";
+                if (!reproIni) {
+                    if (document.getElementById('proOut').value != "") {
+                        var figFin = STACK.figureGetById(document.getElementById('proOut').value);
+                        var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - 20];
+                        connectorType = Connector.TYPE_JAGGED;
+                        connectorPickFirst(coor[0], coor[1] + 50);
+                        var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+                        History.addUndo(cmdCreateCon);
+                        connectorPickSecond(coorOut[0], coorOut[1]);
+                        CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
+                        ordenarJagged(coorOut);
+                        coor = savePos.pop();
+                        coor[1] -= 70;
+                        reprocesa = false;
+                        error = false;
+                        document.getElementById('btnRepOut').disabled = true;
+                        document.getElementById('btnRepIn').disabled = false;
+                        especialSelect(false);
+                    } else {
+                        textError = "El valor no pueden ser nulo";
+                    }
+                } else {
+                    textError = "Debe haber al menos un proceso";
+                }
+                if (error) {
+                    errorDiv(textError);
+                    clean = false;
+                }
+                break;
+
+            case 'trayGen':
+                if (options >= 2 && options <= 10) {
+                    var options = document.getElementById('trayNum').value;
+                    figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
+                    conectorBuild();
+                    coor[1] -= 20;
+                    savePos.push(coor);
+                    var ini = coor[0] - ((options * 50) - 50);
+                    for (var i = 0; i < options; i++) {
+                        trayecto[i] = [ini + (100 * i), coor[1] + 30];
+                    }
+                    opciones = true;
+                    for (var i = 0; i < trayecto.length; i++) {
+                        figureBuild(window.figure_EndSS, trayecto[i][0], trayecto[i][1]);
+                        var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
+                        centro ? connectorType = Connector.TYPE_STRAIGHT : connectorType = Connector.TYPE_JAGGED;
+                        connectorPickFirst(coor[0], coor[1]);
+                        connectorPickSecond(trayecto[i][0], trayecto[i][1]);
+                        if (!centro) {
+                            ordenarJagged();
+                        }
+                    }
+                    opciones = false;
+                    coor[trayecto[0][0], coor[1] + 10];
+                    document.getElementById('trayIni').style.display = 'none';
+                    document.getElementById('trayFin').style.display = 'block';
+                    especialSelect(true);
+                    lineas[3] = options;//Numero de trayectos
+                    lineas[4]++;//Trayecto actual
+                } else {
+                    errorDiv('Opciones solo puden ser numeros enteros de 2 a 10');
+                    clean = false;
+                }
+                break;
+
+            case 'trayFin'://TODO agregar la posicion del mas bajo en trayecto
+                if (lineas[3] > lineas[4]) {
+                    coor = trayecto[lineas[4]];
+                    lineas[4]++;
+                    coor[1] -= 20;
+                    if (lineas[3] == lineas[4]) {
+                        document.getElementById('btnFin').disabled = true;
+                        document.getElementById('btnUni').disabled = false;
+                    }
+                } else {
+                    clean = false;
+                }
+                break;
+
+            case 'trayUnir'://TODO crear la union
+                break;
+
+        }
+    } else {
+        errorDiv('No se ha creado ninguna linea');
+        clean = false;
+    }
+    if (clean) {
+        cleanStates();
+    }
 }
 
+function especialSelect(bool) {
+    var select = document.getElementById('espSelect');
+    bool ? select.disabled = true : select.disabled = false;
+}
+
+function errorDiv(textError) {
+    var div = document.getElementById('error');
+    if (textError != '') {
+        div.innerHTML = textError;
+        div.style.display = 'block';
+    } else {
+        div.style.display = 'none';
+    }
+}
 
 var stackSelct = -1;
 var stackFigure = -1;
@@ -4829,5 +4884,5 @@ function cargarFiguras(selectId) {
         stackSelct = cont;
         stackFigure = STACK.figures.length;
     }
-    document.getElementById('error').style.display = 'none';
+    errorDiv('');
 }

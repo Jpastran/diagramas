@@ -91,7 +91,7 @@ $page = 'editor';
                 }                
             }
         </script>
-        
+        <!-- TODO crear un js de cargar y limpiar innesearios -->
         <script type="text/javascript" src="./lib/dashed.js"></script>
         <script type="text/javascript" src="./lib/canvasprops.js"></script>        
         <script type="text/javascript" src="./lib/style.js"></script>
@@ -260,7 +260,7 @@ $page = 'editor';
                     </select>
                 </div>
                 <div id="especial">
-                    <select style="width: 120px;" onchange="setEspecial(this.options[this.selectedIndex].value)">
+                    <select id="espSelect" style="width: 120px;" onchange="setEspecial(this.options[this.selectedIndex].value)">
                         <option value="entrada" selected>Entrada</option>
                         <option value="salida">Salida</option>
                         <option value="repeticion">Repeticion</option>
@@ -270,12 +270,12 @@ $page = 'editor';
                     <div id="entrada" style=" display: block">
                         <img src="lib/sets/entrada.png" class="especial" />
                         <input type="button" value="Añadir" onclick="especial('newLE');"/>
-                        <input type="button" value="Finalizar" onclick="especial('endLE');"/>
+                        <input id="btnLE" type="button" value="Finalizar" onclick="especial('endLE');" disabled/>
                     </div>
                     <div id="salida" style=" display: none">
                         <img src="lib/sets/salida.png" class="especial" />
                         <input type="button" value="Añadir" onclick="especial('newLS');"/>
-                        <input type="button" value="Finalizar" onclick="especial('endLS');"/>
+                        <input id="btnLS" type="button" value="Finalizar" onclick="especial('endLS');" disabled/>
                     </div>
                     <div id="repeticion" style=" display: none">
                         <img src="lib/sets/repeticion.png" class="especial"/>
@@ -294,12 +294,12 @@ $page = 'editor';
                         <div class="label">
                             Inicio
                             <select id="proIn" style="width: 120px;" onclick="cargarFiguras('proIn')"></select>
-                            <input type="button" value="Iniciar" onclick="especial('reproIn')"/>
+                            <input id="btnRepIn" type="button" value="Iniciar" onclick="especial('reproIn')"/>
                         </div>					
                         <div class="label">
                             Final
                             <select id="proOut" style="width: 120px;" onclick="cargarFiguras('proOut')"></select>
-                            <input type="button" value="Finalizar" onclick="especial('reproOut')"/>
+                            <input id="btnRepOut" type="button" value="Finalizar" onclick="especial('reproOut')" disabled/>
                         </div>						
                     </div>
                     <div id="trayectos" style=" display: none">
@@ -311,10 +311,10 @@ $page = 'editor';
                         </div>	
                         <div class="label" id="trayFin" style=" display: none">
                         	Finalizar
-                        	<input type="button" value="Siguiente" onclick="especial('trayFin')"/><br>
+                        	<input id="btnFin" type="button" value="Siguiente" onclick="especial('trayFin')"/><br>
                         	Unir Opcion
                         	<select id="trayUL" style="width: 120px;"></select>
-                        	<input type="button" value="Reunir" onclick="especial('trayUnir')"/>
+                        	<input id="btnUni" type="button" value="Reunir" onclick="especial('trayUnir')" disabled/>
                         </div>	
                     </div>
                     <div id="error" class="error" style=" display: none"></div>

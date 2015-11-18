@@ -1299,9 +1299,6 @@ function buildPanel() {
 			eFigure.addEventListener('dblclick', function(figureFunction) {
 				return function(evt) {
 					canvasBuild(window[figureFunction]);
-					//console.log(STACK);
-					//console.log(window);
-					//console.log(CONNECTOR_MANAGER);
 				};
 			}(figureFunctionName), false);
 

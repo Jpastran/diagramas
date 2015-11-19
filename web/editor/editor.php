@@ -304,18 +304,23 @@ $page = 'editor';
                     </div>
                     <div id="trayectos" style=" display: none">
                         <img src="lib/sets/trayectos.png" class="especial" />
-                        <div class="label" id="trayIni" style=" display: block">
+                        <div class="label" id="trayGen" style=" display: block">
                         	Generar
-							<input type="number" id="trayNum" min="2" step="1" max="6" style="width: 120px;">
+							<input type="number" id="trayNum" min="2" step="1" max="8" style="width: 120px;">
                        	 	<input type="button" value="Generar" onclick="especial('trayGen')"/>
                         </div>	
-                        <div class="label" id="trayFin" style=" display: none">
-                        	Finalizar
+                        <div class="label" id="traySig" style=" display: none">
+                        	Finalizar 
+                        	<label id="trayName"></label>
                         	<input id="btnFin" type="button" value="Siguiente" onclick="especial('trayFin')"/><br>
-                        	Unir Opcion
-                        	<select id="trayUL" style="width: 120px;"></select>
-                        	<input id="btnUni" type="button" value="Reunir" onclick="especial('trayUnir')" disabled/>
                         </div>	
+                        <div class="label" id="trayUnir" style=" display: none">
+                        	Opciones a continuar 
+                        	<!--//TODO remplazar por un div para creacion de checkbox o implemtentar sin ctrl -->
+                        	<select id="trayChk" style="width: 120px;" multiple></select>                        	
+                        	<input id="btnUni" type="button" value="Reunir" onclick="especial('trayUnir')"/>
+                        </div>
+                        	
                     </div>
                     <div id="error" class="error" style=" display: none"></div>
                 </div>

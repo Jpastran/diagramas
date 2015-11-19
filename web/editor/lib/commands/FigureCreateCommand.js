@@ -75,7 +75,7 @@ FigureCreateCommand.prototype = {
             selectedFigureId = createdFigure.id;
         
             //set up it's editor
-            setUpEditPanel(createdFigure);
+            //setUpEditPanel(createdFigure);
         
             //move to figure selected state
             state = STATE_FIGURE_SELECTED;

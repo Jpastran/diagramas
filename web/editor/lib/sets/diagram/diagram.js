@@ -538,14 +538,22 @@ function figure_NewSS(x, y) {
 function figure_EndSS(x, y) {
 	
 	var circleRadius = 5;
+	var point = 1;
 	
 	var c = new Arc(x, y, circleRadius, 0, 360, false, 0);
+	var p = new Arc(x, y, point, 0, 360, false, 0);
 
 	var f = new Figure("EndSS");
 	f.style.fillStyle = "#FFFFFF";
 	f.style.strokeStyle = FigureDefaults.strokeStyle;
 	
+	f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
+	f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
+	f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
+	f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
+	
 	f.addPrimitive(c);
+	f.addPrimitive(p);
 	
 	CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y), ConnectionPoint.TYPE_FIGURE);
 	

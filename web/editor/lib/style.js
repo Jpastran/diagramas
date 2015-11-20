@@ -415,5 +415,5 @@ Style.prototype={
         return style;
     }
 
-}
+};
 

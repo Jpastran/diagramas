@@ -4515,7 +4515,7 @@ function canvasBuild(figureFunction) {
         conectorBuild();
         coor[1] -= tamFig;
     } else if (window.createFigureFunction == window.figure_LineDouble) {
-        figureBuild(window.createFigureFunction, coor[0], coor[1] - tamFig * 0.75);
+        figureBuild(window.createFigureFunction, coor[0], coor[1] - tamFig / 4);
         conectorBuild();
         coor[1] -= tamFig / 2;
     } else {
@@ -4615,6 +4615,7 @@ function dropFigure() {
     createFigureFunction = null;
     selectedFigureThumb = null;
     state = STATE_NONE;
+    //document.getElementById('draggingThumb').style.display  = 'none';
 }
 
 function ordenarJagged(pos) {
@@ -4936,23 +4937,27 @@ var stackSelct = -1;
 var stackFigure = -1;
 
 function cargarFiguras(selectId) {
-    var select = document.getElementById(selectId);
-    if (select.length != stackSelct || stackFigure != STACK.figures.length) {
-        var names = [];
-        var ids = [];
-        for (var i = 0; i < STACK.figures.length; i++) {
-            names[i] = STACK.figures[i].primitives[1].str;
-            ids[i] = STACK.figures[i].id;
-        }
-        var cont = 0;
-        for (var i = 0; i < STACK.figures.length; i++) {
-            if (names[i] != "Text" && names[i] != undefined) {
-                select.options[cont] = new Option(names[i], ids[i]);
-                cont++;
-            }
-        }
-        stackSelct = cont;
-        stackFigure = STACK.figures.length;
-    }
-    errorDiv('');
+	var select = document.getElementById(selectId);
+	if (select.length != stackSelct || stackFigure != STACK.figures.length) {
+		var names = [];
+		var ids = [];
+		for (var i = 0; i < STACK.figures.length; i++) {
+			for (var j = 0; j < STACK.figures[i].primitives.length; j++) {
+				if (STACK.figures[i].primitives[j].str !== undefined) {
+					names[i] = STACK.figures[i].primitives[j].str;
+					ids[i] = STACK.figures[i].id;
+				}
+			}
+		}
+		var cont = 0;
+		for (var i = 0; i < STACK.figures.length; i++) {
+			if (names[i] != "Text") {
+				select.options[cont] = new Option(names[i], ids[i]);
+				cont++;
+			}
+		}
+		stackSelct = cont;
+		stackFigure = STACK.figures.length;
+	}
+	errorDiv('');
 }

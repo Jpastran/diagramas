@@ -4411,33 +4411,93 @@ function touchCancel(event){
 
 /*======================Diagramas de Procesos========================*/
 
-//TODO Arreglar la seleccion multiple
-//TODO Corregir autoID o generar la numeracion de forma automatica eliminado y renumeracion
-//TODO Corregir nivel de los conectores
-//TODO Buscar en buildgenerate las propiedades de las figuras
-//TODO console.log(STACK.figures[1].primitives); //Crear metodo a partir de aqui para renombrar en caso de borrado
-//TODO correjir posiciones en caso de borrado o generar posicion mas baja a partir de busqueda
-//TODO opcional crear los grupos nuevos segun(Entrada, salida, simbolos, otros)
-//TODO opcional agregar parametros de (descripcion, tiempo y distancia)
-//TODO opcional agregar al lienzo (Nombre del Proceso)
-//TODO opcional agregar a linea init (Componente Principal, Material Componente Principal) en texto
+//TODO Arreglar la seleccion multiple.
+//TODO Corregir autoID o generar la numeracion de forma automatica eliminado y renumeracion.
+//TODO Corregir nivel de los conectores.
+//TODO Buscar en buildgenerate las propiedades de las figuras.
+//TODO console.log(STACK.figures[1].primitives); //Crear metodo a partir de aqui para renombrar en caso de borrado.
+//TODO correjir posiciones en caso de borrado o generar posicion mas baja a partir de busqueda.
+//TODO opcional crear los grupos nuevos segun(Entrada, salida, simbolos, otros).
+//TODO opcional agregar parametros de (descripcion, tiempo y distancia).
+//TODO opcional agregar al lienzo (Nombre del Proceso).
+//TODO opcional agregar a linea init (Componente Principal, Material Componente Principal) en texto.
 //TODO estandarizar los valores del usados para las coordenadas(no quedar numero suelto).
+//TODO crear un metodo y boton para terminar el diagrama.
 
-var coor = [400, 60];
+/***
+ * Variables usadas por el diagrama
+ **/
+
+/**Coordenada inicial en eje X*/
+var iniX = 400;
+
+/**Coordenada inicial en eje Y*/
+var iniY = 60;
+
+/**Distancia entre lineas*/
+var distLine = 150;
+
+/**Distancia menos de linea especiales*/
+var disLinMin = 100;
+
+/**Distancia del segmento de las figuras
+ * ref @see FigureDefaults.segmentSize*/
+var tamFig = 40;
+
+/**Distancia menos de linea especiales
+ * interpretado como {disFig-tamFig}*/
+var disCon = 30;
+
+/**Distancia de las figura de centro a 
+ * centro para la creacion dado por 
+ * {tamFig}/2 + {disCon} + {tamFig}/2 */
+var disFig = 70;
+
+/**Distancia del centro de la figura 
+ * hasta el conector tambien como
+ * {tamFig}/2-{disFig}*/
+var disFigCon = 50;
+
+/**Coordenada actual en el lienzo*/
+var coor = [iniX, iniY];
+
+/**Tamaño actual del lienzo*/
 var lienzo = [CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT];
-var lineas = [0, 0, 0, 0, 0]; //[0][1]funcion en entrada, [2]funcion en salida, [3][4]funcion en trayecto.
+
+/**Referencia de lineas usadas
+ * {lineas[0][1]} funcion en entrada
+ * {lineas[2]} funcion en salida
+ * {lineas[3][4]} funcion en trayecto*/
+var lineas = [0, 0, 0, 0, 0];
+
+/**Guarda coordenada del lienzo*/
 var savePos = [];
+
+/**Guarda las coordenadas de las 
+ * lineas de opciones de trayecto*/
 var trayecto = [];
+
+/**Gatillo de primer proceso activo*/
 var primer = false;
+
+/**Gatillo de linea de entrada secundaria*/
 var finLS = false;
+
+/**Gatillo de linea de salida secundaria*/
 var finSS = false;
-var reprocesa = false;
+
+/**Gatillo de primer proceso en reproceso*/
 var reproIni = false;
+
+/**Gatillo de reproceso activo*/
+var reprocesa = false;
+
+/**Gatillo de opciones de trayecto*/
 var opciones = false;
 
 function lineaPrincipal() {
     if (!primer) {
-        figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
+        figureBuild(window.figure_LineInit, coor[0] - (tamFig * 0.75), coor[1]);
         coor[1] += 70;
         lineas[0]++;//Numero de lineas de entrada
         lineas[1]++;//Linea de entrada actual y principal = 1
@@ -4446,22 +4506,20 @@ function lineaPrincipal() {
 }
 
 function canvasBuild(figureFunction) {
-
     createFigureFunction = figureFunction;
     lineaPrincipal();
-
     if (window.createFigureFunction == window.figure_LineIn) {
-        figureBuild(window.createFigureFunction, coor[0] - 30, coor[1] - 30);
+        figureBuild(window.createFigureFunction, coor[0] - tamFig * 0.75, coor[1] - tamFig * 0.75);
         conectorBuild();
-        coor[1] -= 40;
+        coor[1] -= tamFig;
     } else if (window.createFigureFunction == window.figure_LineOut) {
-        figureBuild(window.createFigureFunction, coor[0] + 30, coor[1] - 30);
+        figureBuild(window.createFigureFunction, coor[0] + tamFig * 0.75, coor[1] - tamFig * 0.75);
         conectorBuild();
-        coor[1] -= 40;
+        coor[1] -= tamFig;
     } else if (window.createFigureFunction == window.figure_LineDouble) {
-        figureBuild(window.createFigureFunction, coor[0], coor[1] - 10);
+        figureBuild(window.createFigureFunction, coor[0], coor[1] - tamFig * 0.75);
         conectorBuild();
-        coor[1] -= 20;
+        coor[1] -= tamFig / 2;
     } else {
         figureBuild(window.createFigureFunction, coor[0], coor[1]);
         conectorBuild();
@@ -4470,50 +4528,50 @@ function canvasBuild(figureFunction) {
 }
 
 function conectorBuild() {
-	connectorType = Connector.TYPE_JAGGED;
-	if (finLS) {
-		var pos = savePos.pop();
-		connectorPickFirst(coor[0], coor[1] - 50);
-		connectorPickSecond(pos[0], pos[1]);
-		ordenarJagged(pos);
-		coor = pos;
-		finLS = false;
-	} else if (finSS) {
-		var pos = savePos.pop();		
-		connectorPickFirst(pos[0], pos[1]);
-		connectorPickSecond(coor[0], coor[1] - 20);
-		ordenarJagged(coor);
-		savePos.push(pos);
-		finSS = false;
-	} else if (reproIni) {
-		var pos = savePos.pop();
-		connectorPickFirst(pos[0], pos[1]);
-		connectorPickSecond(coor[0], coor[1] + 20);
-		CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
-		ordenarJagged(pos);
-		reproIni = false;
-	} else {
-		connectorType = Connector.TYPE_STRAIGHT;
-		if (reprocesa) {
-			connectorPickFirst(coor[0], coor[1] + 50);
-			connectorPickSecond(coor[0], coor[1] + 20);
-		} else {
-			connectorPickFirst(coor[0], coor[1] - 50);
-			connectorPickSecond(coor[0], coor[1] - 20);
-		}
-		if (opciones) opciones = false;
-	}
-	var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-	History.addUndo(cmdCreateCon);
+    connectorType = Connector.TYPE_JAGGED;
+    if (finLS) {
+        var pos = savePos.pop();
+        connectorPickFirst(coor[0], coor[1] - disFigCon);
+        connectorPickSecond(pos[0], pos[1]);
+        ordenarJagged(pos);
+        coor = pos;
+        finLS = false;
+    } else if (finSS) {
+        var pos = savePos.pop();
+        connectorPickFirst(pos[0], pos[1]);
+        connectorPickSecond(coor[0], coor[1] - tamFig / 2);
+        ordenarJagged(coor);
+        savePos.push(pos);
+        finSS = false;
+    } else if (reproIni) {
+        var pos = savePos.pop();
+        connectorPickFirst(pos[0], pos[1]);
+        connectorPickSecond(coor[0], coor[1] + tamFig / 2);
+        CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
+        ordenarJagged(pos);
+        reproIni = false;
+    } else {
+        connectorType = Connector.TYPE_STRAIGHT;
+        if (reprocesa) {
+            connectorPickFirst(coor[0], coor[1] + disFigCon);
+            connectorPickSecond(coor[0], coor[1] + tamFig / 2);
+        } else {
+            connectorPickFirst(coor[0], coor[1] - disFigCon);
+            connectorPickSecond(coor[0], coor[1] - tamFig / 2);
+        }
+        if (opciones) opciones = false;
+    }
+    var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+    History.addUndo(cmdCreateCon);
 }
 
 function conectorBuildFull(jagg, xy1, xy2, filled) {
-	jagg ? connectorType = Connector.TYPE_JAGGED : connectorType = Connector.TYPE_STRAIGHT;
-	connectorPickFirst(xy1[0], xy1[1]);
-	connectorPickSecond(xy2[0], xy2[1]);
-	if (filled) CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
-	var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
-	History.addUndo(cmdCreateCon);
+    jagg ? connectorType = Connector.TYPE_JAGGED : connectorType = Connector.TYPE_STRAIGHT;
+    connectorPickFirst(xy1[0], xy1[1]);
+    connectorPickSecond(xy2[0], xy2[1]);
+    if (filled) CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
+    var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
+    History.addUndo(cmdCreateCon);
 }
 
 function figureBuild(figureFunction, x, y) {
@@ -4522,8 +4580,8 @@ function figureBuild(figureFunction, x, y) {
     History.addUndo(cmdCreateFig);
 }
 
-function cleanStates() {	
-    reprocesa ? coor[1] -= 70 : coor[1] += 70;
+function cleanStates() {
+    reprocesa ? coor[1] -= disFig : coor[1] += disFig;
     state = STATE_NONE;
     selectedFigureId = -1;
     selectedConnectorId = -1;
@@ -4537,11 +4595,11 @@ function cleanStates() {
 
 function growCanvas() {
     if (lienzo[1] <= coor[1]) {
-        lienzo[1] += 100;
+        lienzo[1] += distLine;
         var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
         grow.execute();
     } else if (lienzo[0] <= coor[0]) {
-        lienzo[0] += 100;
+        lienzo[0] += distLine;
         var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
         grow.execute();
         //Utilizar el selecionar multiple para seleccionar todas las figuras
@@ -4566,8 +4624,8 @@ function ordenarJagged(pos) {
 
     if (finLS) {
         turns[1].x = turns[0].x;
-        turns[1].y = turns[0].y + 30;
-        turns[2].x = turns[1].x + 75;
+        turns[1].y = turns[0].y + disCon;
+        turns[2].x = turns[1].x + distLine / 2;
         turns[2].y = turns[1].y;
         if (turns[3].y != pos[1]) {
             turns[3].x = turns[2].x;
@@ -4582,12 +4640,12 @@ function ordenarJagged(pos) {
         turns[2].y = turns[1].y;
         turns[3] = turns[2];
     } else if (reprocesa) {
-        reproIni ? turns[1].y = turns[0].y + 15 : turns[1].y = turns[0].y - 15;
+        reproIni ? turns[1].y = turns[0].y + disCon / 2 : turns[1].y = turns[0].y - disCon / 2;
         turns[2].y = turns[1].y;
         if (pos[1] != turns[0].y) {
-            turns[2].x = turns[1].x - 50;
+            turns[2].x = turns[1].x - disFigCon;
             turns[3].x = turns[2].x;
-            turns[3].y = pos[1] - 15;
+            turns[3].y = pos[1] - disCon / 2;
             var turn4 = turns[3].clone();
             var turn5 = turns.pop();
             turn4.x = pos[0];
@@ -4627,48 +4685,50 @@ function especial(accion) {
     if (primer) {
         //TODO Preguntar las acciones que se pueden dentro de otras
         switch (accion) {
-
             case 'newLE':
-                figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
-                conectorBuild();
-                coor[1] -= 20;
-                savePos.push(coor);
-                lineas[0]++;
-                coor = [coor[0] - (150 * (lineas[0] - lineas[1])), 60];
-                figureBuild(window.figure_LineInit, coor[0] - 30, coor[1]);
-                lineas[1]++;
-                document.getElementById('btnLE').disabled = false;
-                especialSelect(true);
+                if (coor[1] != (iniY + disFig)) {
+                    figureBuild(window.figure_NewLS, coor[0], coor[1] - tamFig / 2);
+                    conectorBuild();
+                    coor[1] -= tamFig / 2;
+                    savePos.push(coor);
+                    lineas[0]++;
+                    coor = [coor[0] - (distLine * (lineas[0] - lineas[1])), iniY];
+                    figureBuild(window.figure_LineInit, coor[0] - disCon, coor[1]);
+                    lineas[1]++;
+                    document.getElementById('btnLE').disabled = false;
+                    especialSelect(true);
+                } else {
+                    errorDiv('Debe poseer al menos un proceso');
+                    clean = false;
+                }
                 break;
-
             case 'endLE':
-				if (lineas[1] != 1) {
-					if (coor[1] != 130) {
-						finLS = true;
-						conectorBuild();
-						lineas[1]--;
-						coor[1] -= 20;
-						if (lineas[1] == 1) {
-							document.getElementById('btnLE').disabled = true;
-							especialSelect(false);
-						}
-					} else {
-						errorDiv('Debe poseer al menos un proceso');
-						clean = false;
-					}
-				}
+                if (lineas[1] != 1) {
+                    if (coor[1] != (iniY + disFig)) {
+                        finLS = true;
+                        conectorBuild();
+                        lineas[1]--;
+                        coor[1] -= tamFig / 2;
+                        if (lineas[1] == 1) {
+                            document.getElementById('btnLE').disabled = true;
+                            especialSelect(false);
+                        }
+                    } else {
+                        errorDiv('Debe poseer al menos un proceso');
+                        clean = false;
+                    }
+                }
                 break;
-
             case 'newLS':
                 if (lineas[1] == 1) {
                     lineas[2]++;//Numero de salidas activas
-                    figureBuild(window.figure_NewSS, coor[0], coor[1] - 20);
+                    figureBuild(window.figure_NewSS, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
-                    coor[1] -= 20;
+                    coor[1] -= tamFig / 2;
                     savePos.push(coor);
-                    coor = [coor[0] + 150, coor[1]];
+                    coor = [coor[0] + distLine, coor[1]];
                     finSS = true;
-                    coor[1] -= 30;
+                    coor[1] -= disCon;
                     document.getElementById('btnLS').disabled = false;
                     especialSelect(true);
                 } else {
@@ -4676,39 +4736,35 @@ function especial(accion) {
                     clean = false;
                 }
                 break;
-
             case 'endLS':
                 if (lineas[2] != 0) {
                     lineas[2]--;
                     var pos = savePos.pop();
                     coor = pos;
-                    coor[1] -= 20;
+                    coor[1] -= tamFig / 2;
                     if (lineas[2] == 0) {
                         document.getElementById('btnLS').disabled = true;
                         especialSelect(false);
                     }
                 }
                 break;
-
             case 'repetir'://TODO la repeticion se hacen en la parte superior, en rotationCoords[1] usa el superior.
                 clean = false;
                 if (document.getElementById('repIn').value != "" && document.getElementById('repOut').value != "") {
                     var figIni = STACK.figureGetById(document.getElementById('repIn').value);
                     var figFin = STACK.figureGetById(document.getElementById('repOut').value);
                     if (figFin != figIni) {
-                        var coorIn = [figIni.rotationCoords[0].x - 20, figIni.rotationCoords[0].y];
-                        var coorOut = [figFin.rotationCoords[0].x - 20, figFin.rotationCoords[0].y];
-                        if (figIni.primitives[1].str.split("", 1) == 'A') {
-                            coorIn[0] += 10;
-                        }
-                        if (figFin.primitives[1].str.split("", 1) == 'A') {
-                            coorOut[0] += 10;
-                        }
+                        var coorIn = [figIni.rotationCoords[0].x - tamFig / 2, figIni.rotationCoords[0].y];
+                        var coorOut = [figFin.rotationCoords[0].x - tamFig / 2, figFin.rotationCoords[0].y];
+                        if (figIni.primitives[1].str.split("", 1) == 'A')
+                            coorIn[0] += tamFig / 4;
+                        if (figFin.primitives[1].str.split("", 1) == 'A')
+                            coorOut[0] += tamFig / 4;
                         if (coorIn[0] == coorOut[0]) {
                             if (coorIn[1] > coorOut[1]) {
-                            	conectorBuildFull(true, coorIn, coorOut, true);
-                            	coor[1]-=70;
-                            	clean = true;
+                                conectorBuildFull(true, coorIn, coorOut, true);
+                                coor[1] -= disFig;
+                                clean = true;
                             } else {
                                 errorDiv("La repetcion no puede ser inversa");
                             }
@@ -4720,88 +4776,74 @@ function especial(accion) {
                     }
                 } else {
                     errorDiv("Los valores no pueden ser nulos");
-                }                                
+                }
                 break;
-
             case 'reproIn'://TODO Añadir limitador de linea
-                var error = true;
+                clean = false;
                 var textError = "";
                 if (document.getElementById('proIn').value != "") {
                     savePos.push(coor);
                     var figIni = STACK.figureGetById(document.getElementById('proIn').value);
-                    var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + 20];
-                    coor = [coorIn[0] + 100, coorIn[1] - 20];
+                    var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + tamFig / 2];
+                    coor = [coorIn[0] + disLinMin, coorIn[1] - tamFig / 2];
                     savePos.push(coorIn);
                     reprocesa = true;
                     reproIni = true;
-                    clean = false;
-                    error = false;
                     document.getElementById('btnRepOut').disabled = false;
                     document.getElementById('btnRepIn').disabled = true;
                     especialSelect(true);
                 } else {
-                    textError = "El valor no pueden ser nulo";
-                }
-                if (error) {
-                    errorDiv(textError);
-                    clean = false;
+                    errorDiv("El valor no pueden ser nulo");
                 }
                 break;
-
             case 'reproOut'://TODO Añadir limitador de hacia abajo y de linea
-                var error = true;
+                clean = false;
                 var textError = "";
                 if (!reproIni) {
                     if (document.getElementById('proOut').value != "") {
                         var figFin = STACK.figureGetById(document.getElementById('proOut').value);
-                        var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - 20];
-                        coor[1] += 50;
+                        var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - tamFig / 2];
+                        coor[1] += disFigCon;
                         conectorBuildFull(true, coor, coorOut, true);
                         ordenarJagged(coorOut);
-                        coor = savePos.pop();                       
-                        coor[1] -= 70;
+                        coor = savePos.pop();
+                        coor[1] -= disFig;
                         reprocesa = false;
-                        error = false;
+                        clean = true;
                         document.getElementById('btnRepOut').disabled = true;
                         document.getElementById('btnRepIn').disabled = false;
                         especialSelect(false);
                     } else {
-                        textError = "El valor no pueden ser nulo";
+                        errorDiv("El valor no pueden ser nulo");
                     }
                 } else {
-                    textError = "Debe haber al menos un proceso";
-                }
-                if (error) {
-                    errorDiv(textError);
-                    clean = false;
+                    errorDiv("Debe haber al menos un proceso");
                 }
                 break;
-
             case 'trayGen':
-            	var options = parseInt(document.getElementById('trayNum').value);
-                if (options >= 2 && options <= 8) {                    
-                    figureBuild(window.figure_NewLS, coor[0], coor[1] - 20);
+                var options = parseInt(document.getElementById('trayNum').value);
+                if (options >= 2 && options <= 8) {
+                    figureBuild(window.figure_NewLS, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
-                    coor[1] -= 20;
+                    coor[1] -= tamFig / 2;
                     savePos.push(coor);
                     for (var i = 0; i < options; i++) {
-                        trayecto[i] = [(coor[0] - ((options * 50) - 50)) + (100 * i), coor[1] + 30];
+                        trayecto[i] = [(coor[0] - ((options * 50) - (disLinMin / 2))) + (disLinMin * i), coor[1] + disCon];
                     }
                     opciones = true;
                     for (var i = 0; i < trayecto.length; i++) {
                         figureBuild(window.figure_EndSS, trayecto[i][0], trayecto[i][1]);
                         var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
                         conectorBuildFull(!centro, coor, trayecto[i], false);
-                        if (!centro) {
+                        if (!centro)
                             ordenarJagged();
-                        }
-                        trayecto[i][1]-= 20;
-                    }                   
+                        trayecto[i][1] -= tamFig / 2;
+                    }
                     coor = trayecto[0];
                     document.getElementById('trayGen').style.display = 'none';
                     document.getElementById('traySig').style.display = 'block';
                     document.getElementById('trayName').innerHTML = 'Opcion 1';
-                    //especialSelect(true);
+                    especialSelect(true);
                     lineas[3] = options;//Numero de trayectos
                     lineas[4]++;//Trayecto actual
                 } else {
@@ -4809,43 +4851,61 @@ function especial(accion) {
                     clean = false;
                 }
                 break;
+            case 'trayFin':
+                clean = false;
+                if (!opciones) {
+                    if (lineas[3] > lineas[4]) {
+                        coor = trayecto[lineas[4]];
+                        lineas[4]++;
+                        clean = true;
+                        opciones = true;
+                        document.getElementById('trayName').innerHTML = 'Opcion ' + lineas[4];
+                        if (lineas[3] == lineas[4])
+                            document.getElementById('btnFin').value = 'Terminar';
+                    } else if (lineas[3] == lineas[4]) {
+                        document.getElementById('traySig').style.display = 'none';
+                        document.getElementById('trayUnir').style.display = 'block';
+                        var div = document.getElementById('trayChk');
+                        for (var i = 0; i < lineas[4]; i++) {
+                            var text = document.createTextNode("Opcion " + (i + 1));
+                            var br = document.createElement("br");
+                            var check = document.createElement("input");
+                            check.setAttribute("type", "checkbox");
+                            check.setAttribute("name", "opcion");
+                            check.setAttribute("value", i);
+                            div.appendChild(check);
+                            div.appendChild(text);
+                            div.appendChild(br);
+                        }
+                    }
+                } else {
+                    errorDiv('La opcion debe tener al menos un proceso');
+                }
+                break;
 
-            case 'trayFin':	
-            	clean = false;
-				if (!opciones) {
-					if (lineas[3] > lineas[4]) {
-						coor = trayecto[lineas[4]];
-						lineas[4]++;
-						clean = true;
-						opciones = true;
-						document.getElementById('trayName').innerHTML = 'Opcion '+ lineas[4];
-						if (lineas[3] == lineas[4]){
-							document.getElementById('btnFin').value = 'Terminar';
-						}
-					} else if (lineas[3] == lineas[4]) {
-						//TODO remplazar por checkbox o quitar el ctrl
-						document.getElementById('traySig').style.display = 'none';
-                    	document.getElementById('trayUnir').style.display = 'block';
-						var select = document.getElementById('trayChk');
-						for (var i = 0; i < trayecto.length; i++) {
-							select.options[i] = new Option((i + 1) + ' Trayecto', i);
-						}
-					}
-				} else {
-					errorDiv('La opcion debe tener al menos un proceso');
-				}
-	            break;
-
-            case 'trayUnir'://TODO crear la union
-            	var pos = savePos.pop();
-            	for (var i=0; i < trayecto.length; i++) {
-            		if (pos[1] < trayecto[i][1]){
-            			pos[1] = trayecto[i][1];        			
-            		}			   
-				}
-				figureBuild(window.figure_EndSS, pos[0], pos[1]);
-				coor = pos;
-				//savePos.push(coor);
+            case 'trayUnir':
+                var pos = savePos.pop();
+                for (var i = 0; i < trayecto.length; i++) {
+                    if (pos[1] < trayecto[i][1]) {
+                        pos[1] = trayecto[i][1];
+                    }
+                    trayecto[i][1] -= disFigCon;//Reducir punto final para conector
+                }
+                figureBuild(window.figure_EndSS, pos[0], pos[1]);
+                var checks = document.getElementsByName("opcion");
+                for (var i = 0; i < checks.length; i++) {
+                    if (checks[i].checked == true) {
+                        conectorBuildFull(true, trayecto[checks[i].value], pos, false);
+                    }
+                }
+                var div = document.getElementById('trayChk');
+                while (div.hasChildNodes()) {
+                    div.removeChild(list.firstChild);
+                }
+                document.getElementById('trayUnir').style.display = 'none';
+                document.getElementById('trayGen').style.display = 'block';
+                especialSelect(false);
+                coor = pos;
                 break;
 
         }
@@ -4868,7 +4928,7 @@ function errorDiv(textError) {
     if (textError != '') {
         div.innerHTML = textError;
         div.style.display = 'block';
-    } else if (div.style.display != 'none'){
+    } else if (div.style.display != 'none') {
         div.style.display = 'none';
     }
 }

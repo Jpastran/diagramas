@@ -4600,6 +4600,7 @@ function growCanvas() {
         lienzo[0] += distLine;
         var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
         grow.execute();
+        //TODO terminar el crecer lienzo mirar otras maneras
         //Utilizar el selecionar multiple para seleccionar todas las figuras
         // y moverlas usar handle.action(lastMove, x, y); de STATE_GROUP_SELECTED
         // crecer el diagrama primero y despues reducir el valor de coor en x
@@ -4881,7 +4882,7 @@ function especial(accion) {
                 }
                 break;
 
-            case 'trayUnir':
+            case 'trayUnir'://TODO confirmar accion en caso de no union
                 var pos = savePos.pop();
                 for (var i = 0; i < trayecto.length; i++) {
                     if (pos[1] < trayecto[i][1]) {

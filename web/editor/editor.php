@@ -58,17 +58,17 @@ $page = 'editor';
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=9" />
         <script type="text/javascript" src="./assets/javascript/dropdownmenu.js"></script>    
-        
+
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/minimap.css" />
-        
+
         <script type="text/javascript" src="./assets/javascript/json2.js"></script>
         <script type="text/javascript" src="./assets/javascript/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
-        
+
         <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
         <script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>
-               
+
         <script type="text/javascript">
             "use strict";
             /*Option 1:
@@ -79,7 +79,7 @@ $page = 'editor';
              * Option 2:
              * Use http://code.google.com/p/js-uri/
              **/
-            var appURL = '<?=$WEBADDRESS?>';
+            var appURL = '<?= $WEBADDRESS ?>';
             var figureSetsURL = appURL + '/editor/lib/sets';
             var insertImageURL = appURL + '/editor/data/import/';
 
@@ -113,18 +113,18 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/containers.js"></script>
         <script type="text/javascript" src="./lib/importer.js"></script>
         <script type="text/javascript" src="./lib/main.js"></script>
-               
+
         <script type="text/javascript" src="./lib/sets/diagram/diagram.js"></script>
         <!--<script type="text/javascript" src="./lib/sets/basic/basic.js"></script>
         <script type="text/javascript" src="./lib/sets/experimental/experimental.js"></script>
         <script type="text/javascript" src="./lib/sets/network/network.js"></script>
         <script type="text/javascript" src="./lib/sets/secondary/secondary.js"></script>
         <script type="text/javascript" src="./lib/sets/statemachine/statemachine.js"></script>-->
-        
+
         <script type="text/javascript" src="./lib/minimap.js"></script>
 
         <script type="text/javascript" src="./lib/commands/History.js"></script>
-        
+
         <script type="text/javascript" src="./lib/commands/FigureCreateCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/FigureCloneCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/FigureTranslateCommand.js"></script>
@@ -132,7 +132,7 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/commands/FigureScaleCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/FigureZOrderCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/FigureDeleteCommand.js"></script>
-        
+
         <script type="text/javascript" src="./lib/commands/GroupRotateCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/GroupScaleCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/GroupCreateCommand.js"></script>
@@ -140,33 +140,33 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/commands/GroupDestroyCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/GroupDeleteCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/GroupTranslateCommand.js"></script>
-               
+
         <script type="text/javascript" src="./lib/commands/ContainerCreateCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/ContainerDeleteCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/ContainerTranslateCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/ContainerScaleCommand.js"></script>
-        
+
         <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js"></script>                                
         <script type="text/javascript" src="./lib/commands/ConnectorAlterCommand.js"></script>
-        
+
         <script type="text/javascript" src="./lib/commands/ShapeChangePropertyCommand.js"></script>
-        
+
         <script type="text/javascript" src="./lib/commands/CanvasChangeColorCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/CanvasChangeSizeCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/CanvasFitCommand.js"></script>
 
         <script type="text/javascript" src="./lib/commands/InsertedImageFigureCreateCommand.js"></script>
-      
+
         <script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/colorPicker_new.css" />
-        
+
         <!--[if IE]>
         <script src="./assets/javascript/excanvas.js"></script>
         <![endif]-->
-       
+
     </head>
-    <body onload="init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId']:''?>');" id="body">      
+    <body onload="init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : '' ?>');" id="body">      
         <? require_once dirname(__FILE__) . '/header.php'; ?>
         <div id="actions">
 
@@ -250,12 +250,12 @@ $page = 'editor';
                 <div id="figures">
                     <select style="width: 120px;" onchange="setFigureSet(this.options[this.selectedIndex].value);">
                         <script>
-                                "use strict";
-                                for (var setName in figureSets) {
-                                        var set = figureSets[setName];
-                                        document.write('<option value="' + setName + '">' + set['name'] + '</option>');
-                                }
-                                buildPanel();
+                            "use strict";
+                            for (var setName in figureSets) {
+                                var set = figureSets[setName];
+                                document.write('<option value="' + setName + '">' + set['name'] + '</option>');
+                            }
+                            buildPanel();
                         </script>
                     </select>
                 </div>
@@ -343,7 +343,7 @@ $page = 'editor';
                 </div>
             </div>
         </div>
-        
+
         <!--The import panel-->
         <div id="import-dialog" style="background-color: white; display: none; margin-top: auto; margin-bottom: auto;">
             <form action="./common/controller.php" method="POST" enctype="multipart/form-data">
@@ -384,26 +384,26 @@ $page = 'editor';
                 </div>
             </form>
         </div>
-        
+
         <!--Insert Image hidden iframe-->
         <iframe id="upload_target" name="upload_target" style="width:0;height:0;border:0px;"></iframe>
 
         <script type="text/javascript">
             "use strict";
-            function loadFill(check){
-                if(check.checked === true){
-                    if($('#colorpickerHolder3').css('display') === 'none'){
+            function loadFill(check) {
+                if (check.checked === true) {
+                    if ($('#colorpickerHolder3').css('display') === 'none') {
                         $('#colorSelector3').click();
                     }
                 }
-                else{
-                    if($('#colorpickerHolder3').css('display') === 'block'){
+                else {
+                    if ($('#colorpickerHolder3').css('display') === 'block') {
                         $('#colorSelector3').click();
                     }
                 }
             }
         </script>
         <br/>
-         <? //require_once dirname(__FILE__) . '/common/analytics.php';?>
+        <? //require_once dirname(__FILE__) . '/common/analytics.php';?>
     </body>
 </html>

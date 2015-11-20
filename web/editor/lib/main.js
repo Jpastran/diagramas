@@ -4415,13 +4415,11 @@ function touchCancel(event){
 //TODO Corregir autoID o generar la numeracion de forma automatica eliminado y renumeracion.
 //TODO Corregir nivel de los conectores.
 //TODO Buscar en buildgenerate las propiedades de las figuras.
-//TODO console.log(STACK.figures[1].primitives); //Crear metodo a partir de aqui para renombrar en caso de borrado.
 //TODO correjir posiciones en caso de borrado o generar posicion mas baja a partir de busqueda.
 //TODO opcional crear los grupos nuevos segun(Entrada, salida, simbolos, otros).
 //TODO opcional agregar parametros de (descripcion, tiempo y distancia).
 //TODO opcional agregar al lienzo (Nombre del Proceso).
 //TODO opcional agregar a linea init (Componente Principal, Material Componente Principal) en texto.
-//TODO estandarizar los valores del usados para las coordenadas(no quedar numero suelto).
 //TODO crear un metodo y boton para terminar el diagrama.
 
 /***

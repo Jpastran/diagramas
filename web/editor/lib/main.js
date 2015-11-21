@@ -4495,7 +4495,7 @@ var opciones = false;
 
 function lineaPrincipal() {
     if (!primer) {
-        figureBuild(window.figure_LineInit, coor[0] - (tamFig * 0.75), coor[1]);
+        figureBuild(window.figure_LineInit, coor[0] - tamFig, coor[1]);
         coor[1] += 70;
         lineas[0]++;//Numero de lineas de entrada
         lineas[1]++;//Linea de entrada actual y principal = 1
@@ -4507,11 +4507,11 @@ function canvasBuild(figureFunction) {
     createFigureFunction = figureFunction;
     lineaPrincipal();
     if (window.createFigureFunction == window.figure_LineIn) {
-        figureBuild(window.createFigureFunction, coor[0] - tamFig * 0.75, coor[1] - tamFig * 0.75);
+        figureBuild(window.createFigureFunction, coor[0] - tamFig, coor[1] - tamFig * 0.75);
         conectorBuild();
         coor[1] -= tamFig;
     } else if (window.createFigureFunction == window.figure_LineOut) {
-        figureBuild(window.createFigureFunction, coor[0] + tamFig * 0.75, coor[1] - tamFig * 0.75);
+        figureBuild(window.createFigureFunction, coor[0] + tamFig, coor[1] - tamFig * 0.75);
         conectorBuild();
         coor[1] -= tamFig;
     } else if (window.createFigureFunction == window.figure_LineDouble) {
@@ -4687,13 +4687,13 @@ function especial(accion) {
         switch (accion) {
             case 'newLE':
                 if (coor[1] != (iniY + disFig)) {
-                    figureBuild(window.figure_NewLS, coor[0], coor[1] - tamFig / 2);
+                    figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
                     coor[1] -= tamFig / 2;
                     savePos.push(coor);
                     lineas[0]++;
                     coor = [coor[0] - (distLine * (lineas[0] - lineas[1])), iniY];
-                    figureBuild(window.figure_LineInit, coor[0] - disCon, coor[1]);
+                    figureBuild(window.figure_LineInit, coor[0] - tamFig, coor[1]);
                     lineas[1]++;
                     document.getElementById('btnLE').disabled = false;
                     especialSelect(true);
@@ -4823,7 +4823,7 @@ function especial(accion) {
             case 'trayGen':
                 var options = parseInt(document.getElementById('trayNum').value);
                 if (options >= 2 && options <= 8) {
-                    figureBuild(window.figure_NewLS, coor[0], coor[1] - tamFig / 2);
+                    figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
                     coor[1] -= tamFig / 2;
                     savePos.push(coor);
@@ -4891,7 +4891,7 @@ function especial(accion) {
                     }
                     trayecto[i][1] -= disFigCon;//Reducir punto final para conector
                 }
-                figureBuild(window.figure_EndSS, pos[0], pos[1]);
+                figureBuild(window.figure_MultiPoint, pos[0], pos[1]);
                 var checks = document.getElementsByName("opcion");
                 for (var i = 0; i < checks.length; i++) {
                     if (checks[i].checked == true) {

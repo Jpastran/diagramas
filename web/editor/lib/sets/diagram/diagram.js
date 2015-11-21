@@ -79,7 +79,7 @@ function figure_Square(x, y) {
     r.addPoint(new Point(x + FigureDefaults.segmentSize, y));
     r.addPoint(new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize));
     r.addPoint(new Point(x, y + FigureDefaults.segmentSize));
-    
+
     var f = new Figure("Square");
     f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
@@ -181,7 +181,7 @@ function figure_TriangleInvert(x, y) {
 
 function figure_SemiCircleRight(x, y) {
     var c = new Arc(x + FigureDefaults.segmentSize / 4, y, FigureDefaults.radiusSize, 270, 450, false, 0);
-    
+
     var p = new Polyline();
     p.addPoint(new Point(x + FigureDefaults.segmentSize / 4, y - FigureDefaults.radiusSize));
     p.addPoint(new Point(x, y - FigureDefaults.radiusSize));
@@ -207,8 +207,8 @@ function figure_SemiCircleRight(x, y) {
     var t2 = new Text('D-' + dId, x + FigureDefaults.radiusSize / 2 + 5, y, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
     dId++;
-	f.addPrimitive(c);
-	f.addPrimitive(p);  
+    f.addPrimitive(c);
+    f.addPrimitive(p);
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.radiusSize / 2 + 5, y - FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
@@ -264,17 +264,14 @@ function figure_Arrow(x, y) {
 
 
 function figure_LineInit(x, y) {
-
     var p = new Polyline();
     p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 2));//0,20
-    p.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentSize / 2));//60,20
-    p.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentSize));//60,40	
+    p.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentSize / 2));//80,20
+    p.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentSize));//80,40	
 
     var q = new Polyline();
-    q.addPoint(new Point(x, y + FigureDefaults.segmentSize / 2));//0,20
     q.addPoint(new Point(x, y));//0,0
-    q.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y));//60,0
-    q.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentSize / 2));//60,20
+    q.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y));//80,0
     q.style.globalAlpha = 0;
 
     var r = new Path();
@@ -282,7 +279,6 @@ function figure_LineInit(x, y) {
     r.addPrimitive(q);
 
     var f = new Figure("LineInit");
-    //f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
@@ -293,7 +289,6 @@ function figure_LineInit(x, y) {
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    //f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
 
@@ -304,7 +299,7 @@ function figure_LineInit(x, y) {
 
     f.addPrimitive(t2);
 
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();
     return f;
@@ -314,21 +309,24 @@ function figure_LineIn(x, y) {
 
     var p = new Polyline();
     p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 2));//0,20
-    p.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentSize / 2));//60,20
+    p.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentSize / 2));//60,20
 
     var q = new Polyline();
-    q.addPoint(new Point(x, y + FigureDefaults.segmentSize / 2));//0,20
     q.addPoint(new Point(x, y));//0,0
-    q.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y));//60,0
-    q.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentSize / 2));//60,20
+    q.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y));//80,0
     q.style.globalAlpha = 0;
+
+    var t = new Polygon();
+    t.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentSize / 2));
+    t.addPoint(new Point(x - 6 + FigureDefaults.segmentSize * 2, y - 2 + FigureDefaults.segmentSize / 2));
+    t.addPoint(new Point(x - 6 + FigureDefaults.segmentSize * 2, y + 2 + FigureDefaults.segmentSize / 2));
+    t.style.fillStyle = FigureDefaults.strokeStyle;
 
     var r = new Path();
     r.addPrimitive(p);
     r.addPrimitive(q);
 
     var f = new Figure("LineIn");
-    //f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
@@ -339,18 +337,18 @@ function figure_LineIn(x, y) {
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    //f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
 
     f.addPrimitive(r);
+    f.addPrimitive(t);
 
-    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentShortSize, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentSize / 2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentSize / 2), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();
     return f;
@@ -360,22 +358,24 @@ function figure_LineOut(x, y) {
 
     var p = new Polyline();
     p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 2));//0,20
-    p.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentSize / 2));//60,20
+    p.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentSize / 2));//80,20
 
     var q = new Polyline();
-    q.addPoint(new Point(x, y + FigureDefaults.segmentSize / 2));//0,20
     q.addPoint(new Point(x, y));//0,0
-    q.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y));//60,0
-    q.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentSize / 2));//60,20
+    q.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y));//80,0
     q.style.globalAlpha = 0;
-    
+
+    var t = new Polygon();
+    t.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentSize / 2));
+    t.addPoint(new Point(x - 6 + FigureDefaults.segmentSize * 2, y - 2 + FigureDefaults.segmentSize / 2));
+    t.addPoint(new Point(x - 6 + FigureDefaults.segmentSize * 2, y + 2 + FigureDefaults.segmentSize / 2));
+    t.style.fillStyle = FigureDefaults.strokeStyle;
 
     var r = new Path();
     r.addPrimitive(p);
     r.addPrimitive(q);
 
     var f = new Figure("LineOut");
-    //f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
@@ -386,18 +386,17 @@ function figure_LineOut(x, y) {
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    //f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
 
     f.addPrimitive(r);
+    f.addPrimitive(t);
 
-    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentShortSize, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
-    //CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize / 2), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();
@@ -408,18 +407,17 @@ function figure_LineDouble(x, y) {
 
     var p = new Polyline();
     p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 4));//0,10
-    p.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentSize / 4));//60,10
+    p.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentSize / 4));//80,10
 
     var q = new Polyline();
     q.addPoint(new Point(x, y + FigureDefaults.segmentShortSize));//0,30
-    q.addPoint(new Point(x + FigureDefaults.segmentSize * 1.5, y + FigureDefaults.segmentShortSize));//60,30
+    q.addPoint(new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentShortSize));//80,30
 
     var r = new Path();
     r.addPrimitive(p);
     r.addPrimitive(q);
 
     var f = new Figure("LineDouble");
-    //f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
@@ -430,123 +428,43 @@ function figure_LineDouble(x, y) {
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    //f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
 
     f.addPrimitive(r);
 
-    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentShortSize, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentShortSize, y + FigureDefaults.segmentSize / 4), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentShortSize, y + FigureDefaults.segmentShortSize), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 4), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentShortSize), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();
     return f;
 }
 
 
-function figure_NewLS(x, y) {
+function figure_MultiPoint(x, y) {
 
     var innerCircleRadius = 2;
-    var outerCircleRadius = 6;
+    var outerCircleRadius = 8;
 
     var oc = new Arc(x, y, outerCircleRadius, 0, 360, false, 0);
-    oc.style.fillStyle = "#FFFFFF";
-    oc.style.strokeStyle = '#000000';
+    oc.style.globalAlpha = 0;
 
     var ic = new Arc(x, y, innerCircleRadius, 0, 360, false, 0);
-    ic.style.fillStyle = "#000000";
-    ic.style.strokeStyle = '#000000';
 
-    var f = new Figure("NewLS");
+    var f = new Figure("MultiPoint");
     f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
 
-    f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
 
     f.addPrimitive(oc);
     f.addPrimitive(ic);
-
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y), ConnectionPoint.TYPE_FIGURE);
-
-    f.finalise();
-    return f;
-}
-
-function figure_EndLS(x, y) {
-    var circleRadius = 5;
-
-    var c = new Arc(x, y, circleRadius, 0, 360, false, 0);
-
-    var f = new Figure("EndLS");
-    f.style.fillStyle = "#000000";
-    f.style.strokeStyle = FigureDefaults.strokeStyle;
-
-    f.addPrimitive(c);
-
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y), ConnectionPoint.TYPE_FIGURE);
-
-    f.finalise();
-    return f;
-}
-
-function figure_NewSS(x, y) {
-
-    var innerCircleRadius = 2;
-    var outerCircleRadius = 6;
-
-    var oc = new Arc(x, y, outerCircleRadius, 0, 360, false, 0);
-    oc.style.fillStyle = "#FFFFFF";
-    oc.style.strokeStyle = '#000000';
-
-    var ic = new Arc(x, y, innerCircleRadius, 0, 360, false, 0);
-    ic.style.fillStyle = "#FFFFFF";
-    ic.style.strokeStyle = '#000000';
-
-    var f = new Figure("NewSS");
-    f.style.fillStyle = FigureDefaults.fillStyle;
-    f.style.strokeStyle = FigureDefaults.strokeStyle;
-
-    f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
-    f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
-
-    f.addPrimitive(oc);
-    f.addPrimitive(ic);
-
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y), ConnectionPoint.TYPE_FIGURE);
-
-    f.finalise();
-    return f;
-}
-
-function figure_EndSS(x, y) {
-
-    var circleRadius = 5;
-    var point = 1;
-
-    var c = new Arc(x, y, circleRadius, 0, 360, false, 0);
-    var p = new Arc(x, y, point, 0, 360, false, 0);
-
-    var f = new Figure("EndSS");
-    f.style.fillStyle = "#FFFFFF";
-    f.style.strokeStyle = FigureDefaults.strokeStyle;
-
-    f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
-    f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
-
-    f.addPrimitive(c);
-    f.addPrimitive(p);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y), ConnectionPoint.TYPE_FIGURE);
 

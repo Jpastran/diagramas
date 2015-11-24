@@ -4595,38 +4595,38 @@ function cleanStates() {
 }
 
 function growCanvas() {
-	if (lienzo[1] <= coor[1]) {
-		lienzo[1] += distLine;
-		var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
-		grow.execute();
-	} else if (lienzo[0] <= coor[0]) {
-		lienzo[0] += distLine;
-		var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
-		grow.execute();
-	} else if (0 >= coor[0]) {
-		var workAreaBounds = STACK.getWorkAreaBounds();
-		var cmdCanvasFit = new CanvasFitCommand(
-			lienzo[0], 
-			lienzo[1], 
-			workAreaBounds[0] - DIAGRAMO.CANVAS_FIT_PADDING - tamFig / 4,
-			workAreaBounds[1] - DIAGRAMO.CANVAS_FIT_PADDING - tamFig / 4
-		);
-		cmdCanvasFit.execute();
-		History.addUndo(cmdCanvasFit);
-		coor[0]+=150;
-		for (var i=0; i < savePos.length; i++) {
-		  savePos[i][0]+=150;
-		}
-	}
+    if (lienzo[1] <= coor[1]) {
+        lienzo[1] += distLine;
+        var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
+        grow.execute();
+    } else if (lienzo[0] <= coor[0]) {
+        lienzo[0] += distLine;
+        var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
+        grow.execute();
+    } else if (0 >= coor[0]) {
+        var workAreaBounds = STACK.getWorkAreaBounds();
+        var cmdCanvasFit = new CanvasFitCommand(
+                lienzo[0],
+                lienzo[1],
+                workAreaBounds[0] - DIAGRAMO.CANVAS_FIT_PADDING - tamFig / 4,
+                workAreaBounds[1] - DIAGRAMO.CANVAS_FIT_PADDING - tamFig / 4
+                );
+        cmdCanvasFit.execute();
+        History.addUndo(cmdCanvasFit);
+        coor[0] += 150;
+        for (var i = 0; i < savePos.length; i++) {
+            savePos[i][0] += 150;
+        }
+    }
 }
 
 function dropFigure() {
-	createFigureFunction = null;
-	selectedFigureThumb = null;
-	state = STATE_NONE;
-	if (document.getElementById('draggingThumb') != null) {
-		document.getElementById('draggingThumb').style.display = 'none';
-	}
+    createFigureFunction = null;
+    selectedFigureThumb = null;
+    state = STATE_NONE;
+    if (document.getElementById('draggingThumb') != null) {
+        document.getElementById('draggingThumb').style.display = 'none';
+    }
 }
 
 function ordenarJagged(pos) {
@@ -4670,23 +4670,23 @@ function ordenarJagged(pos) {
 }
 
 function ordenarDelta(align, delta, index) {
-	var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
-	if (con != null) {
-		var translationMatrix = align == 'v' ? Matrix.translationMatrix(0, delta) : Matrix.translationMatrix(delta, 0);
-		con.turningPoints[index - 1].transform(translationMatrix);
-		con.turningPoints[index].transform(translationMatrix);
-		con.addUserChange({
-			align : align,
-			delta : delta,
-			index : index - 1
-		});
-		con.addUserChange({
-			align : align,
-			delta : delta,
-			index : index
-		});
-		con.updateMiddleText();
-	}
+    var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
+    if (con != null) {
+        var translationMatrix = align == 'v' ? Matrix.translationMatrix(0, delta) : Matrix.translationMatrix(delta, 0);
+        con.turningPoints[index - 1].transform(translationMatrix);
+        con.turningPoints[index].transform(translationMatrix);
+        con.addUserChange({
+            align: align,
+            delta: delta,
+            index: index - 1
+        });
+        con.addUserChange({
+            align: align,
+            delta: delta,
+            index: index
+        });
+        con.updateMiddleText();
+    }
 }
 
 var selectEspecial = 'entrada';
@@ -4712,9 +4712,9 @@ function setEspecial(nombre) {
 }
 
 function especial(accion) {
-	//TODO Agregar correcion de superposicion en los casos de linea nueva
+    //TODO Agregar correcion de superposicion en los casos de linea nueva
     var clean = true;
-    if (primer) {      
+    if (primer) {
         switch (accion) {
             case 'newLE':
                 if (coor[1] != (iniY + disFig)) {
@@ -4789,10 +4789,10 @@ function especial(accion) {
                         var coorOut = [figFin.rotationCoords[1].x, figFin.rotationCoords[1].y];
                         if (coorIn[0] == coorOut[0]) {
                             if (coorIn[1] > coorOut[1]) {
-                                conectorBuildFull(true, coorIn, coorOut, true);	
-								ordenarDelta('h', -disLinMin, 3);
-								ordenarDelta('v', -disCon / 2, 2);
-								ordenarDelta('v', disCon / 2, 4); 
+                                conectorBuildFull(true, coorIn, coorOut, true);
+                                ordenarDelta('h', -disLinMin, 3);
+                                ordenarDelta('v', -disCon / 2, 2);
+                                ordenarDelta('v', disCon / 2, 4);
                                 clean = true;
                                 coor[1] -= disFig;
                             } else {
@@ -4812,59 +4812,59 @@ function especial(accion) {
                 clean = false;
                 var textError = "";
                 if (document.getElementById('proIn').value != "") {
-                	if(lineas[1] == 1){
-	                    savePos.push(coor);
-	                    var figIni = STACK.figureGetById(document.getElementById('proIn').value);
-	                    var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + tamFig / 2];
-	                    coor = [coorIn[0] + disLinMin, coorIn[1] - tamFig / 2];
-	                    savePos.push(coorIn);
-	                    reprocesa = true;
-	                    reproIni = true;
-	                    document.getElementById('btnRepOut').disabled = false;
-	                    document.getElementById('proIn').disabled = true;
-	                    document.getElementById('btnRepIn').disabled = true;
-	                    especialSelect(true);
-                   } else {
-                   		errorDiv('Solo se permite en la linea principal');
-                   }
+                    if (lineas[1] == 1) {
+                        savePos.push(coor);
+                        var figIni = STACK.figureGetById(document.getElementById('proIn').value);
+                        var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + tamFig / 2];
+                        coor = [coorIn[0] + disLinMin, coorIn[1] - tamFig / 2];
+                        savePos.push(coorIn);
+                        reprocesa = true;
+                        reproIni = true;
+                        document.getElementById('btnRepOut').disabled = false;
+                        document.getElementById('proIn').disabled = true;
+                        document.getElementById('btnRepIn').disabled = true;
+                        especialSelect(true);
+                    } else {
+                        errorDiv('Solo se permite en la linea principal');
+                    }
                 } else {
                     errorDiv("El valor no pueden ser nulo");
                 }
                 break;
             case 'reproOut':
-				clean = false;
-				var textError = "";
-				if (!reproIni) {
-					if (document.getElementById('proOut').value != "") {
-						var figFin = STACK.figureGetById(document.getElementById('proOut').value);
-						var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - tamFig / 2];
-						var figIni = STACK.figureGetById(document.getElementById('proIn').value);
-						var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y];
-						if (coorIn[1] > coorOut[1]) {
-							if(coorIn[0] == coorOut[0]) {
-								coor[1] += disFigCon;
-								conectorBuildFull(true, coor, coorOut, true);
-								ordenarJagged(coorOut);
-								coor = savePos.pop();
-								coor[1] -= disFig;
-								reprocesa = false;
-								clean = true;
-								document.getElementById('btnRepOut').disabled = true;
-								document.getElementById('btnRepIn').disabled = false;
-								document.getElementById('proIn').disabled = false;
-								especialSelect(false);
-							} else {
-								errorDiv("El punto de llegada solo es posible en la misma linea");
-							}
-						} else {
-							errorDiv("El punto de llegada no puede ser posterior");
-						}
-					} else {
-						errorDiv("El valor no pueden ser nulo");
-					}
-				} else {
-					errorDiv("Debe haber al menos un proceso");
-				}
+                clean = false;
+                var textError = "";
+                if (!reproIni) {
+                    if (document.getElementById('proOut').value != "") {
+                        var figFin = STACK.figureGetById(document.getElementById('proOut').value);
+                        var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - tamFig / 2];
+                        var figIni = STACK.figureGetById(document.getElementById('proIn').value);
+                        var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y];
+                        if (coorIn[1] > coorOut[1]) {
+                            if (coorIn[0] == coorOut[0]) {
+                                coor[1] += disFigCon;
+                                conectorBuildFull(true, coor, coorOut, true);
+                                ordenarJagged(coorOut);
+                                coor = savePos.pop();
+                                coor[1] -= disFig;
+                                reprocesa = false;
+                                clean = true;
+                                document.getElementById('btnRepOut').disabled = true;
+                                document.getElementById('btnRepIn').disabled = false;
+                                document.getElementById('proIn').disabled = false;
+                                especialSelect(false);
+                            } else {
+                                errorDiv("El punto de llegada solo es posible en la misma linea");
+                            }
+                        } else {
+                            errorDiv("El punto de llegada no puede ser posterior");
+                        }
+                    } else {
+                        errorDiv("El valor no pueden ser nulo");
+                    }
+                } else {
+                    errorDiv("Debe haber al menos un proceso");
+                }
                 break;
             case 'trayGen':
                 var options = parseInt(document.getElementById('trayNum').value);
@@ -4982,27 +4982,27 @@ var stackSelct = -1;
 var stackFigure = -1;
 
 function cargarFiguras(selectId) {
-	var select = document.getElementById(selectId);
-	if (select.length != stackSelct || stackFigure != STACK.figures.length) {
-		var names = [];
-		var ids = [];
-		for (var i = 0; i < STACK.figures.length; i++) {
-			for (var j = 0; j < STACK.figures[i].primitives.length; j++) {
-				if (STACK.figures[i].primitives[j].str !== undefined) {
-					names[i] = STACK.figures[i].primitives[j].str;
-					ids[i] = STACK.figures[i].id;
-				}
-			}
-		}
-		var cont = 0;
-		for (var i = 0; i < STACK.figures.length; i++) {
-			if (names[i] != "Text" && names[i] != null) {
-				select.options[cont] = new Option(names[i], ids[i]);
-				cont++;
-			}
-		}
-		stackSelct = cont;
-		stackFigure = STACK.figures.length;
-	}
-	errorDiv('');
+    var select = document.getElementById(selectId);
+    if (select.length != stackSelct || stackFigure != STACK.figures.length) {
+        var names = [];
+        var ids = [];
+        for (var i = 0; i < STACK.figures.length; i++) {
+            for (var j = 0; j < STACK.figures[i].primitives.length; j++) {
+                if (STACK.figures[i].primitives[j].str !== undefined) {
+                    names[i] = STACK.figures[i].primitives[j].str;
+                    ids[i] = STACK.figures[i].id;
+                }
+            }
+        }
+        var cont = 0;
+        for (var i = 0; i < STACK.figures.length; i++) {
+            if (names[i] != "Text" && names[i] != null) {
+                select.options[cont] = new Option(names[i], ids[i]);
+                cont++;
+            }
+        }
+        stackSelct = cont;
+        stackFigure = STACK.figures.length;
+    }
+    errorDiv('');
 }

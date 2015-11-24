@@ -69,6 +69,8 @@ $page = 'editor';
         <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
         <script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>
 
+		<script type="text/javascript" src="./lib/loadScript.js"></script>
+		
         <script type="text/javascript">
             "use strict";
             /*Option 1:
@@ -90,74 +92,11 @@ $page = 'editor';
                     $('#import-dialog').modal(); // jQuery object; this demo
                 }                
             }
+            loadLibs();
+            loadSets();
+            loadCommands();
         </script>
-        <!-- TODO crear un js de cargar y limpiar innesearios -->
-        <script type="text/javascript" src="./lib/dashed.js"></script>
-        <script type="text/javascript" src="./lib/canvasprops.js"></script>        
-        <script type="text/javascript" src="./lib/style.js"></script>
-        <script type="text/javascript" src="./lib/primitives.js"></script>
-        <script type="text/javascript" src="./lib/ImageFrame.js"></script>
-        <script type="text/javascript" src="./lib/matrix.js"></script>
-        <script type="text/javascript" src="./lib/util.js"></script>
-        <script type="text/javascript" src="./lib/key.js"></script>
-        <script type="text/javascript" src="./lib/groups.js"></script>
-        <script type="text/javascript" src="./lib/stack.js"></script>
-        <script type="text/javascript" src="./lib/connections.js"></script>
-        <script type="text/javascript" src="./lib/connectionManagers.js"></script>
-        <script type="text/javascript" src="./lib/handles.js"></script>
-
-        <script type="text/javascript" src="./lib/builder.js"></script>        
-        <script type="text/javascript" src="./lib/text.js"></script>
-        <script type="text/javascript" src="./lib/log.js"></script>
-        <script type="text/javascript" src="./lib/browserReady.js"></script>
-        <script type="text/javascript" src="./lib/containers.js"></script>
-        <script type="text/javascript" src="./lib/importer.js"></script>
-        <script type="text/javascript" src="./lib/main.js"></script>
-
-        <script type="text/javascript" src="./lib/sets/diagram/diagram.js"></script>
-        <!--<script type="text/javascript" src="./lib/sets/basic/basic.js"></script>
-        <script type="text/javascript" src="./lib/sets/experimental/experimental.js"></script>
-        <script type="text/javascript" src="./lib/sets/network/network.js"></script>
-        <script type="text/javascript" src="./lib/sets/secondary/secondary.js"></script>
-        <script type="text/javascript" src="./lib/sets/statemachine/statemachine.js"></script>-->
-
-        <script type="text/javascript" src="./lib/minimap.js"></script>
-
-        <script type="text/javascript" src="./lib/commands/History.js"></script>
-
-        <script type="text/javascript" src="./lib/commands/FigureCreateCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/FigureCloneCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/FigureTranslateCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/FigureRotateCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/FigureScaleCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/FigureZOrderCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/FigureDeleteCommand.js"></script>
-
-        <script type="text/javascript" src="./lib/commands/GroupRotateCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/GroupScaleCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/GroupCreateCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/GroupCloneCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/GroupDestroyCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/GroupDeleteCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/GroupTranslateCommand.js"></script>
-
-        <script type="text/javascript" src="./lib/commands/ContainerCreateCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/ContainerDeleteCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/ContainerTranslateCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/ContainerScaleCommand.js"></script>
-
-        <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js"></script>                                
-        <script type="text/javascript" src="./lib/commands/ConnectorAlterCommand.js"></script>
-
-        <script type="text/javascript" src="./lib/commands/ShapeChangePropertyCommand.js"></script>
-
-        <script type="text/javascript" src="./lib/commands/CanvasChangeColorCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/CanvasChangeSizeCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/CanvasFitCommand.js"></script>
-
-        <script type="text/javascript" src="./lib/commands/InsertedImageFigureCreateCommand.js"></script>
-
+        
         <script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/colorPicker_new.css" />
 

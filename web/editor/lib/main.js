@@ -4632,20 +4632,28 @@ function dropFigure() {
 function ordenarJagged(pos) {
 
     var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
-
+	
     if (finLS) {
-    	//TODO corregir las formas para punto a punto.
-        turns[1].x = turns[0].x;
-        turns[1].y = turns[0].y + disCon;
-        turns[2].y = turns[1].y;
-        if (turns[3].y != pos[1]) {
-            turns[3].x = turns[2].x;
-            turns[3].y = pos[1];
-        } else {
-            turns[3] = turns[2];
-        }
-        turns[4].x = pos[0];
-        turns[4].y = pos[1];
+		if (turns.length == 4) {
+			turns[1] = turns[0];
+			turns[2] = turns[3];
+		} else {
+			turns[1].x = turns[0].x;
+			turns[1].y = turns[0].y + disCon;
+			turns[2].x = turns[1].x;
+			if (turns[1].y < pos[1]){
+				turns[2].y = pos[1];
+				turns[3] = turns[4];
+			} else {
+				turns[2].x += distLine/2;
+				turns[2].y = turns[1].y;
+				turns[3].x = turns[2].x;
+				turns[3].y = pos[1];
+			}
+			if (turns.length == 6) {
+				turns[4].y = pos[1];
+			}
+		}
     } else if (finSS) {
         turns[1] = turns[0];
         turns[2].y = turns[1].y;

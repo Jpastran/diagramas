@@ -15,7 +15,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-//TODO eliminar figuras sobrantes
 //TODO agregar la propiedad de texto en el builder, para las lineas
 figureSets["diagram"] = {
     name: 'Diagram',
@@ -29,10 +28,6 @@ figureSets["diagram"] = {
         {figureFunction: "LineIn", image: "line_in.png"},
         {figureFunction: "LineOut", image: "line_out.png"},
         {figureFunction: "LineDouble", image: "line_double.png"}
-        //{figureFunction : "NewLS", image : "new_ls.png"},
-        //{figureFunction : "EndLS",image : "end_ls.png"},
-        //{figureFunction : "NewSS", image : "new_ss.png"},
-        //{figureFunction : "EndSS",image : "end_ss.png"}
     ]
 };
 
@@ -104,7 +99,6 @@ function figure_Square(x, y) {
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize / 2), ConnectionPoint.TYPE_FIGURE);
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();
@@ -137,7 +131,6 @@ function figure_Circle(x, y) {
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - FigureDefaults.radiusSize, y), ConnectionPoint.TYPE_FIGURE);
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();
@@ -172,7 +165,6 @@ function figure_TriangleInvert(x, y) {
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 4, y + FigureDefaults.segmentSize / 2), ConnectionPoint.TYPE_FIGURE);
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();
@@ -212,7 +204,6 @@ function figure_SemiCircleRight(x, y) {
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.radiusSize / 2 + 5, y - FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y), ConnectionPoint.TYPE_FIGURE);
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.radiusSize / 2 + 5, y + FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();
@@ -255,7 +246,6 @@ function figure_Arrow(x, y) {
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize / 2), ConnectionPoint.TYPE_FIGURE);
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();

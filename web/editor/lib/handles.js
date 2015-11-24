@@ -62,7 +62,7 @@ Handle.load = function(o){
     newHandle.y = o.y;
     newHandle.visible = o.visible;
     return newHandle;
-}
+};
 
 /**Creates an array of handles from an array of {JSONObject}s
  *@param {Array} v - the array of JSONObjects
@@ -75,7 +75,7 @@ Handle.loadArray = function(v){
         newHandles.push(Handle.load(v[i]));
     }
     return newHandles;
-}
+};
 
 /**Default handle radius*/
 Handle.RADIUS = 3;
@@ -118,7 +118,7 @@ Handle.prototype = {
         var m = this.actionShape(lastMove, newX, newY);
         if(m[0] == 'rotate'){
             //simply ingnore rotate
-            throw "Handles.js -> actionContainer -> rotate should be disabled for Container"
+            throw "Handles.js -> actionContainer -> rotate should be disabled for Container";
 //            var cmdRotate = new ContainerRotateCommand(HandleManager.shape.id, m[1], m[2]);
 //            cmdRotate.execute();
 //            History.addUndo(cmdRotate);
@@ -210,7 +210,7 @@ Handle.prototype = {
             newX = p.x;
             newY = p.y;
 
-            var handlerPoint=new Point(this.x,this.y) //Handler's center point (used to draw it's circle)
+            var handlerPoint=new Point(this.x,this.y); //Handler's center point (used to draw it's circle)
             //rotate that as well.
             handlerPoint.transform(Matrix.translationMatrix(-oldCenter.x,-oldCenter.y));
             handlerPoint.transform(Matrix.rotationMatrix(-angle));
@@ -262,7 +262,7 @@ Handle.prototype = {
                     break;
 
                 case 'ne':
-                    transX = figBounds[0]
+                    transX = figBounds[0];
                     transY = figBounds[3];
                     if(newX>figBounds[0]+5 && newY<figBounds[3]-5){
                         scaleX = (newX-figBounds[0])/(handlerPoint.x-figBounds[0]);
@@ -271,7 +271,7 @@ Handle.prototype = {
                     break;
 
                 case 'sw':
-                    transX = figBounds[2]
+                    transX = figBounds[2];
                     transY = figBounds[1];
                     if(newX<figBounds[2]-5 && newY>figBounds[1]+5){
                         scaleX = (figBounds[2]-newX)/((figBounds[2]-handlerPoint.x));
@@ -530,7 +530,7 @@ Handle.prototype = {
      *@param {Matrix} matrix - the matrix that will perform the transformation
      **/
     transform: function(matrix){
-        var p=new Point(this.x,this.y)
+        var p=new Point(this.x,this.y);
         p.transform(matrix);
         this.x=p.x;
         this.y=p.y;
@@ -594,7 +594,7 @@ Handle.prototype = {
                 }
                 else{ //quadrant III or IV
                     if(2 * Math.PI - angle < minAngleToNorth){
-                        minAngleToNorth = 2 * Math.PI - angle
+                        minAngleToNorth = 2 * Math.PI - angle;
                         closestToNorthIndex = i;
                     }
                 }
@@ -637,7 +637,7 @@ Handle.prototype = {
                 }
                 else{ //quadrant III or IV
                     if(2 * Math.PI - angle < minAngleToNorth){
-                        minAngleToNorth = 2 * Math.PI - angle
+                        minAngleToNorth = 2 * Math.PI - angle;
                         closestToNorthIndex = i;
                     }
                 }
@@ -665,7 +665,7 @@ Handle.prototype = {
 
         return "";
     }
-}
+};
 
 
 /**HandleManager will act like a Singleton (even not defined as one)
@@ -700,7 +700,7 @@ HandleManager.handleGetSelected = function(){
         return HandleManager.handles[HandleManager.handleSelectedIndex];
     }
     return null;
-}
+};
 
 /**Use this method to set a new shape (Figure or Connetor)  to this manager.
  * Every time a new figure is set, old handles will dissapear (got erased by new figure's handles)
@@ -914,7 +914,7 @@ HandleManager.shapeSet = function(shape){
 //        }
 //        HandleManager.handles.push(handle);
     }
-}
+};
 
 /**Returns all handles for a shape (figure or connector).
  *It does not mean that the HandleManager keeps records of all Handles for a
@@ -923,7 +923,7 @@ HandleManager.shapeSet = function(shape){
  **/
 HandleManager.handleGetAll = function(){
     return HandleManager.handles;
-}
+};
 
 /**Returns the handle from a certain coordinates
  *@param {Number} x - the value on Ox
@@ -936,7 +936,7 @@ HandleManager.handleGet = function(x,y){
         }
     }
     return null;
-}
+};
 
 /**
  *Select the handle from a certain coordinates
@@ -950,7 +950,7 @@ HandleManager.handleSelectXY = function(x,y){
             HandleManager.handleSelectedIndex = i;
         }
     }
-}
+};
 
 /**
  *Clear HandleManager.
@@ -959,7 +959,7 @@ HandleManager.clear = function(){
     HandleManager.handleSelectedIndex = -1;
     HandleManager.shape = null;
     HandleManager.handles = [];
-}
+};
 
 /**Paint the Handles, actually the HandleManager will delegate each paint to
  *the proper Handle to paint
@@ -985,5 +985,5 @@ HandleManager.paint = function(context){
             handles[i].paint(context);
         }
     }
-    context.restore()
-}
+    context.restore();
+};

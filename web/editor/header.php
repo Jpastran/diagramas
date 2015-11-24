@@ -4,7 +4,7 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
 <div id="header">    
     <!--Logo menu-->
     <div class="dropdown_menu">
-        <a style="padding: 0;" href="http://diagramo.com" target="blank"><img src="./assets/images/logo-36x36.png"/></a>
+        <a style="padding: 0;" href="" target="blank"><img src="./assets/images/logo-36x36.png"/></a>
     </div>
     <!--Logo menu-->
 

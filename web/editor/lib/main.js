@@ -4421,6 +4421,9 @@ function touchCancel(event){
 //TODO opcional agregar al lienzo (Nombre del Proceso).
 //TODO opcional agregar a linea init (Componente Principal, Material Componente Principal) en texto.
 //TODO crear un metodo y boton para terminar el diagrama.
+//TODO estudiar el .js de History e implementarlo para coor.
+//TODO Borrar los TODO que no digan un error.
+//TODO Preguntar las acciones que se pueden dentro de otras.
 
 /***
  * Variables usadas por el diagrama
@@ -4430,7 +4433,7 @@ function touchCancel(event){
 var iniX = 400;
 
 /**Coordenada inicial en eje Y*/
-var iniY = 60;
+var iniY = 40;
 
 /**Distancia entre lineas*/
 var distLine = 150;
@@ -4592,30 +4595,38 @@ function cleanStates() {
 }
 
 function growCanvas() {
-    if (lienzo[1] <= coor[1]) {
-        lienzo[1] += distLine;
-        var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
-        grow.execute();
-    } else if (lienzo[0] <= coor[0]) {
-        lienzo[0] += distLine;
-        var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
-        grow.execute();
-        //TODO terminar el crecer lienzo mirar otras maneras
-        //Utilizar el selecionar multiple para seleccionar todas las figuras
-        // y moverlas usar handle.action(lastMove, x, y); de STATE_GROUP_SELECTED
-        // crecer el diagrama primero y despues reducir el valor de coor en x
-    } else if (0 >= coor[0]) {
-
-    } else if (0 >= coor[1]) {
-
-    }
+	if (lienzo[1] <= coor[1]) {
+		lienzo[1] += distLine;
+		var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
+		grow.execute();
+	} else if (lienzo[0] <= coor[0]) {
+		lienzo[0] += distLine;
+		var grow = new CanvasChangeSizeCommand(lienzo[0], lienzo[1]);
+		grow.execute();
+	} else if (0 >= coor[0]) {
+		var workAreaBounds = STACK.getWorkAreaBounds();
+		var cmdCanvasFit = new CanvasFitCommand(
+			lienzo[0], 
+			lienzo[1], 
+			workAreaBounds[0] - DIAGRAMO.CANVAS_FIT_PADDING - tamFig / 4,
+			workAreaBounds[1] - DIAGRAMO.CANVAS_FIT_PADDING - tamFig / 4
+		);
+		cmdCanvasFit.execute();
+		History.addUndo(cmdCanvasFit);
+		coor[0]+=150;
+		for (var i=0; i < savePos.length; i++) {
+		  savePos[i][0]+=150;
+		}
+	}
 }
 
 function dropFigure() {
-    createFigureFunction = null;
-    selectedFigureThumb = null;
-    state = STATE_NONE;
-    //document.getElementById('draggingThumb').style.display  = 'none';
+	createFigureFunction = null;
+	selectedFigureThumb = null;
+	state = STATE_NONE;
+	if (document.getElementById('draggingThumb') != null) {
+		document.getElementById('draggingThumb').style.display = 'none';
+	}
 }
 
 function ordenarJagged(pos) {
@@ -4623,9 +4634,9 @@ function ordenarJagged(pos) {
     var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
 
     if (finLS) {
+    	//TODO corregir las formas para punto a punto.
         turns[1].x = turns[0].x;
         turns[1].y = turns[0].y + disCon;
-        turns[2].x = turns[1].x + distLine / 2;
         turns[2].y = turns[1].y;
         if (turns[3].y != pos[1]) {
             turns[3].x = turns[2].x;
@@ -4658,6 +4669,26 @@ function ordenarJagged(pos) {
     }
 }
 
+function ordenarDelta(align, delta, index) {
+	var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
+	if (con != null) {
+		var translationMatrix = align == 'v' ? Matrix.translationMatrix(0, delta) : Matrix.translationMatrix(delta, 0);
+		con.turningPoints[index - 1].transform(translationMatrix);
+		con.turningPoints[index].transform(translationMatrix);
+		con.addUserChange({
+			align : align,
+			delta : delta,
+			index : index - 1
+		});
+		con.addUserChange({
+			align : align,
+			delta : delta,
+			index : index
+		});
+		con.updateMiddleText();
+	}
+}
+
 var selectEspecial = 'entrada';
 
 function setEspecial(nombre) {
@@ -4681,9 +4712,9 @@ function setEspecial(nombre) {
 }
 
 function especial(accion) {
+	//TODO Agregar correcion de superposicion en los casos de linea nueva
     var clean = true;
-    if (primer) {
-        //TODO Preguntar las acciones que se pueden dentro de otras
+    if (primer) {      
         switch (accion) {
             case 'newLE':
                 if (coor[1] != (iniY + disFig)) {
@@ -4722,7 +4753,7 @@ function especial(accion) {
             case 'newLS':
                 if (lineas[1] == 1) {
                     lineas[2]++;//Numero de salidas activas
-                    figureBuild(window.figure_NewSS, coor[0], coor[1] - tamFig / 2);
+                    figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
                     coor[1] -= tamFig / 2;
                     savePos.push(coor);
@@ -4748,23 +4779,22 @@ function especial(accion) {
                     }
                 }
                 break;
-            case 'repetir'://TODO la repeticion se hacen en la parte superior, en rotationCoords[1] usa el superior.
+            case 'repetir':
                 clean = false;
                 if (document.getElementById('repIn').value != "" && document.getElementById('repOut').value != "") {
                     var figIni = STACK.figureGetById(document.getElementById('repIn').value);
                     var figFin = STACK.figureGetById(document.getElementById('repOut').value);
                     if (figFin != figIni) {
-                        var coorIn = [figIni.rotationCoords[0].x - tamFig / 2, figIni.rotationCoords[0].y];
-                        var coorOut = [figFin.rotationCoords[0].x - tamFig / 2, figFin.rotationCoords[0].y];
-                        if (figIni.primitives[1].str.split("", 1) == 'A')
-                            coorIn[0] += tamFig / 4;
-                        if (figFin.primitives[1].str.split("", 1) == 'A')
-                            coorOut[0] += tamFig / 4;
+                        var coorIn = [figIni.rotationCoords[1].x, figIni.rotationCoords[1].y + tamFig];
+                        var coorOut = [figFin.rotationCoords[1].x, figFin.rotationCoords[1].y];
                         if (coorIn[0] == coorOut[0]) {
                             if (coorIn[1] > coorOut[1]) {
-                                conectorBuildFull(true, coorIn, coorOut, true);
-                                coor[1] -= disFig;
+                                conectorBuildFull(true, coorIn, coorOut, true);	
+								ordenarDelta('h', -disLinMin, 3);
+								ordenarDelta('v', -disCon / 2, 2);
+								ordenarDelta('v', disCon / 2, 4); 
                                 clean = true;
+                                coor[1] -= disFig;
                             } else {
                                 errorDiv("La repetcion no puede ser inversa");
                             }
@@ -4778,47 +4808,63 @@ function especial(accion) {
                     errorDiv("Los valores no pueden ser nulos");
                 }
                 break;
-            case 'reproIn'://TODO Añadir limitador de linea
+            case 'reproIn':
                 clean = false;
                 var textError = "";
                 if (document.getElementById('proIn').value != "") {
-                    savePos.push(coor);
-                    var figIni = STACK.figureGetById(document.getElementById('proIn').value);
-                    var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + tamFig / 2];
-                    coor = [coorIn[0] + disLinMin, coorIn[1] - tamFig / 2];
-                    savePos.push(coorIn);
-                    reprocesa = true;
-                    reproIni = true;
-                    document.getElementById('btnRepOut').disabled = false;
-                    document.getElementById('btnRepIn').disabled = true;
-                    especialSelect(true);
+                	if(lineas[1] == 1){
+	                    savePos.push(coor);
+	                    var figIni = STACK.figureGetById(document.getElementById('proIn').value);
+	                    var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + tamFig / 2];
+	                    coor = [coorIn[0] + disLinMin, coorIn[1] - tamFig / 2];
+	                    savePos.push(coorIn);
+	                    reprocesa = true;
+	                    reproIni = true;
+	                    document.getElementById('btnRepOut').disabled = false;
+	                    document.getElementById('proIn').disabled = true;
+	                    document.getElementById('btnRepIn').disabled = true;
+	                    especialSelect(true);
+                   } else {
+                   		errorDiv('Solo se permite en la linea principal');
+                   }
                 } else {
                     errorDiv("El valor no pueden ser nulo");
                 }
                 break;
-            case 'reproOut'://TODO Añadir limitador de hacia abajo y de linea
-                clean = false;
-                var textError = "";
-                if (!reproIni) {
-                    if (document.getElementById('proOut').value != "") {
-                        var figFin = STACK.figureGetById(document.getElementById('proOut').value);
-                        var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - tamFig / 2];
-                        coor[1] += disFigCon;
-                        conectorBuildFull(true, coor, coorOut, true);
-                        ordenarJagged(coorOut);
-                        coor = savePos.pop();
-                        coor[1] -= disFig;
-                        reprocesa = false;
-                        clean = true;
-                        document.getElementById('btnRepOut').disabled = true;
-                        document.getElementById('btnRepIn').disabled = false;
-                        especialSelect(false);
-                    } else {
-                        errorDiv("El valor no pueden ser nulo");
-                    }
-                } else {
-                    errorDiv("Debe haber al menos un proceso");
-                }
+            case 'reproOut':
+				clean = false;
+				var textError = "";
+				if (!reproIni) {
+					if (document.getElementById('proOut').value != "") {
+						var figFin = STACK.figureGetById(document.getElementById('proOut').value);
+						var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - tamFig / 2];
+						var figIni = STACK.figureGetById(document.getElementById('proIn').value);
+						var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y];
+						if (coorIn[1] > coorOut[1]) {
+							if(coorIn[0] == coorOut[0]) {
+								coor[1] += disFigCon;
+								conectorBuildFull(true, coor, coorOut, true);
+								ordenarJagged(coorOut);
+								coor = savePos.pop();
+								coor[1] -= disFig;
+								reprocesa = false;
+								clean = true;
+								document.getElementById('btnRepOut').disabled = true;
+								document.getElementById('btnRepIn').disabled = false;
+								document.getElementById('proIn').disabled = false;
+								especialSelect(false);
+							} else {
+								errorDiv("El punto de llegada solo es posible en la misma linea");
+							}
+						} else {
+							errorDiv("El punto de llegada no puede ser posterior");
+						}
+					} else {
+						errorDiv("El valor no pueden ser nulo");
+					}
+				} else {
+					errorDiv("Debe haber al menos un proceso");
+				}
                 break;
             case 'trayGen':
                 var options = parseInt(document.getElementById('trayNum').value);
@@ -4832,7 +4878,7 @@ function especial(accion) {
                     }
                     opciones = true;
                     for (var i = 0; i < trayecto.length; i++) {
-                        figureBuild(window.figure_EndSS, trayecto[i][0], trayecto[i][1]);
+                        figureBuild(window.figure_MultiPoint, trayecto[i][0], trayecto[i][1]);
                         var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
                         conectorBuildFull(!centro, coor, trayecto[i], false);
                         if (!centro)
@@ -4882,8 +4928,7 @@ function especial(accion) {
                     errorDiv('La opcion debe tener al menos un proceso');
                 }
                 break;
-
-            case 'trayUnir'://TODO confirmar accion en caso de no union
+            case 'trayUnir':
                 var pos = savePos.pop();
                 for (var i = 0; i < trayecto.length; i++) {
                     if (pos[1] < trayecto[i][1]) {
@@ -4951,7 +4996,7 @@ function cargarFiguras(selectId) {
 		}
 		var cont = 0;
 		for (var i = 0; i < STACK.figures.length; i++) {
-			if (names[i] != "Text") {
+			if (names[i] != "Text" && names[i] != null) {
 				select.options[cont] = new Option(names[i], ids[i]);
 				cont++;
 			}

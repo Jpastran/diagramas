@@ -87,6 +87,7 @@ Builder.IMAGE_TEXT_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-text.png' ;
 Builder.constructPropertiesPanel = function(DOMObject, shape){
     for(var i = 0; i < shape.properties.length; i++){
         // regExp to avoid properties of Text editor
+        //TODO Corregir las propiedades de texto segun se neseciten
         if (/(primitives\.\d+|middleText)\.(str|size|font|align|underlined|style\.fillStyle)/g.test(shape.properties[i].property) === false) {
             shape.properties[i].injectInputArea(DOMObject, shape.id);
         }
@@ -1282,7 +1283,7 @@ function buildPanel() {
 
 			var eFigure = document.createElement('img');
 			eFigure.setAttribute('src', figureThumbURL);
-
+			/*
 			eFigure.addEventListener('mousedown', function(figureFunction, figureThumbURL) {
 				return function(evt) {
 					evt.preventDefault();
@@ -1295,8 +1296,8 @@ function buildPanel() {
 			eFigure.addEventListener('mouseup', function() {
 				dropFigure();
 			}, false);
-
-			eFigure.addEventListener('dblclick', function(figureFunction) {
+			*/
+			eFigure.addEventListener('mouseup', function(figureFunction) {
 				return function(evt) {
 					canvasBuild(window[figureFunction]);
 				};

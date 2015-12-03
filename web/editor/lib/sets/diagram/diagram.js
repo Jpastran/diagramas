@@ -16,18 +16,20 @@
  limitations under the License.
  */
 //TODO agregar la propiedad de texto en el builder, para las lineas
+//TODO corregir los que usan el formato patch para cambiar nombre u eliminar la posibilidad
 figureSets["diagram"] = {
     name: 'Diagram',
     description: 'Diagram set of figures',
-    figures: [
-        {figureFunction: "Square", image: "square.png"},
+    figures: [     
         {figureFunction: "Circle", image: "circle.png"},
+        {figureFunction: "Square", image: "square.png"},
         {figureFunction: "TriangleInvert", image: "triangle_inver.png"},
         {figureFunction: "SemiCircleRight", image: "semi_circle_right.png"},
         {figureFunction: "Arrow", image: "arrow.png"},
+        {figureFunction: "Combined", image: "combine.png"},
         {figureFunction: "LineIn", image: "line_in.png"},
         {figureFunction: "LineOut", image: "line_out.png"},
-        {figureFunction: "LineDouble", image: "line_double.png"}
+        {figureFunction: "LineDouble", image: "line_double.png"}      
     ]
 };
 
@@ -62,11 +64,12 @@ var FigureDefaults = {
     textColor: "#000000"
 };
 
-var oId = 0;
-var tId = 0;
-var iId = 0;
-var dId = 0;
-var aId = 0;
+var oId = 1;
+var tId = 1;
+var iId = 1;
+var dId = 1;
+var aId = 1;
+var cId = 1;
 
 function figure_Square(x, y) {
     var r = new Polygon();
@@ -196,11 +199,13 @@ function figure_SemiCircleRight(x, y) {
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
 
+    f.addPrimitive(c);
+    f.addPrimitive(p);
+
     var t2 = new Text('D-' + dId, x + FigureDefaults.radiusSize / 2 + 5, y, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
     dId++;
-    f.addPrimitive(c);
-    f.addPrimitive(p);
+
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.radiusSize / 2 + 5, y - FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
@@ -220,7 +225,6 @@ function figure_Arrow(x, y) {
     p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y));
     p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 4));
     p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 4));
-
 
     var f = new Figure("Arrow");
     f.style.fillStyle = FigureDefaults.fillStyle;
@@ -252,6 +256,45 @@ function figure_Arrow(x, y) {
     return f;
 }
 
+function figure_Combined(x, y) {
+	var c = new Arc(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2 , FigureDefaults.radiusSize, 0, 360, false, 0);
+	
+    var r = new Polygon();
+    r.addPoint(new Point(x, y));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize, y));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize));
+    r.addPoint(new Point(x, y + FigureDefaults.segmentSize));
+
+    var f = new Figure("Combine");
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
+
+    f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
+    f.properties.push(new BuilderProperty('Font ', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
+    f.properties.push(new BuilderProperty('Alignment ', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.1.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
+    f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
+
+    f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
+    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
+    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
+    f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
+
+    f.addPrimitive(r);
+    f.addPrimitive(c);
+
+    var t2 = new Text('C-' + cId, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
+    cId++;
+    f.addPrimitive(t2);
+
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
+
+    f.finalise();
+    return f;
+}
 
 function figure_LineInit(x, y) {
     var p = new Polyline();
@@ -458,6 +501,26 @@ function figure_MultiPoint(x, y) {
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y), ConnectionPoint.TYPE_FIGURE);
 
+    f.finalise();
+    return f;
+}
+
+function figure_Text(x,y) {
+    var f = new Figure('Text');
+    f.style.fillStyle = FigureDefaults.fillStyle;
+
+    f.properties.push(new BuilderProperty('Text', 'primitives.0.str', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('Text Size ', 'primitives.0.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
+    f.properties.push(new BuilderProperty('Font ', 'primitives.0.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
+    f.properties.push(new BuilderProperty('Alignment ', 'primitives.0.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.0.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
+    f.properties.push(new BuilderProperty('Text Color', 'primitives.0.style.fillStyle', BuilderProperty.TYPE_COLOR));
+
+    var t2 = new Text(FigureDefaults.textStr, x, y + FigureDefaults.radiusSize/2, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
+
+    f.addPrimitive(t2);
+    
     f.finalise();
     return f;
 }

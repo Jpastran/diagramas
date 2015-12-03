@@ -124,7 +124,7 @@ $page = 'editor';
 
             <a href="javascript:action('connector-jagged');" title="Jagged connector"><img src="assets/images/icon_connector_jagged.gif" border="0"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
+			<!--
             <a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
@@ -138,7 +138,7 @@ $page = 'editor';
             <input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Snap elements to grid" />
             <span class="toolbarText">Snap to grid</span>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
+			-->
             <a href="javascript:action('front');" title="Move to front"><img src="assets/images/icon_front.gif" border="0"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
@@ -159,7 +159,7 @@ $page = 'editor';
 
             <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
+			<!-- TODO revisar el insetImagen -->
             <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             <!--
@@ -204,7 +204,7 @@ $page = 'editor';
                         <option value="salida">Salida</option>
                         <option value="repeticion">Repeticion</option>
                         <option value="reproceso">Reproceso</option>
-                        <option value="trayectos">Trayectos</option>
+                        <option value="trayectos">Opciones</option>
                     </select>
                     <div id="entrada" style=" display: block">
                         <img src="lib/sets/entrada.png" class="especial" />
@@ -219,11 +219,11 @@ $page = 'editor';
                     <div id="repeticion" style=" display: none">
                         <img src="lib/sets/repeticion.png" class="especial"/>
                         <div class="label">
-                            Inicio
-                            <select id="repIn" style="width: 120px;" onclick="cargarFiguras('repIn')"></select>
+                            Repeticiones
+                            <input type="number" id="repNum" min="1" step="1" style="width: 120px;">                           
                         </div>						
                         <div class="label">
-                            Final
+                            Retorno
                             <select id="repOut" style="width: 120px;" onclick="cargarFiguras('repOut')"></select>
                             <input type="button" value="Añadir" onclick="especial('repetir')"/>
                         </div>

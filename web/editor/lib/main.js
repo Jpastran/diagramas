@@ -4414,7 +4414,6 @@ function touchCancel(event){
 //TODO Arreglar la seleccion multiple.
 //TODO Corregir autoID o generar la numeracion de forma automatica eliminado y renumeracion.
 //TODO Corregir nivel de los conectores.
-//TODO Buscar en buildgenerate las propiedades de las figuras.
 //TODO correjir posiciones en caso de borrado o generar posicion mas baja a partir de busqueda.
 //TODO opcional crear los grupos nuevos segun(Entrada, salida, simbolos, otros).
 //TODO opcional agregar parametros de (descripcion, tiempo y distancia).
@@ -4423,9 +4422,8 @@ function touchCancel(event){
 //TODO crear un metodo y boton para terminar el diagrama.
 //TODO estudiar el .js de History e implementarlo para coor.
 //TODO Borrar los TODO que no digan un error.
-//TODO Preguntar las acciones que se pueden dentro de otras.
 
-/***
+/**
  * Variables usadas por el diagrama
  **/
 
@@ -4634,26 +4632,26 @@ function ordenarJagged(pos) {
     var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
 	
     if (finLS) {
-		if (turns.length == 4) {
-			turns[1] = turns[0];
-			turns[2] = turns[3];
-		} else {
-			turns[1].x = turns[0].x;
-			turns[1].y = turns[0].y + disCon;
-			turns[2].x = turns[1].x;
-			if (turns[1].y < pos[1]){
-				turns[2].y = pos[1];
-				turns[3] = turns[4];
-			} else {
-				turns[2].x += distLine/2;
-				turns[2].y = turns[1].y;
-				turns[3].x = turns[2].x;
-				turns[3].y = pos[1];
-			}
-			if (turns.length == 6) {
-				turns[4].y = pos[1];
-			}
-		}
+        if (turns.length == 4) {
+            turns[1] = turns[0];
+            turns[2] = turns[3];
+        } else {
+            turns[1].x = turns[0].x;
+            turns[1].y = turns[0].y + disCon;
+            turns[2].x = turns[1].x;
+            if (turns[1].y < pos[1]) {
+                turns[2].y = pos[1];
+                turns[3] = turns[4];
+            } else {
+                turns[2].x += distLine / 2;
+                turns[2].y = turns[1].y;
+                turns[3].x = turns[2].x;
+                turns[3].y = pos[1];
+            }
+            if (turns.length == 6) {
+                turns[4].y = pos[1];
+            }
+        }
     } else if (finSS) {
         turns[1] = turns[0];
         turns[2].y = turns[1].y;
@@ -4720,11 +4718,10 @@ function setEspecial(nombre) {
 }
 
 function especial(accion) {
-    //TODO Agregar correcion de superposicion en los casos de linea nueva
     var clean = true;
     if (primer) {
         switch (accion) {
-            case 'newLE':
+            case 'newLE'://TODO corregir los posibles errores en linea secundaria, desbloquear.
                 if (coor[1] != (iniY + disFig)) {
                     figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
@@ -4787,13 +4784,12 @@ function especial(accion) {
                     }
                 }
                 break;
-            case 'repetir':
+            case 'repetir'://TODO agregar el numero de loop y cambiar idStr figura y txt del pausa, actualizar imagen
                 clean = false;
-                if (document.getElementById('repIn').value != "" && document.getElementById('repOut').value != "") {
-                    var figIni = STACK.figureGetById(document.getElementById('repIn').value);
+                if (document.getElementById('repOut').value != "") {
                     var figFin = STACK.figureGetById(document.getElementById('repOut').value);
                     if (figFin != figIni) {
-                        var coorIn = [figIni.rotationCoords[1].x, figIni.rotationCoords[1].y + tamFig];
+                        var coorIn = [coor[0], coor[1] - disFigCon];
                         var coorOut = [figFin.rotationCoords[1].x, figFin.rotationCoords[1].y];
                         if (coorIn[0] == coorOut[0]) {
                             if (coorIn[1] > coorOut[1]) {
@@ -4802,7 +4798,9 @@ function especial(accion) {
                                 ordenarDelta('v', -disCon / 2, 2);
                                 ordenarDelta('v', disCon / 2, 4);
                                 clean = true;
-                                coor[1] -= disFig;
+                                figureBuild(window.figure_LineDouble, coor[0], coor[1] - tamFig / 4);
+        						conectorBuild();
+        						coor[1] -= tamFig / 2;
                             } else {
                                 errorDiv("La repetcion no puede ser inversa");
                             }
@@ -4816,7 +4814,7 @@ function especial(accion) {
                     errorDiv("Los valores no pueden ser nulos");
                 }
                 break;
-            case 'reproIn':
+            case 'reproIn'://TODO Entrada quitar triangulo agregar punto superior, sin actividades internas.
                 clean = false;
                 var textError = "";
                 if (document.getElementById('proIn').value != "") {
@@ -4839,7 +4837,7 @@ function especial(accion) {
                     errorDiv("El valor no pueden ser nulo");
                 }
                 break;
-            case 'reproOut':
+            case 'reproOut'://TODO casi identico que repeticion.
                 clean = false;
                 var textError = "";
                 if (!reproIni) {
@@ -4893,13 +4891,13 @@ function especial(accion) {
                             ordenarJagged();
                         trayecto[i][1] -= tamFig / 2;
                     }
-                    coor = trayecto[0];
+                    coor = trayecto[options - 1];
                     document.getElementById('trayGen').style.display = 'none';
                     document.getElementById('traySig').style.display = 'block';
-                    document.getElementById('trayName').innerHTML = 'Opcion 1';
+                    lineas[3] = options - 1;//Trayecto actual
+                    lineas[4] = options;//Numero de trayectos
+                    document.getElementById('trayName').innerHTML = 'Opcion ' + (lineas[3] + 1);
                     especialSelect(true);
-                    lineas[3] = options;//Numero de trayectos
-                    lineas[4]++;//Trayecto actual
                 } else {
                     errorDiv('Opciones solo puden ser numeros enteros de 2 a 8');
                     clean = false;
@@ -4908,15 +4906,15 @@ function especial(accion) {
             case 'trayFin':
                 clean = false;
                 if (!opciones) {
-                    if (lineas[3] > lineas[4]) {
-                        coor = trayecto[lineas[4]];
-                        lineas[4]++;
+                    if (lineas[3] > 0) {                    	
+                    	lineas[3]--;  
+                        coor = trayecto[lineas[3]];                       
                         clean = true;
                         opciones = true;
-                        document.getElementById('trayName').innerHTML = 'Opcion ' + lineas[4];
-                        if (lineas[3] == lineas[4])
+                        document.getElementById('trayName').innerHTML = 'Opcion ' + (lineas[3] + 1);                        
+                        if (lineas[3] == 0)
                             document.getElementById('btnFin').value = 'Terminar';
-                    } else if (lineas[3] == lineas[4]) {
+                    } else if (lineas[3] == 0) {
                         document.getElementById('traySig').style.display = 'none';
                         document.getElementById('trayUnir').style.display = 'block';
                         var div = document.getElementById('trayChk');
@@ -4949,18 +4947,19 @@ function especial(accion) {
                 for (var i = 0; i < checks.length; i++) {
                     if (checks[i].checked == true) {
                         conectorBuildFull(true, trayecto[checks[i].value], pos, false);
+                        ordenarDelta('v',(tamFig/2)-2,4);
                     }
                 }
                 var div = document.getElementById('trayChk');
                 while (div.hasChildNodes()) {
-                    div.removeChild(list.firstChild);
+                    div.removeChild(div.firstChild);
                 }
                 document.getElementById('trayUnir').style.display = 'none';
                 document.getElementById('trayGen').style.display = 'block';
                 especialSelect(false);
                 coor = pos;
+                coor[1] -= tamFig / 2;
                 break;
-
         }
     } else {
         errorDiv('No se ha creado ninguna linea');

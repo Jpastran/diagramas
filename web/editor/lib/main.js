@@ -4721,7 +4721,7 @@ function especial(accion) {
     var clean = true;
     if (primer) {
         switch (accion) {
-            case 'newLE'://TODO corregir los posibles errores en linea secundaria, desbloquear.
+            case 'newLE'://TODO corregir los posibles errores en linea secundaria.
                 if (coor[1] != (iniY + disFig)) {
                     figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
@@ -4732,7 +4732,6 @@ function especial(accion) {
                     figureBuild(window.figure_LineInit, coor[0] - tamFig, coor[1]);
                     lineas[1]++;
                     document.getElementById('btnLE').disabled = false;
-                    especialSelect(true);
                 } else {
                     errorDiv('Debe poseer al menos un proceso');
                     clean = false;
@@ -4747,7 +4746,6 @@ function especial(accion) {
                         coor[1] -= tamFig / 2;
                         if (lineas[1] == 1) {
                             document.getElementById('btnLE').disabled = true;
-                            especialSelect(false);
                         }
                     } else {
                         errorDiv('Debe poseer al menos un proceso');
@@ -4814,7 +4812,7 @@ function especial(accion) {
                     errorDiv("Los valores no pueden ser nulos");
                 }
                 break;
-            case 'reproIn'://TODO Entrada quitar triangulo agregar punto superior, sin actividades internas.
+            case 'reproIn'://TODO Entrada quitar triangulo agregar punto superior, sin actividades internas. cuidado con la numeracion
                 clean = false;
                 var textError = "";
                 if (document.getElementById('proIn').value != "") {

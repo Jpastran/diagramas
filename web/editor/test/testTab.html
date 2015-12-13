@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="../assets/javascript/jquery-1.11.0.min.js"></script>
+		<title>Test Tabs</title>
+		<style>
+			body {
+				background: darkgrey;
+			}
+			.contenedor {
+				width: 1080px;
+				margin: auto;
+				background: black;
+				color: bisque;
+				padding: 20px 15px 50px 50px;
+				border-radius: 10px;
+				box-shadow: 0 10px 10px 0px rgba(0, 0, 0, 0.8);
+			}
+			.contenedor .titulo {
+				font-size: 3.5ex;
+				font-weight: bold;
+				margin-left: 10px;
+				margin-bottom: 10px;
+			}
+			#tabs {
+				font-size: 3ex;
+				font-weight: bold;
+				position: relative;
+			}
+			#tabs ul {
+				margin-left: -40px;
+			}
+			#tabs li {
+				background: darkgrey;
+				border-top-left-radius: 5px;
+				border-top-right-radius: 5px;
+				border: 2px solid bisque;
+				border-bottom: dimgray;
+				list-style-type: none;
+				float: left;
+				text-align: center;
+				margin: 0px 2px -2px -0px;
+				background: darkgrey;
+				padding: 0px 20px 0px 20px;
+			}
+			#tabs a:link {
+				text-decoration: none;
+				color: bisque;
+			}
+			#ctabs {
+				clear: both;
+				background: dimgray;
+				padding: 20px;
+				width: 1025px;
+				height: 800px;
+			}
+			#a {
+				border: 1px solid #E5E5E5;
+				background-repeat: repeat;
+				background-color: #FFFFFF;
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				tabs("tab1");
+			}); 
+			http://programandoointentandolo.com/2012/11/como-crear-pestanas-con-html.html
+			// Dadas la division que contiene todas las pestañas y la de la pestaña que se
+			// quiere mostrar, la funcion oculta todas las pestañas a excepcion de esa.
+			function tabs(tabId) {
+				// Obtiene los elementos con los identificadores pasados.
+				var tab = document.getElementById(tabId);
+				// Obtiene las divisiones que tienen el contenido de las pestañas.
+				var ctab = document.getElementById("c" + tabId);
+				var i = 1;
+				// Recorre la lista ocultando todas las pestañas y restaurando el fondo
+				// y el padding de las pestañas.
+				while (document.getElementById("tab" + i) != null) {
+					$("#" + "ctab" + i).css('display', 'none');
+					$("#" + "tab" + i).css('background', '');
+					$("#" + "tab" + i).css('padding-bottom', '');
+					i += 1;
+				}
+				// Muestra el contenido de la pestaña pasada como parametro a la funcion,
+				// cambia el color de la pestaña y aumenta el padding para que tape el
+				// borde superior del contenido que esta juesto debajo y se vea de este
+				// modo que esta seleccionada.
+				$(ctab).css('display', '');
+				$(tab).css('background', 'dimgray');
+				$(tab).css('padding-bottom', '2px');
+			}
+		</script>
+	</head>
+	<body>
+		<div class="contenedor">
+			<div class="titulo">
+				¿Sobre que escribiré en el blog?
+			</div>
+			<div id="tabs">
+				<ul id=lista>
+					<li id="tab1">
+						<a href='javascript:tabs("tab1");'>HTML</a>
+					</li>
+					<li id="tab2">
+						<a href='javascript:tabs("tab2");'>CSS</a>
+					</li>
+					<li id="tab3">
+						<a href='javascript:tabs("tab3");'>JavaScript</a>
+					</li>
+				</ul>
+			</div>
+			<div id="ctabs">
+				<div id="ctab1">
+					<div>
+						<canvas id="a" width="800" height="600">
+							Your browser does not support HTML5. Please upgrade your browser to any modern version.
+						</canvas>
+						<div id="text-editor"></div>
+						<div id="text-editor-tools"></div>
+					</div>
+				</div>
+				<div id="ctab2">
+					El nombre hojas de estilo en cascada viene del inglés Cascading Style Sheets, del que toma sus siglas. CSS es un lenguaje usado para definir la presentación de un documento estructurado escrito en HTML o XML2 (y por extensión en XHTML). El W3C (World Wide Web Consortium) es el encargado de formular la especificación de las hojas de estilo que servirán de estándar para los agentes de usuario o navegadores.
+				</div>
+				<div id="ctab3">
+					JavaScript es un lenguaje de programación interpretado, dialecto del estándar ECMAScript. Se define como orientado a objetos,3 basado en prototipos, imperativo, débilmente tipado y dinámico.
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

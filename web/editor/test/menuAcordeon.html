@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="../assets/javascript/jquery-1.11.0.min.js"></script>
+		<title>Test Menu</title>
+		<style>
+			.menujq ul {
+				list-style: none;
+				width: 80%;
+				margin: 0 auto;
+				padding: 0;
+			}
+			.menujq a {
+				display: block;
+				padding: 10px;
+				border-bottom: 1px solid #fff;
+				background: #D25400;
+				color: #fff;
+				text-decoration: none;
+				font-size: 16px;
+				line-height: 16px;
+				text-transform: uppercase;
+			}
+			/* Símbolo elemento normal */
+			.menujq ul li a:before {
+				content: "\25CF\00A0 ";
+				width: 28px;
+				display: inline-block;
+				vertical-align: top;
+			}
+			/* Símbolo elemento desplegable cerrado */
+			.menujq ul li.desplegable a:before {
+				content: "\25BA\00A0";
+			}
+			/* Símbolo elemento desplegable abierto */
+			.menujq ul li.desplegable.activa a:before {
+				content: "\25BC\00A0 ";
+			}
+			/* Eliminar símbolos para sub-opciones */
+			.menujq ul li.desplegable ul li a:before, .menujq ul li.desplegable.activa ul li a:before {
+				content: "";
+			}
+			/* Lista anidada inicialmente oculta */
+			.menujq ul ul {
+				display: none;
+				width: 100%;
+			}
+			/* Sangrado y segundo color para sub-opciones */
+			.menujq ul ul a {
+				padding-left: 20px;
+				background: #E77E23;
+				text-transform: capitalize;
+			}
+		</style>
+		<script>
+			$(document).ready(function() {
+				$('.menujq > ul > li:has(ul)').addClass('desplegable');
+				$('.menujq > ul > li > a').click(function() {
+					var comprobar = $(this).next();
+					$('.menujq li').removeClass('activa');
+					$(this).closest('li').addClass('activa');
+					if ((comprobar.is('ul')) && (comprobar.is(':visible'))) {
+						$(this).closest('li').removeClass('activa');
+						comprobar.slideUp('normal');
+					}
+					if ((comprobar.is('ul')) && (!comprobar.is(':visible'))) {
+						$('.menujq ul ul:visible').slideUp('normal');
+						comprobar.slideDown('normal');
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="menujq">
+			<ul>
+				<li>
+					<a href="javascript:void();">Opción1 desplegable</a>
+					<ul>
+						<li>
+							<a href="URL del enlace">Opc. 1.1</a>
+						</li>
+						<li>
+							<a href="URL del enlace">Opc. 1.2</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="javascript:void();">Opción2 desplegable</a>
+					<ul>
+						<li>
+							<a href="URL del enlace">Opc. 2.1</a>
+						</li>
+						<li>
+							<a href="URL del enlace">Opc. 2.2</a>
+						</li>
+						<li>
+							<a href="URL del enlace">Opc. 2.3</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="URL del enlace">Opción3 Directa</a>
+				</li>
+			</ul>
+		</div>
+	</body>
+</html>

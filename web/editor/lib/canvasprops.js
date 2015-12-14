@@ -41,7 +41,7 @@ function CanvasProps(width, height, fillColor){
 }
 
 /**default height for canvas*/
-CanvasProps.DEFAULT_HEIGHT = 560; 
+CanvasProps.DEFAULT_HEIGHT = 515; 
 
 /**default width for canvas*/
 CanvasProps.DEFAULT_WIDTH = 800;

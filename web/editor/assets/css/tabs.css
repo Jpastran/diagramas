@@ -1,0 +1,28 @@
+#tabs {
+	font-size: 3ex;
+	font-weight: bold;
+	position: relative;
+}
+#tabs ul {
+	margin: auto;
+	margin-left: -40px;	
+}
+#tabs li {
+	background: #E5E5E5;
+	list-style-type: none;
+	float: left;
+	text-align: center;
+	margin: 0px 2px -2px -0px;
+	padding: 0px 20px 0px 20px;
+}
+#tabs a:link {
+	text-decoration: none;
+	color: #8C8C8C;
+}
+#ctabs {
+	clear: both;
+	background: #E5E5E5;
+	padding: 3px;
+	border: 2px solid #D8D8D8;
+	position: relative;
+}

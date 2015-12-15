@@ -5,6 +5,9 @@
 		<script type="text/javascript" src="../assets/javascript/jquery-1.11.0.min.js"></script>
 		<title>Test Tabs</title>
 		<style>
+			body {
+				background: #D2D2D2;
+			}
 			#tabs {
 				font-size: 3ex;
 				font-weight: bold;
@@ -32,7 +35,7 @@
 			}
 			#ctabs {
 				clear: both;
-				background: dimgray;
+				background: #EFEFEF;
 				padding: 20px;
 			}
 			#a {
@@ -40,11 +43,34 @@
 				background-repeat: repeat;
 				background-color: #FFFFFF;
 			}
+			table {
+				border: 2px solid #ddd;
+				width: 100%;
+				border-spacing: 0;
+				border-collapse: collapse;
+			}
+
+			table img {
+				vertical-align: -10px;
+			}
+			td {
+				border: 2px solid #ddd;
+				min-width: 30px;
+				max-width: 150px;
+				line-height: 1.42857143;
+				padding: 3px;
+			}
+			.edit {
+				background: #F6F6F6;
+			}
 		</style>
 		<script type="text/javascript">
-			http://programandoointentandolo.com/2012/11/como-crear-pestanas-con-html.html
-			// Dadas la division que contiene todas las pestañas y la de la pestaña que se
-			// quiere mostrar, la funcion oculta todas las pestañas a excepcion de esa.
+			$(document).ready(function() {
+				tabs('tab1');
+				editable();
+			});
+			//http:programandoointentandolo.com/2012/11/como-crear-pestanas-con-html.html
+
 			function tabs(tabId) {
 				// Obtiene los elementos con los identificadores pasados.
 				var tab = document.getElementById(tabId);
@@ -66,6 +92,43 @@
 				$(ctab).css('display', '');
 				$(tab).css('background', 'dimgray');
 				$(tab).css('padding-bottom', '2px');
+
+			}
+
+			var resumen = ['op', 'tr', 'de', 'in', 'al', 'co', 'tal', 'tdi', 'tti'];
+			var datos = ['carta', 'hoja', 'from', 'mate', 'acti', 'ubic', 'alist', 'fecha'];
+
+			function editable() {
+				for (var i = 0; i < resumen.length; i++) {
+					$("#" + datos[i]).attr('contenteditable', 'true');
+					$("#" + datos[i]).attr('class', 'edit');
+					for (var j = 1; j <= 3; j++) {
+						$("#" + resumen[i] + j).attr('contenteditable', 'true');
+						$("#" + resumen[i] + j).attr('class', 'edit');
+					}
+				}
+			}
+
+			function obtener() {
+				var obDatos = [];
+				var obResum = [];
+				var n = 0;
+				for (var i = 0; i < resumen.length; i++) {
+					for (var j = 1; j <= 3; j++) {
+						obDatos[n] = document.getElementById(resumen[i] + j).textContent;
+						n++;
+					}
+					if (document.getElementById(datos[i]) != null) {
+						obResum[i] = document.getElementById(datos[i]).textContent;
+					}
+				}
+				console.log(obResum);
+				console.log(obDatos);
+			}
+
+			function cambiaTab(tabOld, tabNew) {
+				var href = 'javascript:tabs(' + '"' + tabNew + '"' + ');';
+				$($(tabOld).children('a')).attr('href', href);
 			}
 		</script>
 	</head>
@@ -77,31 +140,115 @@
 			<div id="tabs">
 				<ul id=lista>
 					<li id="tab1">
-						<a href='javascript:tabs("tab1");'>HTML</a>
+						<a href='javascript:tabs("tab1");'>Cabecera</a>
 					</li>
 					<li id="tab2">
-						<a href='javascript:tabs("tab2");'>CSS</a>
-					</li>
-					<li id="tab3">
-						<a href='javascript:tabs("tab3");'>JavaScript</a>
+						<a href='javascript:tabs("tab2");'>Diagrama</a>
 					</li>
 				</ul>
 			</div>
 			<div id="ctabs">
 				<div id="ctab1">
 					<div>
-						<canvas id="a" width="800" height="600">
-							Your browser does not support HTML5. Please upgrade your browser to any modern version.
-						</canvas>
-						<div id="text-editor"></div>
-						<div id="text-editor-tools"></div>
+						<table id="head">
+							<tbody>
+								<tr>
+									<td>Carta No:</td>
+									<td id="carta"></td>
+									<td>Hoja No:</td>
+									<td id="hoja"></td>
+									<td>De:</td>
+									<td id="from"  width="100px;"></td>
+									<td colspan="2">Metodo Presente
+									<input type="radio" name="metodo"/>
+									</td>
+									<td colspan="2">Metodo Propuesto
+									<input type="radio" name="metodo"/>
+									</td>
+								</tr>
+								<tr>
+									<td rowspan="3">Material</td>
+									<td colspan="5" rowspan="3"id="mate"></td>
+									<td colspan="4" align="center">Resumen</td>
+								</tr>
+								<tr align="center">
+									<td>Actividad</td>
+									<td>Presente</td>
+									<td>Propuesto</td>
+									<td>Ganado</td>
+								</tr>
+								<tr>
+									<td>Operacion <img src="../lib/sets/diagram/circle.png"/></td>
+									<td id="op1"></td>
+									<td id="op2"></td>
+									<td id="op3"></td>
+								</tr>
+								<tr>
+									<td rowspan="3">Actividad:</td>
+									<td colspan="5" rowspan="3"id="acti"></td>
+									<td>Trasporte <img src="../lib/sets/diagram/arrow.png"/></td>
+									<td id="tr1"></td>
+									<td id="tr2"></td>
+									<td id="tr3"></td>
+								</tr>
+								<tr>
+									<td>Demora <img src="../lib/sets/diagram/semi_circle_right.png"/></td>
+									<td id="de1"></td>
+									<td id="de2"></td>
+									<td id="de3"></td>
+								</tr>
+								<tr>
+									<td>Inspeccion <img src="../lib/sets/diagram/square.png"/></td>
+									<td id="in1"></td>
+									<td id="in2"></td>
+									<td id="in3"></td>
+								</tr>
+								<tr>
+									<td rowspan="2">Ubicacion:</td>
+									<td colspan="5" rowspan="2"id="ubic"></td>
+									<td>Almacenaje <img src="../lib/sets/diagram/triangle_inver.png"/></td>
+									<td id="al1"></td>
+									<td id="al2"></td>
+									<td id="al3"></td>
+								</tr>
+								<tr>
+									<td>Combinada <img src="../lib/sets/diagram/combine.png"/></td>
+									<td id="co1"></td>
+									<td id="co2"></td>
+									<td id="co3"></td>
+								</tr>
+								<tr>
+									<td rowspan="2">Analista:</td>
+									<td colspan="5" rowspan="2"id="alist"></td>
+									<td>Total actividades</td>
+									<td id="tal1"></td>
+									<td id="tal2"></td>
+									<td id="tal3"></td>
+								<tr>
+									<td>Distancia total</td>
+									<td id="tdi1"></td>
+									<td id="tdi2"></td>
+									<td id="tdi3"></td>
+								</tr>
+								<tr>
+									<td>Fecha: </td>
+									<td colspan="5" id="fecha"></td>
+									<td>Tiempo total</td>
+									<td id="tti1"></td>
+									<td id="tti2"></td>
+									<td id="tti3"></td>
+								</tr>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 				<div id="ctab2">
-					El nombre hojas de estilo en cascada viene del inglés Cascading Style Sheets, del que toma sus siglas. CSS es un lenguaje usado para definir la presentación de un documento estructurado escrito en HTML o XML2 (y por extensión en XHTML). El W3C (World Wide Web Consortium) es el encargado de formular la especificación de las hojas de estilo que servirán de estándar para los agentes de usuario o navegadores.
-				</div>
-				<div id="ctab3">
-					JavaScript es un lenguaje de programación interpretado, dialecto del estándar ECMAScript. Se define como orientado a objetos,3 basado en prototipos, imperativo, débilmente tipado y dinámico.
+					<canvas id="a" width="800" height="600">
+						Your browser does not support HTML5. Please upgrade your browser to any modern version.
+					</canvas>
+					<div id="text-editor"></div>
+					<div id="text-editor-tools"></div>
 				</div>
 			</div>
 		</div>

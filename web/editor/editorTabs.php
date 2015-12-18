@@ -7,7 +7,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +19,7 @@ limitations under the License.
 require_once dirname(__FILE__) . '/common/delegate.php';
 
 if (!isset($_SESSION)) {
-    session_start();
+session_start();
 }
 
 require_once dirname(__FILE__) . '/common/rememberme.php';
@@ -31,15 +31,15 @@ $delegate = new Delegate();
 #print_r($_SESSION['userId']);
 $loggedUser = null;
 if(isset($_SESSION['userId']) && is_numeric($_SESSION['userId'])){
-    $loggedUser = $delegate->userGetById($_SESSION['userId']);
+$loggedUser = $delegate->userGetById($_SESSION['userId']);
 }
 
 //start diagram guardian
 if(isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId'])){
-    if( !isset($_SESSION['userId']) ){
-        print "Not allocated to this diagram";
-        exit();
-    }
+if( !isset($_SESSION['userId']) ){
+print "Not allocated to this diagram";
+exit();
+}
 }
 //end diagram guardian
 
@@ -71,8 +71,8 @@ $page = 'editor';
         <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
         <script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>
 
-		<script type="text/javascript" src="./lib/loadScript.js"></script>
-		
+        <script type="text/javascript" src="./lib/loadScript.js"></script>
+
         <script type="text/javascript">
             "use strict";
             /*Option 1:
@@ -87,21 +87,21 @@ $page = 'editor';
             var figureSetsURL = appURL + '/editor/lib/sets';
             var insertImageURL = appURL + '/editor/data/import/';
 
-            function showImport(){
+            function showImport() {
                 //alert("ok");
                 var r = confirm("Current diagram will be deleted. Are you sure?");
-                if(r === true){                    
+                if (r === true) {
                     $('#import-dialog').modal(); // jQuery object; this demo
-                }                
+                }
             }
             loadLibs();
             loadSets();
             loadCommands();
-			$(document).ready(function() {
-				tabs("tab1");
-			}); 
+            $(document).ready(function() {
+                tabs("tab1");
+            });
         </script>
-        
+
         <script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/colorPicker_new.css" />
 
@@ -129,21 +129,21 @@ $page = 'editor';
 
             <a href="javascript:action('connector-jagged');" title="Jagged connector"><img src="assets/images/icon_connector_jagged.gif" border="0"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-			<!--
-            <a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            <!--
+<a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
+<img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/container.png" border="0" alt="Container"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+<a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/container.png" border="0" alt="Container"/></a>
+<img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <input type="checkbox" onclick="showGrid();" id="gridCheckbox"  title="Show grid" />
-            <span class="toolbarText">Show grid</span>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+<input type="checkbox" onclick="showGrid();" id="gridCheckbox"  title="Show grid" />
+<span class="toolbarText">Show grid</span>
+<img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Snap elements to grid" />
-            <span class="toolbarText">Snap to grid</span>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-			-->
+<input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Snap elements to grid" />
+<span class="toolbarText">Snap to grid</span>
+<img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            -->
             <a href="javascript:action('front');" title="Move to front"><img src="assets/images/icon_front.gif" border="0"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
@@ -164,7 +164,7 @@ $page = 'editor';
 
             <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-			<!-- TODO revisar el insetImagen -->
+            <!-- TODO revisar el insetImagen -->
             <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             <!--
@@ -268,38 +268,38 @@ $page = 'editor';
                 </div>
             </div>
             <!--THE canvas-->
-			<div style="width: 100%">
-				<div  id="container">
-					<div id="tabs">
-						<ul id=lista>
-							<li id="tab1">
-								<a href='javascript:tabs("tab1");'>HTML</a>
-							</li>
-							<li id="tab2">
-								<a href='javascript:tabs("tab2");'>CSS</a>
-							</li>
-							<li id="tab3">
-								<a href='javascript:tabs("tab3");'>JavaScript</a>
-							</li>
-						</ul>
-					</div>
-					<div id="ctabs">
-						<div id="ctab1">
-							<canvas id="a" width="800" height="600">
-								Your browser does not support HTML5. Please upgrade your browser to any modern version.
-							</canvas>
-							<div id="text-editor"></div>
-							<div id="text-editor-tools"></div>
-						</div>
-						<div id="ctab2">
-							El nombre hojas de estilo en cascada viene del inglés Cascading Style Sheets, del que toma sus siglas. CSS es un lenguaje usado para definir la presentación de un documento estructurado escrito en HTML o XML2 (y por extensión en XHTML). El W3C (World Wide Web Consortium) es el encargado de formular la especificación de las hojas de estilo que servirán de estándar para los agentes de usuario o navegadores.
-						</div>
-						<div id="ctab3">
-							JavaScript es un lenguaje de programación interpretado, dialecto del estándar ECMAScript. Se define como orientado a objetos,3 basado en prototipos, imperativo, débilmente tipado y dinámico.
-						</div>
-					</div>					
-				</div>
-			</div>
+            <div style="width: 100%">
+                <div  id="container">
+                    <div id="tabs">
+                        <ul id=lista>
+                            <li id="tab1">
+                                <a href='javascript:tabs("tab1");'>HTML</a>
+                            </li>
+                            <li id="tab2">
+                                <a href='javascript:tabs("tab2");'>CSS</a>
+                            </li>
+                            <li id="tab3">
+                                <a href='javascript:tabs("tab3");'>JavaScript</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="ctabs">
+                        <div id="ctab1">
+                            <canvas id="a" width="800" height="600">
+                                Your browser does not support HTML5. Please upgrade your browser to any modern version.
+                            </canvas>
+                            <div id="text-editor"></div>
+                            <div id="text-editor-tools"></div>
+                        </div>
+                        <div id="ctab2">
+                            El nombre hojas de estilo en cascada viene del inglés Cascading Style Sheets, del que toma sus siglas. CSS es un lenguaje usado para definir la presentación de un documento estructurado escrito en HTML o XML2 (y por extensión en XHTML). El W3C (World Wide Web Consortium) es el encargado de formular la especificación de las hojas de estilo que servirán de estándar para los agentes de usuario o navegadores.
+                        </div>
+                        <div id="ctab3">
+                            JavaScript es un lenguaje de programación interpretado, dialecto del estándar ECMAScript. Se define como orientado a objetos,3 basado en prototipos, imperativo, débilmente tipado y dinámico.
+                        </div>
+                    </div>					
+                </div>
+            </div>
             <!--Right panel-->
             <div id="right">
                 <center>

@@ -69,7 +69,7 @@ $page = 'editor';
         <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
         <script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>
 
-		<script type="text/javascript" src="./lib/loadScript.js"></script>
+	<script type="text/javascript" src="./lib/loadScript.js"></script>
 		
         <script type="text/javascript">
             "use strict";

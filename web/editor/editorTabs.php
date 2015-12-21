@@ -98,7 +98,8 @@ $page = 'editor';
             loadSets();
             loadCommands();
             $(document).ready(function() {
-                tabs("tab1");
+                tabs('tab2');
+                editable();
             });
         </script>
 
@@ -130,19 +131,19 @@ $page = 'editor';
             <a href="javascript:action('connector-jagged');" title="Jagged connector"><img src="assets/images/icon_connector_jagged.gif" border="0"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             <!--
-<a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
-<img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            <a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
+            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-<a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/container.png" border="0" alt="Container"/></a>
-<img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            <a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/container.png" border="0" alt="Container"/></a>
+            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-<input type="checkbox" onclick="showGrid();" id="gridCheckbox"  title="Show grid" />
-<span class="toolbarText">Show grid</span>
-<img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            <input type="checkbox" onclick="showGrid();" id="gridCheckbox"  title="Show grid" />
+            <span class="toolbarText">Show grid</span>
+            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-<input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Snap elements to grid" />
-<span class="toolbarText">Snap to grid</span>
-<img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            <input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Snap elements to grid" />
+            <span class="toolbarText">Snap to grid</span>
+            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             -->
             <a href="javascript:action('front');" title="Move to front"><img src="assets/images/icon_front.gif" border="0"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
@@ -273,29 +274,114 @@ $page = 'editor';
                     <div id="tabs">
                         <ul id=lista>
                             <li id="tab1">
-                                <a href='javascript:tabs("tab1");'>HTML</a>
+                                <a href='javascript:tabs("tab1");'>Cabecera</a>
                             </li>
                             <li id="tab2">
-                                <a href='javascript:tabs("tab2");'>CSS</a>
-                            </li>
-                            <li id="tab3">
-                                <a href='javascript:tabs("tab3");'>JavaScript</a>
+                                <a href='javascript:tabs("tab2");'>Diagrama</a>
                             </li>
                         </ul>
                     </div>
                     <div id="ctabs">
                         <div id="ctab1">
+                            <div>
+                                <table id="head">
+                                    <tbody>
+                                        <tr>
+                                            <td>Carta No:</td>
+                                            <td id="carta"></td>
+                                            <td>Hoja No:</td>
+                                            <td id="hoja"></td>
+                                            <td>De:</td>
+                                            <td id="from"  width="100px;"></td>
+                                            <td colspan=2>Metodo Presente
+                                                <input type="radio" name="metodo"/>
+                                            </td>
+                                            <td colspan=2>Metodo Propuesto
+                                                <input type="radio" name="metodo"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan=3>Material</td>
+                                            <td colspan=5 rowspan=3 id="mate"></td>
+                                            <td colspan=4 align="center">Resumen</td>
+                                        </tr>
+                                        <tr align="center">
+                                            <td>Actividad</td>
+                                            <td>Presente</td>
+                                            <td>Propuesto</td>
+                                            <td>Ganado</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Operacion <img src="lib/sets/diagram/circle.png"/></td>
+                                            <td id="op1"></td>
+                                            <td id="op2"></td>
+                                            <td id="op3"></td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan=3>Actividad:</td>
+                                            <td colspan=5 rowspan=3 id="acti"></td>
+                                            <td>Trasporte <img src="lib/sets/diagram/arrow.png"/></td>
+                                            <td id="tr1"></td>
+                                            <td id="tr2"></td>
+                                            <td id="tr3"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Demora <img src="lib/sets/diagram/semi_circle_right.png"/></td>
+                                            <td id="de1"></td>
+                                            <td id="de2"></td>
+                                            <td id="de3"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Inspeccion <img src="lib/sets/diagram/square.png"/></td>
+                                            <td id="in1"></td>
+                                            <td id="in2"></td>
+                                            <td id="in3"></td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan=2>Ubicacion:</td>
+                                            <td colspan=5 rowspan=2 id="ubic"></td>
+                                            <td>Almacenaje <img src="lib/sets/diagram/triangle_inver.png"/></td>
+                                            <td id="al1"></td>
+                                            <td id="al2"></td>
+                                            <td id="al3"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Combinada <img src="lib/sets/diagram/combine.png"/></td>
+                                            <td id="co1"></td>
+                                            <td id="co2"></td>
+                                            <td id="co3"></td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">Analista:</td>
+                                            <td colspan="5" rowspan="2" id="alist"></td>
+                                            <td>Total actividades</td>
+                                            <td id="tal1"></td>
+                                            <td id="tal2"></td>
+                                            <td id="tal3"></td>
+                                        <tr>
+                                            <td>Distancia total</td>
+                                            <td id="tdi1"></td>
+                                            <td id="tdi2"></td>
+                                            <td id="tdi3"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fecha: </td>
+                                            <td colspan="5" id="fecha"></td>
+                                            <td>Tiempo total</td>
+                                            <td id="tti1"></td>
+                                            <td id="tti2"></td>
+                                            <td id="tti3"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="ctab2">
                             <canvas id="a" width="800" height="600">
                                 Your browser does not support HTML5. Please upgrade your browser to any modern version.
                             </canvas>
                             <div id="text-editor"></div>
                             <div id="text-editor-tools"></div>
-                        </div>
-                        <div id="ctab2">
-                            El nombre hojas de estilo en cascada viene del inglés Cascading Style Sheets, del que toma sus siglas. CSS es un lenguaje usado para definir la presentación de un documento estructurado escrito en HTML o XML2 (y por extensión en XHTML). El W3C (World Wide Web Consortium) es el encargado de formular la especificación de las hojas de estilo que servirán de estándar para los agentes de usuario o navegadores.
-                        </div>
-                        <div id="ctab3">
-                            JavaScript es un lenguaje de programación interpretado, dialecto del estándar ECMAScript. Se define como orientado a objetos,3 basado en prototipos, imperativo, débilmente tipado y dinámico.
                         </div>
                     </div>					
                 </div>

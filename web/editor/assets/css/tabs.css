@@ -1,28 +1,52 @@
 #tabs {
-	font-size: 3ex;
-	font-weight: bold;
-	position: relative;
+    font-size: 3ex;
+    font-weight: bold;
+    position: relative;
 }
 #tabs ul {
-	margin: auto;
-	margin-left: -40px;	
+    margin: auto;
+    margin-left: -40px;	
 }
 #tabs li {
-	background: #E5E5E5;
-	list-style-type: none;
-	float: left;
-	text-align: center;
-	margin: 0px 2px -2px -0px;
-	padding: 0px 20px 0px 20px;
+    background: #E5E5E5;
+    list-style-type: none;
+    float: left;
+    text-align: center;
+    margin: 0px 2px -2px -0px;
+    padding: 0px 20px 0px 20px;
 }
 #tabs a:link {
-	text-decoration: none;
-	color: #8C8C8C;
+    text-decoration: none;
+    color: #8C8C8C;
 }
 #ctabs {
-	clear: both;
-	background: #E5E5E5;
-	padding: 3px;
-	border: 2px solid #D8D8D8;
-	position: relative;
+    clear: both;
+    background: #E5E5E5;
+    padding: 3px;
+    border: 2px solid #D8D8D8;
+    position: relative;
+}
+
+table {
+    border: 2px solid #ddd;
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+table img {
+    vertical-align: -10px;
+}
+td {
+    border: 2px solid #ddd;
+    min-width: 30px;
+    max-width: 150px;
+    line-height: 1.42857143;
+    padding: 3px;
+}
+.edit {
+    background: #F6F6F6;
+    -webkit-box-shadow: inset 1px 1px 1px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 1px 1px 1px 0px rgba(0,0,0,0.5);
+    box-shadow: inset 1px 1px 1px 0px rgba(0,0,0,0.5);
 }

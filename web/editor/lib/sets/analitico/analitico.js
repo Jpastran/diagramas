@@ -17,8 +17,8 @@
  */
 //TODO agregar la propiedad de texto en el builder, para las lineas
 //TODO corregir los que usan el formato patch para cambiar nombre u eliminar la posibilidad
-figureSets["diagram"] = {
-    name: 'Diagram',
+figureSets["analitico"] = {
+    name: 'Diagrama Analitico',
     description: 'Diagram set of figures',
     figures: [     
         {figureFunction: "Circle", image: "circle.png"},

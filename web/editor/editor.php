@@ -283,98 +283,96 @@ $page = 'editor';
                     </div>
                     <div id="ctabs">
                         <div id="ctab1">
-                            <div>
-                                <table id="head">
-                                    <tbody>
-                                        <tr>
-                                            <td>Carta No:</td>
-                                            <td id="carta"></td>
-                                            <td>Hoja No:</td>
-                                            <td id="hoja"></td>
-                                            <td>De:</td>
-                                            <td id="from"  width="100px;"></td>
-                                            <td colspan=2>Metodo Presente
-                                                <input type="radio" name="metodo"/>
-                                            </td>
-                                            <td colspan=2>Metodo Propuesto
-                                                <input type="radio" name="metodo"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td rowspan=3>Material</td>
-                                            <td colspan=5 rowspan=3 id="mate"></td>
-                                            <td colspan=4 align="center">Resumen</td>
-                                        </tr>
-                                        <tr align="center">
-                                            <td>Actividad</td>
-                                            <td>Presente</td>
-                                            <td>Propuesto</td>
-                                            <td>Ganado</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Operacion <img src="lib/sets/diagram/circle.png"/></td>
-                                            <td id="op1"></td>
-                                            <td id="op2"></td>
-                                            <td id="op3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td rowspan=3>Actividad:</td>
-                                            <td colspan=5 rowspan=3 id="acti"></td>
-                                            <td>Trasporte <img src="lib/sets/diagram/arrow.png"/></td>
-                                            <td id="tr1"></td>
-                                            <td id="tr2"></td>
-                                            <td id="tr3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Demora <img src="lib/sets/diagram/semi_circle_right.png"/></td>
-                                            <td id="de1"></td>
-                                            <td id="de2"></td>
-                                            <td id="de3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Inspeccion <img src="lib/sets/diagram/square.png"/></td>
-                                            <td id="in1"></td>
-                                            <td id="in2"></td>
-                                            <td id="in3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td rowspan=2>Ubicacion:</td>
-                                            <td colspan=5 rowspan=2 id="ubic"></td>
-                                            <td>Almacenaje <img src="lib/sets/diagram/triangle_inver.png"/></td>
-                                            <td id="al1"></td>
-                                            <td id="al2"></td>
-                                            <td id="al3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Combinada <img src="lib/sets/diagram/combine.png"/></td>
-                                            <td id="co1"></td>
-                                            <td id="co2"></td>
-                                            <td id="co3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td rowspan="2">Analista:</td>
-                                            <td colspan="5" rowspan="2" id="alist"></td>
-                                            <td>Total actividades</td>
-                                            <td id="tal1"></td>
-                                            <td id="tal2"></td>
-                                            <td id="tal3"></td>
-                                        <tr>
-                                            <td>Distancia total</td>
-                                            <td id="tdi1"></td>
-                                            <td id="tdi2"></td>
-                                            <td id="tdi3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fecha: </td>
-                                            <td colspan="5" id="fecha"></td>
-                                            <td>Tiempo total</td>
-                                            <td id="tti1"></td>
-                                            <td id="tti2"></td>
-                                            <td id="tti3"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table id="head">
+                                <tbody>
+                                    <tr>
+                                        <td>Carta No:</td>
+                                        <td id="carta"></td>
+                                        <td>Hoja No:</td>
+                                        <td id="hoja"></td>
+                                        <td>De:</td>
+                                        <td id="from"  width="100px;"></td>
+                                        <td colspan=2>Metodo Presente
+                                            <input type="radio" name="metodo"/>
+                                        </td>
+                                        <td colspan=2>Metodo Propuesto
+                                            <input type="radio" name="metodo"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan=3>Material</td>
+                                        <td colspan=5 rowspan=3 id="mate"></td>
+                                        <td colspan=4 align="center">Resumen</td>
+                                    </tr>
+                                    <tr align="center">
+                                        <td>Actividad</td>
+                                        <td>Presente</td>
+                                        <td>Propuesto</td>
+                                        <td>Ganado</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Operacion <img src="lib/sets/analitico/circle.png"/></td>
+                                        <td id="op1"></td>
+                                        <td id="op2"></td>
+                                        <td id="op3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan=3>Actividad:</td>
+                                        <td colspan=5 rowspan=3 id="acti"></td>
+                                        <td>Trasporte <img src="lib/sets/analitico/arrow.png"/></td>
+                                        <td id="tr1"></td>
+                                        <td id="tr2"></td>
+                                        <td id="tr3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Demora <img src="lib/sets/analitico/semi_circle_right.png"/></td>
+                                        <td id="de1"></td>
+                                        <td id="de2"></td>
+                                        <td id="de3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Inspeccion <img src="lib/sets/analitico/square.png"/></td>
+                                        <td id="in1"></td>
+                                        <td id="in2"></td>
+                                        <td id="in3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan=2>Ubicacion:</td>
+                                        <td colspan=5 rowspan=2 id="ubic"></td>
+                                        <td>Almacenaje <img src="lib/sets/analitico/triangle_inver.png"/></td>
+                                        <td id="al1"></td>
+                                        <td id="al2"></td>
+                                        <td id="al3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combinada <img src="lib/sets/analitico/combine.png"/></td>
+                                        <td id="co1"></td>
+                                        <td id="co2"></td>
+                                        <td id="co3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="2">Analista:</td>
+                                        <td colspan="5" rowspan="2" id="alist"></td>
+                                        <td>Total actividades</td>
+                                        <td id="tal1"></td>
+                                        <td id="tal2"></td>
+                                        <td id="tal3"></td>
+                                    <tr>
+                                        <td>Distancia total</td>
+                                        <td id="tdi1"></td>
+                                        <td id="tdi2"></td>
+                                        <td id="tdi3"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fecha: </td>
+                                        <td colspan="5" id="fecha"></td>
+                                        <td>Tiempo total</td>
+                                        <td id="tti1"></td>
+                                        <td id="tti2"></td>
+                                        <td id="tti3"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <div id="ctab2">
                             <canvas id="a" width="800" height="600">

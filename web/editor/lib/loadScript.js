@@ -36,14 +36,9 @@ function loadLibs() {
 
 function loadSets() {
     document.write(	
-        '<script type="text/javascript" src="./lib/sets/diagram/diagram.js"></script>'
-         /*
-        '<script type="text/javascript" src="./lib/sets/basic/basic.js"></script>'       
-        <script type="text/javascript" src="./lib/sets/experimental/experimental.js"></script>
-        <script type="text/javascript" src="./lib/sets/network/network.js"></script>
-        <script type="text/javascript" src="./lib/sets/secondary/secondary.js"></script>
-        <script type="text/javascript" src="./lib/sets/statemachine/statemachine.js"></script>
-        */
+        '<script type="text/javascript" src="./lib/sets/analitico/analitico.js"></script>',     
+        '<script type="text/javascript" src="./lib/sets/sinoptico/sinoptico.js"></script>',      
+        '<script type="text/javascript" src="./lib/sets/recorrido/recorrido.js"></script>'
      );
 }
 

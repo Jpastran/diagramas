@@ -25,6 +25,7 @@
     padding: 3px;
     border: 2px solid #D8D8D8;
     position: relative;
+    min-width: 800px;
 }
 
 table {
@@ -42,7 +43,7 @@ td {
     min-width: 30px;
     max-width: 150px;
     line-height: 1.42857143;
-    padding: 3px;
+    padding: 5px;
 }
 .edit {
     background: #F6F6F6;

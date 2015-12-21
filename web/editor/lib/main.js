@@ -616,7 +616,7 @@ function showInsertImageDialog() {
     setUploadedImagesList();
 
     var dialogContent = document.getElementById('insert-image-dialog');
-    $.modal(dialogContent, {minWidth: '380px', containerId: 'upload-image-dialog', overlayClose: true});
+    $.modal(dialogContent, {minWidth: '450px', containerId: 'upload-image-dialog', overlayClose: true});
     // update dialog's position
     $.modal.setPosition();
 

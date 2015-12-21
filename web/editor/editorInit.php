@@ -7,7 +7,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +19,7 @@ limitations under the License.
 require_once dirname(__FILE__) . '/common/delegate.php';
 
 if (!isset($_SESSION)) {
-session_start();
+    session_start();
 }
 
 require_once dirname(__FILE__) . '/common/rememberme.php';
@@ -31,15 +31,15 @@ $delegate = new Delegate();
 #print_r($_SESSION['userId']);
 $loggedUser = null;
 if(isset($_SESSION['userId']) && is_numeric($_SESSION['userId'])){
-$loggedUser = $delegate->userGetById($_SESSION['userId']);
+    $loggedUser = $delegate->userGetById($_SESSION['userId']);
 }
 
 //start diagram guardian
 if(isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId'])){
-if( !isset($_SESSION['userId']) ){
-print "Not allocated to this diagram";
-exit();
-}
+    if( !isset($_SESSION['userId']) ){
+        print "Not allocated to this diagram";
+        exit();
+    }
 }
 //end diagram guardian
 
@@ -61,18 +61,16 @@ $page = 'editor';
 
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/minimap.css" />
-        <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/tabs.css" />
 
         <script type="text/javascript" src="./assets/javascript/json2.js"></script>
-        <script type="text/javascript" src="./assets/javascript/tabs.js"></script>
         <script type="text/javascript" src="./assets/javascript/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
 
         <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
         <script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>
 
-        <script type="text/javascript" src="./lib/loadScript.js"></script>
-
+	<script type="text/javascript" src="./lib/loadScript.js"></script>
+		
         <script type="text/javascript">
             "use strict";
             /*Option 1:
@@ -87,22 +85,18 @@ $page = 'editor';
             var figureSetsURL = appURL + '/editor/lib/sets';
             var insertImageURL = appURL + '/editor/data/import/';
 
-            function showImport() {
+            function showImport(){
                 //alert("ok");
                 var r = confirm("Current diagram will be deleted. Are you sure?");
-                if (r === true) {
+                if(r === true){                    
                     $('#import-dialog').modal(); // jQuery object; this demo
-                }
+                }                
             }
             loadLibs();
             loadSets();
             loadCommands();
-            $(document).ready(function() {
-                tabs('tab2');
-                editable();
-            });
         </script>
-
+        
         <script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/colorPicker_new.css" />
 
@@ -130,7 +124,7 @@ $page = 'editor';
 
             <a href="javascript:action('connector-jagged');" title="Jagged connector"><img src="assets/images/icon_connector_jagged.gif" border="0"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            <!--
+			<!--
             <a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
@@ -144,7 +138,7 @@ $page = 'editor';
             <input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Snap elements to grid" />
             <span class="toolbarText">Snap to grid</span>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            -->
+			-->
             <a href="javascript:action('front');" title="Move to front"><img src="assets/images/icon_front.gif" border="0"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
@@ -165,7 +159,7 @@ $page = 'editor';
 
             <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            <!-- TODO revisar el insetImagen -->
+			<!-- TODO revisar el insetImagen -->
             <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             <!--
@@ -271,119 +265,11 @@ $page = 'editor';
             <!--THE canvas-->
             <div style="width: 100%">
                 <div  id="container">
-                    <div id="tabs">
-                        <ul id=lista>
-                            <li id="tab1">
-                                <a href='javascript:tabs("tab1");'>Cabecera</a>
-                            </li>
-                            <li id="tab2">
-                                <a href='javascript:tabs("tab2");'>Diagrama</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="ctabs">
-                        <div id="ctab1">
-                            <div>
-                                <table id="head">
-                                    <tbody>
-                                        <tr>
-                                            <td>Carta No:</td>
-                                            <td id="carta"></td>
-                                            <td>Hoja No:</td>
-                                            <td id="hoja"></td>
-                                            <td>De:</td>
-                                            <td id="from"  width="100px;"></td>
-                                            <td colspan=2>Metodo Presente
-                                                <input type="radio" name="metodo"/>
-                                            </td>
-                                            <td colspan=2>Metodo Propuesto
-                                                <input type="radio" name="metodo"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td rowspan=3>Material</td>
-                                            <td colspan=5 rowspan=3 id="mate"></td>
-                                            <td colspan=4 align="center">Resumen</td>
-                                        </tr>
-                                        <tr align="center">
-                                            <td>Actividad</td>
-                                            <td>Presente</td>
-                                            <td>Propuesto</td>
-                                            <td>Ganado</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Operacion <img src="lib/sets/diagram/circle.png"/></td>
-                                            <td id="op1"></td>
-                                            <td id="op2"></td>
-                                            <td id="op3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td rowspan=3>Actividad:</td>
-                                            <td colspan=5 rowspan=3 id="acti"></td>
-                                            <td>Trasporte <img src="lib/sets/diagram/arrow.png"/></td>
-                                            <td id="tr1"></td>
-                                            <td id="tr2"></td>
-                                            <td id="tr3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Demora <img src="lib/sets/diagram/semi_circle_right.png"/></td>
-                                            <td id="de1"></td>
-                                            <td id="de2"></td>
-                                            <td id="de3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Inspeccion <img src="lib/sets/diagram/square.png"/></td>
-                                            <td id="in1"></td>
-                                            <td id="in2"></td>
-                                            <td id="in3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td rowspan=2>Ubicacion:</td>
-                                            <td colspan=5 rowspan=2 id="ubic"></td>
-                                            <td>Almacenaje <img src="lib/sets/diagram/triangle_inver.png"/></td>
-                                            <td id="al1"></td>
-                                            <td id="al2"></td>
-                                            <td id="al3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Combinada <img src="lib/sets/diagram/combine.png"/></td>
-                                            <td id="co1"></td>
-                                            <td id="co2"></td>
-                                            <td id="co3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td rowspan="2">Analista:</td>
-                                            <td colspan="5" rowspan="2" id="alist"></td>
-                                            <td>Total actividades</td>
-                                            <td id="tal1"></td>
-                                            <td id="tal2"></td>
-                                            <td id="tal3"></td>
-                                        <tr>
-                                            <td>Distancia total</td>
-                                            <td id="tdi1"></td>
-                                            <td id="tdi2"></td>
-                                            <td id="tdi3"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Fecha: </td>
-                                            <td colspan="5" id="fecha"></td>
-                                            <td>Tiempo total</td>
-                                            <td id="tti1"></td>
-                                            <td id="tti2"></td>
-                                            <td id="tti3"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div id="ctab2">
-                            <canvas id="a" width="800" height="600">
-                                Your browser does not support HTML5. Please upgrade your browser to any modern version.
-                            </canvas>
-                            <div id="text-editor"></div>
-                            <div id="text-editor-tools"></div>
-                        </div>
-                    </div>					
+                    <canvas id="a" width="800" height="600">
+                        Your browser does not support HTML5. Please upgrade your browser to any modern version.
+                    </canvas>
+                    <div id="text-editor"></div>
+                    <div id="text-editor-tools"></div>
                 </div>
             </div>
             <!--Right panel-->

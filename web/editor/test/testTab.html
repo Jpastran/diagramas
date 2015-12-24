@@ -71,13 +71,6 @@
 
             });
             //http:programandoointentandolo.com/2012/11/como-crear-pestanas-con-html.html
-            function onclicTab() {
-                while (document.getElementById("tab" + i) != null) {
-                    $("#" + "tab" + i).css('background', '');
-                    $("#" + "tab" + i).css('padding-bottom', '');
-                }
-            }
-
             function tabs(li, div) {
                 //Se ocultan todos los contenedores
                 var i = 1;
@@ -101,35 +94,37 @@
                 $(div).css('display', '');
             }
 
-            var resumen = ['op', 'tr', 'de', 'in', 'al', 'co', 'tal', 'tdi', 'tti'];
-            var datos = ['carta', 'hoja', 'from', 'mate', 'acti', 'ubic', 'alist', 'fecha', 'date'];
-
             function editable() {
-                for (var i = 0; i < resumen.length; i++) {
-                    $("#" + datos[i]).attr('contenteditable', 'true');
-                    $("#" + datos[i]).attr('class', 'edit');
-                    for (var j = 1; j <= 3; j++) {
-                        $("#" + resumen[i] + j).attr('contenteditable', 'true');
-                        $("#" + resumen[i] + j).attr('class', 'edit');
+                var tds = $("#ctabs td");
+                for (var i = 0; i < tds.length; i++) {
+                    if ($(tds[i]).html() == "") {
+                        $(tds[i]).attr('contenteditable', 'true');
+                        $(tds[i]).attr('class', 'edit');
+                        $(tds[i]).attr('id', 'td' + i);
                     }
                 }
             }
 
+            var resp = [];
+
             function obtener() {
-                var obDatos = [];
-                var obResum = [];
-                var n = 0;
-                for (var i = 0; i < resumen.length; i++) {
-                    for (var j = 1; j <= 3; j++) {
-                        obDatos[n] = document.getElementById(resumen[i] + j).textContent;
-                        n++;
+                var edits = $(".edit");
+                for (var i = 0; i < edits.length; i++) {
+                    if ($(edits[i]).text() != "") {
+                        console.log($(edits[i]).text());
                     }
-                    if (document.getElementById(datos[i]) != null) {
-                        obResum[i] = document.getElementById(datos[i]).textContent;
-                    }
+                    resp[i] = $(edits[i]).text();
                 }
-                console.log(obResum);
-                console.log(obDatos);
+            }
+
+            function cargar(datos) {
+                var edits = $(".edit");
+                for (var i = 0; i < edits.length; i++) {
+                    if (datos[i] != "") {
+                        console.log(datos[i]);
+                    }
+                    $(edits[i]).text(datos[i]);
+                }
             }
 
             function cambiaCtab(li, ctab) {
@@ -160,19 +155,19 @@
             </div>
             <div id="ctabs">
                 <div id="ctab1">
-                    <table id="head">
+                    <table id="sinoptico">
                         <tbody>
                             <tr>
                                 <td>Diagrama No:</td>
-                                <td colspan=3 id="carta"></td>
+                                <td colspan=3 ></td>
                                 <td>Hoja No:</td>
-                                <td id="hoja"></td>
+                                <td></td>
                                 <td>De:</td>
-                                <td id="from"  width="100px;"></td>
+                                <td width="100px;"></td>
                             </tr>
                             <tr>
                                 <td>Fecha:</td>
-                                <td id="date" style="min-width: 120px"></td>
+                                <td style="min-width: 120px"></td>
                                 <td>Presente
                                     <input type="radio" name="metodo"/>
                                 </td>
@@ -183,7 +178,7 @@
                             </tr>
                             <tr>
                                 <td rowspan=4>Actividad</td>
-                                <td colspan=3 rowspan=4 id="acti"></td>
+                                <td colspan=3 rowspan=4></td>
                                 <td align="center">Actividad</td>
                                 <td align="center">Presente</td>
                                 <td align="center">Propuesto</td>
@@ -191,36 +186,36 @@
                             </tr>
                             <tr>
                                 <td>Operacion <img src="../lib/sets/sinoptico/circle.png"/></td>
-                                <td id="op1"></td>
-                                <td id="op2"></td>
-                                <td id="op3"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>Inspeccion <img src="../lib/sets/sinoptico/square.png"/></td>
-                                <td id="in1"></td>
-                                <td id="in2"></td>
-                                <td id="in3"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>Combinada <img src="../lib/sets/sinoptico/combine.png"/></td>
-                                <td id="co1"></td>
-                                <td id="co2"></td>
-                                <td id="co3"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>Analista:</td>
-                                <td colspan=3 id="alist"></td>
+                                <td colspan=3></td>
                                 <td>Total actividades</td>
-                                <td id="tal1"></td>
-                                <td id="tal2"></td>
-                                <td id="tal3"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             <tr>
                                 <td>Fecha: </td>
-                                <td colspan=3 id="fecha"></td>
+                                <td colspan=3></td>
                                 <td>Tiempo total</td>
-                                <td id="tti1"></td>
-                                <td id="tti2"></td>
-                                <td id="tti3"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
@@ -233,7 +228,7 @@
                     <div id="text-editor-tools"></div>
                 </div>
                 <div id="ctab3">
-                    <table id="head">
+                    <table id="analitico">
                         <tbody>
                             <tr>
                                 <td>Carta No:</td>

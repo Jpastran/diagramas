@@ -98,7 +98,7 @@ $page = 'editor';
             loadSets();
             loadCommands();
             $(document).ready(function() {
-                tabs('tab2');
+                tabs(tab2, ctab2);
                 editable();
             });
         </script>
@@ -274,24 +274,24 @@ $page = 'editor';
                     <div id="tabs">
                         <ul id=lista>
                             <li id="tab1">
-                                <a href='javascript:tabs("tab1");'>Cabecera</a>
+                                <a href='javascript:tabs(tab1,ctab1)'>Cabecera</a>
                             </li>
                             <li id="tab2">
-                                <a href='javascript:tabs("tab2");'>Diagrama</a>
+                                <a href='javascript:tabs(tab2,ctab2)'>Diagrama</a>
                             </li>
                         </ul>
                     </div>
                     <div id="ctabs">
                         <div id="ctab1">
-                            <table id="head">
+                            <table id="analitico">
                                 <tbody>
                                     <tr>
                                         <td>Carta No:</td>
-                                        <td id="carta"></td>
+                                        <td></td>
                                         <td>Hoja No:</td>
-                                        <td id="hoja"></td>
+                                        <td></td>
                                         <td>De:</td>
-                                        <td id="from"  width="100px;"></td>
+                                        <td width="100px;"></td>
                                         <td colspan=2>Metodo Presente
                                             <input type="radio" name="metodo"/>
                                         </td>
@@ -301,7 +301,7 @@ $page = 'editor';
                                     </tr>
                                     <tr>
                                         <td rowspan=3>Material</td>
-                                        <td colspan=5 rowspan=3 id="mate"></td>
+                                        <td colspan=5 rowspan=3></td>
                                         <td colspan=4 align="center">Resumen</td>
                                     </tr>
                                     <tr align="center">
@@ -312,64 +312,64 @@ $page = 'editor';
                                     </tr>
                                     <tr>
                                         <td>Operacion <img src="lib/sets/analitico/circle.png"/></td>
-                                        <td id="op1"></td>
-                                        <td id="op2"></td>
-                                        <td id="op3"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td rowspan=3>Actividad:</td>
-                                        <td colspan=5 rowspan=3 id="acti"></td>
+                                        <td colspan=5 rowspan=3></td>
                                         <td>Trasporte <img src="lib/sets/analitico/arrow.png"/></td>
-                                        <td id="tr1"></td>
-                                        <td id="tr2"></td>
-                                        <td id="tr3"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>Demora <img src="lib/sets/analitico/semi_circle_right.png"/></td>
-                                        <td id="de1"></td>
-                                        <td id="de2"></td>
-                                        <td id="de3"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>Inspeccion <img src="lib/sets/analitico/square.png"/></td>
-                                        <td id="in1"></td>
-                                        <td id="in2"></td>
-                                        <td id="in3"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td rowspan=2>Ubicacion:</td>
                                         <td colspan=5 rowspan=2 id="ubic"></td>
                                         <td>Almacenaje <img src="lib/sets/analitico/triangle_inver.png"/></td>
-                                        <td id="al1"></td>
-                                        <td id="al2"></td>
-                                        <td id="al3"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>Combinada <img src="lib/sets/analitico/combine.png"/></td>
-                                        <td id="co1"></td>
-                                        <td id="co2"></td>
-                                        <td id="co3"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td rowspan="2">Analista:</td>
-                                        <td colspan="5" rowspan="2" id="alist"></td>
+                                        <td colspan="5" rowspan="2"></td>
                                         <td>Total actividades</td>
-                                        <td id="tal1"></td>
-                                        <td id="tal2"></td>
-                                        <td id="tal3"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     <tr>
                                         <td>Distancia total</td>
-                                        <td id="tdi1"></td>
-                                        <td id="tdi2"></td>
-                                        <td id="tdi3"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>Fecha: </td>
-                                        <td colspan="5" id="fecha"></td>
+                                        <td colspan="5"></td>
                                         <td>Tiempo total</td>
-                                        <td id="tti1"></td>
-                                        <td id="tti2"></td>
-                                        <td id="tti3"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -380,6 +380,72 @@ $page = 'editor';
                             </canvas>
                             <div id="text-editor"></div>
                             <div id="text-editor-tools"></div>
+                        </div>
+                        <div id="ctab3">
+                            <table id="sinoptico">
+                                <tbody>
+                                    <tr>
+                                        <td>Diagrama No:</td>
+                                        <td colspan=3 ></td>
+                                        <td>Hoja No:</td>
+                                        <td></td>
+                                        <td>De:</td>
+                                        <td width="100px;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fecha:</td>
+                                        <td style="min-width: 120px"></td>
+                                        <td>Presente
+                                            <input type="radio" name="metodo"/>
+                                        </td>
+                                        <td>Propuesto
+                                            <input type="radio" name="metodo"/>
+                                        </td>
+                                        <td colspan=4 align="center">Resumen</td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan=4>Actividad</td>
+                                        <td colspan=3 rowspan=4></td>
+                                        <td align="center">Actividad</td>
+                                        <td align="center">Presente</td>
+                                        <td align="center">Propuesto</td>
+                                        <td align="center">Ganado</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Operacion <img src="lib/sets/sinoptico/circle.png"/></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Inspeccion <img src="lib/sets/sinoptico/square.png"/></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combinada <img src="lib/sets/sinoptico/combine.png"/></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Analista:</td>
+                                        <td colspan=3></td>
+                                        <td>Total actividades</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    <tr>
+                                        <td>Fecha: </td>
+                                        <td colspan=3></td>
+                                        <td>Tiempo total</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>					
                 </div>

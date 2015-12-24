@@ -4419,6 +4419,7 @@ function touchCancel(event) {
 //TODO crear un metodo y boton para terminar el diagrama.
 //TODO estudiar el .js de History e implementarlo para coor.
 //TODO Borrar los TODO que no digan un error.
+//TODO implementar multiple lienzo, 
 
 /**
  * Variables usadas por el diagrama
@@ -4580,9 +4581,7 @@ function figureBuild(figureFunction, x, y) {
 
 function cleanStates() {
     reprocesa ? coor[1] -= disFig : coor[1] += disFig;
-    state = STATE_NONE;
-    selectedFigureId = -1;
-    selectedConnectorId = -1;
+    resetToNoneState();
     mousePressed = false;
     createFigureFunction = null;
     CONNECTOR_MANAGER.connectionPointsResetColor();
@@ -5016,7 +5015,18 @@ function cambiarVista(id) {
     var divRight = document.getElementById('right');
     if (id == "analitico") {
         divEsp.style.display = 'block';
+        cambiaCtab(tab1,ctab1);
+        tabs(tab1,ctab1);
+        STACK.reset();
     } else if (id == "sinoptico") {
         divEsp.style.display = 'none';
+        cambiaCtab(tab1,ctab3);
+        tabs(tab1,ctab3);
+        
     }
+    STACK.reset();
+    CONNECTOR_MANAGER.reset();
+    draw();
+    coor = [iniX, iniY];
+    primer = false;
 }

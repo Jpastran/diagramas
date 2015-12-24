@@ -1,61 +1,67 @@
 
 //http:programandoointentandolo.com/2012/11/como-crear-pestanas-con-html.html
-function tabs(tabId) {
-    // Obtiene los elementos con los identificadores pasados.
-    var tab = document.getElementById(tabId);
-    // Obtiene las divisiones que tienen el contenido de las pestañas.
-    var ctab = document.getElementById("c" + tabId);
+function tabs(li, div) {
+    //Se ocultan todos los contenedores
     var i = 1;
-    // Recorre la lista ocultando todas las pestañas y restaurando el fondo
-    // y el padding de las pestañas.
-    while (document.getElementById("tab" + i) != null) {
+    while (document.getElementById("ctab" + i) != null) {
         $("#" + "ctab" + i).css('display', 'none');
+        i += 1;
+    }
+    i = 1;
+    //Se restaura el fondo de las pestañas
+    while (document.getElementById("tab" + i) != null) {
         $("#" + "tab" + i).css('background', '');
         $("#" + "tab" + i).css('padding-bottom', '');
         i += 1;
     }
-    // Muestra el contenido de la pestaña pasada como parametro a la funcion,
-    // cambia el color de la pestaña y aumenta el padding para que tape el
-    // borde superior del contenido que esta juesto debajo y se vea de este
-    // modo que esta seleccionada.
-    $(ctab).css('display', '');
-    $(tab).css('background', '#CECECE');
-    $(tab).css('padding-bottom', '2px');
 
+    //Aplica el fondo a la pestaña activa
+    $(li).css('background', '#CECECE');
+    $(li).css('padding-bottom', '2px');
+
+    //Activa el contedino solicitado
+    $(div).css('display', '');
 }
-
-var resumen = ['op', 'tr', 'de', 'in', 'al', 'co', 'tal', 'tdi', 'tti'];
-var datos = ['carta', 'hoja', 'from', 'mate', 'acti', 'ubic', 'alist', 'fecha'];
 
 function editable() {
-    for (var i = 0; i < resumen.length; i++) {
-        $("#" + datos[i]).attr('contenteditable', 'true');
-        $("#" + datos[i]).attr('class', 'edit');
-        for (var j = 1; j <= 3; j++) {
-            $("#" + resumen[i] + j).attr('contenteditable', 'true');
-            $("#" + resumen[i] + j).attr('class', 'edit');
+    var tds = $("#ctabs td");
+    for (var i = 0; i < tds.length; i++) {
+        if ($(tds[i]).html() == "") {
+            $(tds[i]).attr('contenteditable', 'true');
+            $(tds[i]).attr('class', 'edit');
+            $(tds[i]).attr('id', 'td' + i);
         }
     }
 }
+
+var resp = [];
 
 function obtener() {
-    var obDatos = [];
-    var obResum = [];
-    var n = 0;
-    for (var i = 0; i < resumen.length; i++) {
-        for (var j = 1; j <= 3; j++) {
-            obDatos[n] = document.getElementById(resumen[i] + j).textContent;
-            n++;
+    var edits = $(".edit");
+    for (var i = 0; i < edits.length; i++) {
+        if ($(edits[i]).text() != "") {
+            console.log($(edits[i]).text());
         }
-        if (document.getElementById(datos[i]) != null) {
-            obResum[i] = document.getElementById(datos[i]).textContent;
-        }
+        resp[i] = $(edits[i]).text();
     }
-    console.log(obResum);
-    console.log(obDatos);
 }
 
-function cambiaTab(tabOld, tabNew) {
-    var href = 'javascript:tabs(' + '"' + tabNew + '"' + ');';
-    $($(tabOld).children('a')).attr('href', href);
+function cargar(datos) {
+    var edits = $(".edit");
+    for (var i = 0; i < edits.length; i++) {
+        if (datos[i] != "") {
+            console.log(datos[i]);
+        }
+        $(edits[i]).text(datos[i]);
+    }
+}
+
+function cambiaCtab(li, ctab) {
+    //Obtenemos los id de los objetos
+    var li = $(li).attr('id');
+    var ctab = $(ctab).attr('id');
+    //Crea la nueva ruta de la pestaña
+    var href = "javascript:tabs(" + li + "," + ctab + ")";
+    //Busca la url de la pestaña y la cambia
+    $($("#" + li).children('a')).attr('href', href);
 }

@@ -328,8 +328,10 @@ Stack.prototype = {
     /**Deletes all the figure and reset any index*/
     reset:function(){
         this.figures = [];
-        this.figureSelectedIndex = -1;
-        this.currentId = 0;
+        this.groups = [];
+        this.containers = [];
+        this.currentId = 0;       
+        this.idToIndex = [];
     },
 
     /**Find the storage index of a figure

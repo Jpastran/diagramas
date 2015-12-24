@@ -1211,6 +1211,7 @@ ConnectorManager.prototype = {
         this.connectionPoints = [];
         this.connectionPointSelectedIndex = -1;
         this.connectionPointCurrentId = 0;
+        this.glues = [];
     },
     
 

@@ -428,7 +428,6 @@ function updateShape(shapeId, property, newValue, skipCommand, previousValue) {
      *             |_str
      */
     //Log.info("Object before descend: " +  obj.oType);
-    var figure = obj; //TODO: Why this variable when we already have objSave?
     for (var i = 0; i < props.length - 1; i++) {
         obj = obj[props[i]];
     }
@@ -447,14 +446,14 @@ function updateShape(shapeId, property, newValue, skipCommand, previousValue) {
     /**Compute setXXX and getXXX*/
     var propSet = "set" + Util.capitaliseFirstLetter(propName);
     var propGet = "get" + Util.capitaliseFirstLetter(propName);
-
+    
     if (propSet in obj) { //@see https://developer.mozilla.org/en/JavaScript/Reference/Operators/Special_Operators/in_Operator
         /*If something is complicated enough to need a function,
          *  likelyhood is it will need access to its parent figure.
          *So we will let the parent to do the update as it likes, if it has
          * a method of form set<property_name> in place
          */
-
+        
         if ((typeof (previousValue) !== 'undefined' && previousValue != obj[propGet])
                 || (typeof (previousValue) === 'undefined' && newValue != obj[propGet]())) { //update ONLY if new value differ from the old one
             //Log.info('updateShape() : penultimate propSet: ' +  propSet);

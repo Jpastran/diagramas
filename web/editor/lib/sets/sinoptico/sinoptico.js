@@ -20,9 +20,9 @@ figureSets["sinoptico"] = {
     name: 'Diagrama Sinoptico',
     description: 'Diagram set of figures',
     figures: [     
-        {figureFunction: "Circle", image: "circle.png"},
-        {figureFunction: "Square", image: "square.png"},
-        {figureFunction: "Combined", image: "combine.png"}
+        {figureFunction: "circle", image: "circle.png"},
+        {figureFunction: "square", image: "square.png"},
+        {figureFunction: "combined", image: "combine.png"}
     ]
 };
 
@@ -30,7 +30,7 @@ var oId = 1;
 var iId = 1;
 var cId = 1;
 
-function figure_Square(x, y) {
+function figure_square(x, y) {
     var r = new Polygon();
     r.addPoint(new Point(x, y));
     r.addPoint(new Point(x + FigureDefaults.segmentSize, y));
@@ -67,7 +67,7 @@ function figure_Square(x, y) {
     return f;
 }
 
-function figure_Circle(x, y) {
+function figure_circle(x, y) {
     var f = new Figure("Circle");
     f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
@@ -99,8 +99,8 @@ function figure_Circle(x, y) {
     return f;
 }
 
-function figure_Combined(x, y) {
-	var c = new Arc(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2 , FigureDefaults.radiusSize, 0, 360, false, 0);
+function figure_combined(x, y) {
+    var c = new Arc(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2 , FigureDefaults.radiusSize, 0, 360, false, 0);
 	
     var r = new Polygon();
     r.addPoint(new Point(x, y));

@@ -456,7 +456,7 @@ $page = 'editor';
                     <div id="minimap">
                     </div>
                 </center>
-                <div style="overflow: auto;" id="edit">
+                <div id="edit">
                 </div>
             </div>
         </div>

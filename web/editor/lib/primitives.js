@@ -2800,6 +2800,11 @@ function Figure(name) {
     /**A {String} that point to a location*/
     this.url = '';
 
+    /**A {String} to have save info*/
+    this.time = '';
+    this.dist = '';
+    this.info = '';
+
     /**Object type used for JSON deserialization*/
     this.oType = 'Figure'; 
 }
@@ -2866,6 +2871,9 @@ Figure.load = function(o){
     newFigure.style = Style.load(o.style);
     newFigure.rotationCoords = Point.loadArray(o.rotationCoords);
     newFigure.url = o.url;
+    newFigure.dist = o.dist;
+    newFigure.info = o.info;
+    newFigure.time = o.time;
 
 
     return newFigure ;
@@ -2999,6 +3007,9 @@ Figure.prototype = {
         ret.rotationCoords[0]=this.rotationCoords[0].clone();
         ret.rotationCoords[1]=this.rotationCoords[1].clone();
         ret.url = this.url;
+        ret.time = this.time;
+        ret.info = this.info;
+        ret.dist = this.dist;
         
         //get all connection points and add them to the figure
         var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(this.id);

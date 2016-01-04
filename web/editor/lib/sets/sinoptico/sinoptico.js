@@ -26,9 +26,9 @@ figureSets["sinoptico"] = {
     ]
 };
 
-var oId = 1;
-var iId = 1;
-var cId = 1;
+var oIdS = 1;
+var iIdS = 1;
+var cIdS = 1;
 
 function figure_square(x, y) {
     var r = new Polygon();
@@ -55,9 +55,9 @@ function figure_square(x, y) {
 
     f.addPrimitive(r);
 
-    var t2 = new Text('I-' + iId, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('I-' + iIdS, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    iId++;
+    iIdS++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
@@ -87,9 +87,9 @@ function figure_circle(x, y) {
     var c = new Arc(x, y, FigureDefaults.radiusSize, 0, 360, false, 0);
 
     f.addPrimitive(c);
-    var t2 = new Text('O-' + oId, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('O-' + oIdS, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    oId++;
+    oIdS++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
@@ -127,9 +127,9 @@ function figure_combined(x, y) {
     f.addPrimitive(r);
     f.addPrimitive(c);
 
-    var t2 = new Text('C-' + cId, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('C-' + cIdS, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    cId++;
+    cIdS++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);

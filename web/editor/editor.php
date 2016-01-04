@@ -114,60 +114,66 @@ $page = 'editor';
     <body onload="init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : '' ?>');" id="body">      
         <? require_once dirname(__FILE__) . '/header.php'; ?>
         <div id="actions">
+            <div id="aPrin" style="float: left">
+                <a style="text-decoration: none;" href="#" onclick="return save();" title="Save diagram (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <a style="text-decoration: none;" href="#" onclick="return save();" title="Save diagram (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a style="text-decoration: none;" href="./myDiagrams.php" title="Open diagram"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
+                <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Print diagram"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
+                <?}?>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            </div>
+            <div id="aConn" style="float: left">
+                <a href="javascript:action('connector-straight');"  title="Straight connector"><img src="assets/images/icon_connector_straight.gif" border="0"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <a style="text-decoration: none;" href="./myDiagrams.php" title="Open diagram"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
-            <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Print diagram"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
-            <?}?>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
-            <a href="javascript:action('connector-straight');"  title="Straight connector"><img src="assets/images/icon_connector_straight.gif" border="0"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
-            <a href="javascript:action('connector-jagged');" title="Jagged connector"><img src="assets/images/icon_connector_jagged.gif" border="0"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a href="javascript:action('connector-jagged');" title="Jagged connector"><img src="assets/images/icon_connector_jagged.gif" border="0"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            </div>
             <!--
             <a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
             <a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/container.png" border="0" alt="Container"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
-            <input type="checkbox" onclick="showGrid();" id="gridCheckbox"  title="Show grid" />
-            <span class="toolbarText">Show grid</span>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
-            <input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Snap elements to grid" />
-            <span class="toolbarText">Snap to grid</span>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             -->
-            <a href="javascript:action('front');" title="Move to front"><img src="assets/images/icon_front.gif" border="0"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            <div id="aGrid" style="float: left">
+                <input type="checkbox" onclick="showGrid();" id="gridCheckbox"  title="Show grid" />
+                <span class="toolbarText">Show grid</span>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <a href="javascript:action('back');" title="Move to back"><img src="assets/images/icon_back.gif" border="0"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Snap elements to grid" />
+                <span class="toolbarText">Snap to grid</span>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            </div>
+            <div id="aTools" style="float: left">
+                <a href="javascript:action('front');" title="Move to front"><img src="assets/images/icon_front.gif" border="0"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <a href="javascript:action('moveforward');" title="Move (one level) to front"><img src="assets/images/icon_forward.gif" border="0"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a href="javascript:action('back');" title="Move to back"><img src="assets/images/icon_back.gif" border="0"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <a href="javascript:action('moveback');" title="Move (one level) back"><img src="assets/images/icon_backward.gif" border="0"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a href="javascript:action('moveforward');" title="Move (one level) to front"><img src="assets/images/icon_forward.gif" border="0"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <a href="javascript:action('group');" title="Group (Ctrl-G)"><img src="assets/images/group.gif" border="0"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a href="javascript:action('moveback');" title="Move (one level) back"><img src="assets/images/icon_backward.gif" border="0"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <a href="javascript:action('ungroup');" title="Ungroup (Ctrl-U)"><img src="assets/images/ungroup.gif" border="0"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a href="javascript:action('group');" title="Group (Ctrl-G)"><img src="assets/images/group.gif" border="0"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-            <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            <!-- TODO revisar el insetImagen -->
-            <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a href="javascript:action('ungroup');" title="Ungroup (Ctrl-U)"><img src="assets/images/ungroup.gif" border="0"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            </div>
+            <div id="aEsp" style="float: left">
+                <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <!-- TODO revisar el insetImagen -->
+                <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            </div>
             <!--
             <a href="javascript:action('undo');" title="Undo (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>           
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
@@ -235,16 +241,11 @@ $page = 'editor';
                         </div>
                     </div>
                     <div id="reproceso" style=" display: none">
-                        <img src="lib/sets/reproceso.png" class="especial" />
+                        <img src="lib/sets/reproceso.png" class="especial" />			
                         <div class="label">
-                            Inicio
-                            <select id="proIn" style="width: 120px;" onclick="cargarFiguras('proIn')"></select>
-                            <input id="btnRepIn" type="button" value="Iniciar" onclick="especial('reproIn')"/>
-                        </div>					
-                        <div class="label">
-                            Final
+                            Reprocesa
                             <select id="proOut" style="width: 120px;" onclick="cargarFiguras('proOut')"></select>
-                            <input id="btnRepOut" type="button" value="Finalizar" onclick="especial('reproOut')" disabled/>
+                            <input id="btnRepro" type="button" value="Finalizar" onclick="especial('repro')" disabled/>
                         </div>						
                     </div>
                     <div id="trayectos" style=" display: none">

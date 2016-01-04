@@ -4811,63 +4811,8 @@ function especial(accion) {
                     errorDiv("Los valores no pueden ser nulos");
                 }
                 break;
-            case 'reproIn'://TODO Entrada quitar triangulo agregar punto superior, sin actividades internas. cuidado con la numeracion
+            case 'repro'://TODO Entrada quitar triangulo agregar punto superior, sin actividades internas. cuidado con la numeracion
                 clean = false;
-                var textError = "";
-                if (document.getElementById('proIn').value != "") {
-                    if (lineas[1] == 1) {
-                        savePos.push(coor);
-                        var figIni = STACK.figureGetById(document.getElementById('proIn').value);
-                        var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y + tamFig / 2];
-                        coor = [coorIn[0] + disLinMin, coorIn[1] - tamFig / 2];
-                        savePos.push(coorIn);
-                        reprocesa = true;
-                        reproIni = true;
-                        document.getElementById('btnRepOut').disabled = false;
-                        document.getElementById('proIn').disabled = true;
-                        document.getElementById('btnRepIn').disabled = true;
-                        especialSelect(true);
-                    } else {
-                        errorDiv('Solo se permite en la linea principal');
-                    }
-                } else {
-                    errorDiv("El valor no pueden ser nulo");
-                }
-                break;
-            case 'reproOut'://TODO casi identico que repeticion.
-                clean = false;
-                var textError = "";
-                if (!reproIni) {
-                    if (document.getElementById('proOut').value != "") {
-                        var figFin = STACK.figureGetById(document.getElementById('proOut').value);
-                        var coorOut = [figFin.rotationCoords[0].x, figFin.rotationCoords[0].y - tamFig / 2];
-                        var figIni = STACK.figureGetById(document.getElementById('proIn').value);
-                        var coorIn = [figIni.rotationCoords[0].x, figIni.rotationCoords[0].y];
-                        if (coorIn[1] > coorOut[1]) {
-                            if (coorIn[0] == coorOut[0]) {
-                                coor[1] += disFigCon;
-                                conectorBuildFull(true, coor, coorOut, true);
-                                ordenarJagged(coorOut);
-                                coor = savePos.pop();
-                                coor[1] -= disFig;
-                                reprocesa = false;
-                                clean = true;
-                                document.getElementById('btnRepOut').disabled = true;
-                                document.getElementById('btnRepIn').disabled = false;
-                                document.getElementById('proIn').disabled = false;
-                                especialSelect(false);
-                            } else {
-                                errorDiv("El punto de llegada solo es posible en la misma linea");
-                            }
-                        } else {
-                            errorDiv("El punto de llegada no puede ser posterior");
-                        }
-                    } else {
-                        errorDiv("El valor no pueden ser nulo");
-                    }
-                } else {
-                    errorDiv("Debe haber al menos un proceso");
-                }
                 break;
             case 'trayGen':
                 var options = parseInt(document.getElementById('trayNum').value);

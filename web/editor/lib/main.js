@@ -1109,16 +1109,16 @@ function onMouseDown(ev) {
              *      - we will run STATE_NONE case next (without break;)
              */
 
-            if (currentTextEditor != null){
+            if (currentTextEditor != null) {
                 if (currentTextEditor.mouseClickedInside(ev)) {
                     break;
-                } else  {
+                } else {
                     // IE and Firefox doesn't trigger blur event when mouse clicked canvas
                     // that is why we trigger this event manually
                     if (Browser.msie || Browser.mozilla) {
                         currentTextEditor.blurTextArea();
                     }
-                }       
+                }
                 currentTextEditor.destroy();
                 currentTextEditor = null;
 
@@ -4484,12 +4484,6 @@ var finLS = false;
 /**Gatillo de linea de salida secundaria*/
 var finSS = false;
 
-/**Gatillo de primer proceso en reproceso*/
-var reproIni = false;
-
-/**Gatillo de reproceso activo*/
-var reprocesa = false;
-
 /**Gatillo de opciones de trayecto*/
 var opciones = false;
 
@@ -4541,22 +4535,10 @@ function conectorBuild() {
         ordenarJagged(coor);
         savePos.push(pos);
         finSS = false;
-    } else if (reproIni) {
-        var pos = savePos.pop();
-        connectorPickFirst(pos[0], pos[1]);
-        connectorPickSecond(coor[0], coor[1] + tamFig / 2);
-        CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
-        ordenarJagged(pos);
-        reproIni = false;
     } else {
         connectorType = Connector.TYPE_STRAIGHT;
-        if (reprocesa) {
-            connectorPickFirst(coor[0], coor[1] + disFigCon);
-            connectorPickSecond(coor[0], coor[1] + tamFig / 2);
-        } else {
-            connectorPickFirst(coor[0], coor[1] - disFigCon);
-            connectorPickSecond(coor[0], coor[1] - tamFig / 2);
-        }
+        connectorPickFirst(coor[0], coor[1] - disFigCon);
+        connectorPickSecond(coor[0], coor[1] - tamFig / 2);
         if (opciones)
             opciones = false;
     }
@@ -4581,7 +4563,7 @@ function figureBuild(figureFunction, x, y) {
 }
 
 function cleanStates() {
-    reprocesa ? coor[1] -= disFig : coor[1] += disFig;
+    coor[1] += disFig;
     resetToNoneState();
     mousePressed = false;
     createFigureFunction = null;
@@ -4655,18 +4637,6 @@ function ordenarJagged(pos) {
         turns[1] = turns[0];
         turns[2].y = turns[1].y;
         turns[3] = turns[2];
-    } else if (reprocesa) {
-        reproIni ? turns[1].y = turns[0].y + disCon / 2 : turns[1].y = turns[0].y - disCon / 2;
-        turns[2].y = turns[1].y;
-        if (pos[1] != turns[0].y) {
-            turns[2].x = turns[1].x - disFigCon;
-            turns[3].x = turns[2].x;
-            turns[3].y = pos[1] - disCon / 2;
-            var turn4 = turns[3].clone();
-            var turn5 = turns.pop();
-            turn4.x = pos[0];
-            turns.push(turn4, turn5);
-        }
     } else if (opciones) {
         turns[1].y = coor[1];
         turns[2].y = coor[1];
@@ -4710,7 +4680,6 @@ function setEspecial(nombre) {
             cargarFiguras('repIn');
             cargarFiguras('repOut');
         } else if (nombre == 'reproceso') {
-            cargarFiguras('proIn');
             cargarFiguras('proOut');
         }
     }
@@ -4961,14 +4930,14 @@ function cambiarVista(id) {
     var divRight = document.getElementById('right');
     if (id == "analitico") {
         divEsp.style.display = 'block';
-        cambiaCtab(tab1,ctab1);
-        tabs(tab1,ctab1);
+        cambiaCtab(tab1, ctab1);
+        tabs(tab1, ctab1);
         STACK.reset();
     } else if (id == "sinoptico") {
         divEsp.style.display = 'none';
-        cambiaCtab(tab1,ctab3);
-        tabs(tab1,ctab3);
-        
+        cambiaCtab(tab1, ctab3);
+        tabs(tab1, ctab3);
+
     }
     STACK.reset();
     CONNECTOR_MANAGER.reset();

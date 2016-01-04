@@ -245,7 +245,7 @@ $page = 'editor';
                         <div class="label">
                             Reprocesa
                             <select id="proOut" style="width: 120px;" onclick="cargarFiguras('proOut')"></select>
-                            <input id="btnRepro" type="button" value="Finalizar" onclick="especial('repro')" disabled/>
+                            <input id="btnRepro" type="button" value="Agregar" onclick="especial('repro')"/>
                         </div>						
                     </div>
                     <div id="trayectos" style=" display: none">

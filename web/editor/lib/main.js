@@ -4754,34 +4754,47 @@ function especial(accion) {
                 clean = false;
                 if (document.getElementById('repOut').value != "") {
                     var figFin = STACK.figureGetById(document.getElementById('repOut').value);
-                    if (figFin != figIni) {
-                        var coorIn = [coor[0], coor[1] - disFigCon];
-                        var coorOut = [figFin.rotationCoords[1].x, figFin.rotationCoords[1].y];
-                        if (coorIn[0] == coorOut[0]) {
-                            if (coorIn[1] > coorOut[1]) {
-                                conectorBuildFull(true, coorIn, coorOut, true);
-                                ordenarDelta('h', -disLinMin, 3);
-                                ordenarDelta('v', -disCon / 2, 2);
-                                ordenarDelta('v', disCon / 2, 4);
-                                clean = true;
-                                figureBuild(window.figure_LineDouble, coor[0], coor[1] - tamFig / 4);
-                                conectorBuild();
-                                coor[1] -= tamFig / 2;
-                            } else {
-                                errorDiv("La repetcion no puede ser inversa");
-                            }
+                    var coorIn = [coor[0], coor[1] - disFigCon];
+                    var coorOut = [figFin.rotationCoords[1].x, figFin.rotationCoords[1].y];
+                    if (coorIn[0] == coorOut[0]) {
+                        if (coorIn[1] > coorOut[1]) {
+                            conectorBuildFull(true, coorIn, coorOut, true);
+                            ordenarDelta('h', -disLinMin, 3);
+                            ordenarDelta('v', -disCon / 2, 2);
+                            ordenarDelta('v', disCon / 2, 4);
+                            clean = true;
+                            figureBuild(window.figure_LineDouble, coor[0], coor[1] - tamFig / 4);
+                            conectorBuild();
+                            coor[1] -= tamFig / 2;
                         } else {
-                            errorDiv("La repetcion debe ser en la misma linea");
+                            errorDiv("La repetcion no puede ser inversa");
                         }
                     } else {
-                        errorDiv("El proceso no puede ser el mismo");
+                        errorDiv("La repetcion debe ser en la misma linea");
                     }
                 } else {
                     errorDiv("Los valores no pueden ser nulos");
                 }
                 break;
-            case 'repro'://TODO Entrada quitar triangulo agregar punto superior, sin actividades internas. cuidado con la numeracion
+            case 'repro'://TODO Entrada quitar triangulo agregar punto superior.
                 clean = false;
+                if (document.getElementById('proOut').value != "") {
+                    var figFin = STACK.figureGetById(document.getElementById('proOut').value);
+                    var coorIn = [coor[0], coor[1] - disFigCon];
+                    var coorOut = [figFin.rotationCoords[1].x, figFin.rotationCoords[1].y];
+                    if (coorIn[0] == coorOut[0]) {
+                        conectorBuildFull(true, coorIn, coorOut, true);
+                        ordenarDelta('v', -disCon / 2, 2);
+                        ordenarDelta('v', disCon / 2, 4);
+                        ordenarDelta('h', tamFig / 2, 3);
+                        coor[1] -= disFig;
+                        clean = true;
+                    } else {
+                        errorDiv("El reproceso debe ser en la misma linea");
+                    }
+                } else {
+                    errorDiv("El punto de retorno no pueden ser nulo");
+                }
                 break;
             case 'trayGen':
                 var options = parseInt(document.getElementById('trayNum').value);

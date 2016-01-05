@@ -279,6 +279,13 @@ $page = 'editor';
                     </ul>
                 </div>
                 <div id="ctabs">
+                    <div id="ctab2">
+                        <canvas id="a" width="800" height="600">
+                            Your browser does not support HTML5. Please upgrade your browser to any modern version.
+                        </canvas>
+                        <div id="text-editor"></div>
+                        <div id="text-editor-tools"></div>
+                    </div>
                     <div id="ctab1">
                         <table id="analitico">
                             <tbody>
@@ -371,13 +378,6 @@ $page = 'editor';
                             </tbody>
                         </table>
                     </div>
-                    <div id="ctab2">
-                        <canvas id="a" width="800" height="600">
-                            Your browser does not support HTML5. Please upgrade your browser to any modern version.
-                        </canvas>
-                        <div id="text-editor"></div>
-                        <div id="text-editor-tools"></div>
-                    </div>
                     <div id="ctab3">
                         <table id="sinoptico">
                             <tbody>
@@ -444,6 +444,104 @@ $page = 'editor';
                             </tbody>
                         </table>
                     </div>
+                    <div id="ctab4">
+                        <table id="recorrido">
+                            <tbody>
+                                <tr>
+                                    <td>Diagrama No:</td>
+                                    <td width="100px;" ></td>
+                                    <td>Hoja No:</td>
+                                    <td width="100px;"></td>
+                                    <td>De:</td>
+                                    <td width="100px;"></td>
+                                    <td>Analista:</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="12">Actividad:</td>
+                                    <td colspan="3" rowspan="12"></td>
+                                    <td colspan="2">Metodo Presente
+                                        <input type="radio" name="metodo"/>
+                                    </td>
+                                    <td colspan="2">Metodo Propuesto
+                                        <input type="radio" name="metodo"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" colspan="4">Resumen</td>
+                                </tr>
+                                <tr>
+                                    <td align="center">Actividad</td>
+                                    <td align="center">Presente</td>
+                                    <td align="center">Propuesto</td>
+                                    <td align="center">Ganado</td>
+                                </tr>
+                                <tr>
+                                    <td>Operacion</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Trasporte</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Demora</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Inspeccion</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Almacenaje</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Combinada</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Total actividades</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Distancia total</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Tiempo total</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Ubicacion:</td>
+                                    <td></td>
+                                    <td>Escala:1:</td>
+                                    <td colspan="2"></td>
+                                    <td>Fecha:</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>					
             </div>
         </div>

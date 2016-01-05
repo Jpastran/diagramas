@@ -4413,14 +4413,10 @@ function touchCancel(event) {
 //TODO Corregir autoID o generar la numeracion de forma automatica eliminado y renumeracion.
 //TODO Corregir nivel de los conectores.
 //TODO correjir posiciones en caso de borrado o generar posicion mas baja a partir de busqueda.
-//TODO opcional crear los grupos nuevos segun(Entrada, salida, simbolos, otros).
-//TODO opcional agregar parametros de (descripcion, tiempo y distancia).
 //TODO opcional agregar al lienzo (Nombre del Proceso).
-//TODO opcional agregar a linea init (Componente Principal, Material Componente Principal) en texto.
 //TODO crear un metodo y boton para terminar el diagrama.
 //TODO estudiar el .js de History e implementarlo para coor.
 //TODO Borrar los TODO que no digan un error.
-//TODO implementar multiple lienzo, 
 
 /**
  * Variables usadas por el diagrama
@@ -4941,16 +4937,26 @@ function cargarFiguras(selectId) {
 function cambiarVista(id) {
     var divEsp = document.getElementById('especial');
     var divRight = document.getElementById('right');
+    var divTools = document.getElementById('aTools');
+    var divImg = document.getElementById('imgLoad');
     if (id == "analitico") {
+        divTools.style.display = 'block';
         divEsp.style.display = 'block';
+        divImg.style.display = 'none';
         cambiaCtab(tab1, ctab1);
         tabs(tab1, ctab1);
-        STACK.reset();
     } else if (id == "sinoptico") {
+        divTools.style.display = 'block';
         divEsp.style.display = 'none';
+        divImg.style.display = 'none';
         cambiaCtab(tab1, ctab3);
         tabs(tab1, ctab3);
-
+    } else if (id == "recorrido") {
+        divTools.style.display = 'block';
+        divEsp.style.display = 'none';
+        divImg.style.display = 'block';
+        cambiaCtab(tab1, ctab4);
+        tabs(tab1, ctab4);
     }
     STACK.reset();
     CONNECTOR_MANAGER.reset();

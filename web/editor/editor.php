@@ -114,414 +114,410 @@ $page = 'editor';
     <body onload="init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : '' ?>');" id="body">      
         <? require_once dirname(__FILE__) . '/header.php'; ?>
         <div id="actions">
-            <div id="aPrin" style="float: left">
-                <a style="text-decoration: none;" href="#" onclick="return save();" title="Save diagram (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
+            <div id="aSist" style="float: left">
+                <a style="text-decoration: none;" href="#" onclick="return save();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-                <a style="text-decoration: none;" href="./myDiagrams.php" title="Open diagram"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
+                <a style="text-decoration: none;" href="./myDiagrams.php" title="Abrir diagrama"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
                 <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Print diagram"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
+                <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Imprimir diagrama"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
                 <?}?>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
-            <div id="aConn" style="float: left">
-                <a href="javascript:action('connector-straight');"  title="Straight connector"><img src="assets/images/icon_connector_straight.gif" border="0"/></a>
+            <div id="aTools" style="float: left">
+                <a href="javascript:action('connector-straight');"  title="Conector lineal"><img src="assets/images/icon_connector_straight.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-                <a href="javascript:action('connector-jagged');" title="Jagged connector"><img src="assets/images/icon_connector_jagged.gif" border="0"/></a>
+                <a href="javascript:action('connector-jagged');" title="Conector Cuadrado"><img src="assets/images/icon_connector_jagged.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            </div>
-            <!--
-            <a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
-            <a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/container.png" border="0" alt="Container"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            -->
-            <div id="aGrid" style="float: left">
-                <input type="checkbox" onclick="showGrid();" id="gridCheckbox"  title="Show grid" />
+                <!--
+                <a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+    
+                <a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/container.png" border="0" alt="Container"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                -->
+                <input type="checkbox" onclick="showGrid();" id="gridCheckbox"  title="Mostrar malla" />
                 <span class="toolbarText">Show grid</span>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-                <input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Snap elements to grid" />
+                <input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Alinear a la malla" />
                 <span class="toolbarText">Snap to grid</span>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            </div>
-            <div id="aTools" style="float: left">
-                <a href="javascript:action('front');" title="Move to front"><img src="assets/images/icon_front.gif" border="0"/></a>
+                <a href="javascript:action('front');" title="Mover al frente"><img src="assets/images/icon_front.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-                <a href="javascript:action('back');" title="Move to back"><img src="assets/images/icon_back.gif" border="0"/></a>
+                <a href="javascript:action('back');" title="Mover al fondo"><img src="assets/images/icon_back.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-                <a href="javascript:action('moveforward');" title="Move (one level) to front"><img src="assets/images/icon_forward.gif" border="0"/></a>
+                <a href="javascript:action('moveforward');" title="Subir un nivel"><img src="assets/images/icon_forward.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-                <a href="javascript:action('moveback');" title="Move (one level) back"><img src="assets/images/icon_backward.gif" border="0"/></a>
+                <a href="javascript:action('moveback');" title="Bajar un nivel"><img src="assets/images/icon_backward.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-                <a href="javascript:action('group');" title="Group (Ctrl-G)"><img src="assets/images/group.gif" border="0"/></a>
+                <a href="javascript:action('group');" title="Agrupar (Ctrl-G)"><img src="assets/images/group.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-                <a href="javascript:action('ungroup');" title="Ungroup (Ctrl-U)"><img src="assets/images/ungroup.gif" border="0"/></a>
+                <a href="javascript:action('ungroup');" title="Desagrupar (Ctrl-U)"><img src="assets/images/ungroup.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            </div>
-            <div id="aEsp" style="float: left">
-                <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
+                <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Agregar comentario"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                <!-- TODO revisar el insetImagen -->
-                <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            </div>
-            <!--
-            <a href="javascript:action('undo');" title="Undo (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>           
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
-            <a href="javascript:action('redo');" title="Redo (Ctrl-Y)"><img src="assets/images/arrow_redo.png" border="0"/></a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>  
-            --> 
-            <!-- TODO: From Janis: we have to create a nice icon for duplicate, currently this is the only command without an icon    
-            <a href="javascript:action('duplicate');">Copy (Ctrl-D)</a>
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
-            <input type="text" id="output" />                
-            <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            <a href="javascript:action('duplicate');">Copy</a>
-            <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            <a href="javascript:action('group');">Group</a>
-            <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            <a href="javascript:action('ungroup');">Ungroup</a>
-            -->
-        </div>
-
-        <div id="editor">
-            <!--Left panel-->
-            <div id="left">
-                <div id="figures">
-                    <select style="width: 120px;" onchange="setFigureSet(this.options[this.selectedIndex].value);">
-                        <script>
-                            "use strict";
-                            for (var setName in figureSets) {
-                                var set = figureSets[setName];
-                                document.write('<option value="' + setName + '">' + set['name'] + '</option>');
-                            }
-                            buildPanel();
-                        </script>
-                    </select>
-                </div>
-                <div id="especial">
-                    <select id="espSelect" style="width: 120px;" onchange="setEspecial(this.options[this.selectedIndex].value)">
-                        <option value="entrada" selected>Entrada</option>
-                        <option value="salida">Salida</option>
-                        <option value="repeticion">Repeticion</option>
-                        <option value="reproceso">Reproceso</option>
-                        <option value="trayectos">Opciones</option>
-                    </select>
-                    <div id="entrada" style=" display: block">
-                        <img src="lib/sets/entrada.png" class="especial" />
-                        <input type="button" value="Añadir" onclick="especial('newLE');"/>
-                        <input id="btnLE" type="button" value="Finalizar" onclick="especial('endLE');" disabled/>
-                    </div>
-                    <div id="salida" style=" display: none">
-                        <img src="lib/sets/salida.png" class="especial" />
-                        <input type="button" value="Añadir" onclick="especial('newLS');"/>
-                        <input id="btnLS" type="button" value="Finalizar" onclick="especial('endLS');" disabled/>
-                    </div>
-                    <div id="repeticion" style=" display: none">
-                        <img src="lib/sets/repeticion.png" class="especial"/>
-                        <div class="label">
-                            Repeticiones
-                            <input type="number" id="repNum" min="1" step="1" style="width: 120px;">                           
-                        </div>						
-                        <div class="label">
-                            Retorno
-                            <select id="repOut" style="width: 120px;" onclick="cargarFiguras('repOut')"></select>
-                            <input type="button" value="Añadir" onclick="especial('repetir')"/>
-                        </div>
-                    </div>
-                    <div id="reproceso" style=" display: none">
-                        <img src="lib/sets/reproceso.png" class="especial" />			
-                        <div class="label">
-                            Reprocesa
-                            <select id="proOut" style="width: 120px;" onclick="cargarFiguras('proOut')"></select>
-                            <input id="btnRepro" type="button" value="Agregar" onclick="especial('repro')"/>
-                        </div>						
-                    </div>
-                    <div id="trayectos" style=" display: none">
-                        <img src="lib/sets/trayectos.png" class="especial" />
-                        <div class="label" id="trayGen" style=" display: block">
-                            Generar
-                            <input type="number" id="trayNum" min="2" step="1" max="8" style="width: 120px;">
-                            <input type="button" value="Generar" onclick="especial('trayGen')"/>
-                        </div>	
-                        <div class="label" id="traySig" style=" display: none">
-                            Finalizar 
-                            <br><label id="trayName"></label><br>
-                            <input id="btnFin" type="button" value="Siguiente" onclick="especial('trayFin')"/><br>
-                        </div>	
-                        <div class="label" id="trayUnir" style=" display: none">
-                            Continuan                           
-                            <div id="trayChk" style="width: 120px;"></div>                        	
-                            <input id="btnUni" type="button" value="Reunir" onclick="especial('trayUnir')"/>
-                        </div>
-                    </div>
-                    <div id="error" class="error" style=" display: none"></div>
-                </div>
-            </div>
-            <!--THE canvas-->
-            <div style="width: 100%">
-                <div  id="container">
-                    <div id="tabs">
-                        <ul id=lista>
-                            <li id="tab1">
-                                <a href='javascript:tabs(tab1,ctab1)'>Cabecera</a>
-                            </li>
-                            <li id="tab2">
-                                <a href='javascript:tabs(tab2,ctab2)'>Diagrama</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="ctabs">
-                        <div id="ctab1">
-                            <table id="analitico">
-                                <tbody>
-                                    <tr>
-                                        <td>Carta No:</td>
-                                        <td></td>
-                                        <td>Hoja No:</td>
-                                        <td></td>
-                                        <td>De:</td>
-                                        <td width="100px;"></td>
-                                        <td colspan=2>Metodo Presente
-                                            <input type="radio" name="metodo"/>
-                                        </td>
-                                        <td colspan=2>Metodo Propuesto
-                                            <input type="radio" name="metodo"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td rowspan=3>Material</td>
-                                        <td colspan=5 rowspan=3></td>
-                                        <td colspan=4 align="center">Resumen</td>
-                                    </tr>
-                                    <tr align="center">
-                                        <td>Actividad</td>
-                                        <td>Presente</td>
-                                        <td>Propuesto</td>
-                                        <td>Ganado</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Operacion <img src="lib/sets/analitico/circle.png"/></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td rowspan=3>Actividad:</td>
-                                        <td colspan=5 rowspan=3></td>
-                                        <td>Trasporte <img src="lib/sets/analitico/arrow.png"/></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Demora <img src="lib/sets/analitico/semi_circle_right.png"/></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Inspeccion <img src="lib/sets/analitico/square.png"/></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td rowspan=2>Ubicacion:</td>
-                                        <td colspan=5 rowspan=2 id="ubic"></td>
-                                        <td>Almacenaje <img src="lib/sets/analitico/triangle_inver.png"/></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Combinada <img src="lib/sets/analitico/combine.png"/></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td rowspan="2">Analista:</td>
-                                        <td colspan="5" rowspan="2"></td>
-                                        <td>Total actividades</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    <tr>
-                                        <td>Distancia total</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Fecha: </td>
-                                        <td colspan="5"></td>
-                                        <td>Tiempo total</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="ctab2">
-                            <canvas id="a" width="800" height="600">
-                                Your browser does not support HTML5. Please upgrade your browser to any modern version.
-                            </canvas>
-                            <div id="text-editor"></div>
-                            <div id="text-editor-tools"></div>
-                        </div>
-                        <div id="ctab3">
-                            <table id="sinoptico">
-                                <tbody>
-                                    <tr>
-                                        <td>Diagrama No:</td>
-                                        <td colspan=3 ></td>
-                                        <td>Hoja No:</td>
-                                        <td></td>
-                                        <td>De:</td>
-                                        <td width="100px;"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Fecha:</td>
-                                        <td style="min-width: 120px"></td>
-                                        <td>Presente
-                                            <input type="radio" name="metodo"/>
-                                        </td>
-                                        <td>Propuesto
-                                            <input type="radio" name="metodo"/>
-                                        </td>
-                                        <td colspan=4 align="center">Resumen</td>
-                                    </tr>
-                                    <tr>
-                                        <td rowspan=4>Actividad</td>
-                                        <td colspan=3 rowspan=4></td>
-                                        <td align="center">Actividad</td>
-                                        <td align="center">Presente</td>
-                                        <td align="center">Propuesto</td>
-                                        <td align="center">Ganado</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Operacion <img src="lib/sets/sinoptico/circle.png"/></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Inspeccion <img src="lib/sets/sinoptico/square.png"/></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Combinada <img src="lib/sets/sinoptico/combine.png"/></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Analista:</td>
-                                        <td colspan=3></td>
-                                        <td>Total actividades</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    <tr>
-                                        <td>Fecha: </td>
-                                        <td colspan=3></td>
-                                        <td>Tiempo total</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>					
-                </div>
-            </div>
-            <!--Right panel-->
-            <div id="right">
-                <center>
-                    <div id="minimap">
-                    </div>
-                </center>
-                <div id="edit">
-                </div>
             </div>
         </div>
+        <!--
+        <a href="javascript:action('undo');" title="Undo (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>           
+        <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-        <!--The import panel-->
-        <div id="import-dialog" style="background-color: white; display: none; margin-top: auto; margin-bottom: auto;">
-            <form action="./common/controller.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="importDiagramExe"/>
-                <h2>Import Diagramo file </h2>
-                <p/>
-                <input type="file" name="diagramFile" id="diagramFile"/>  
-                <p/>
-                <input type="image" src="./assets/images/import.gif"/>
-            </form>
+        <a href="javascript:action('redo');" title="Redo (Ctrl-Y)"><img src="assets/images/arrow_redo.png" border="0"/></a>
+        <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>  
+        --> 
+        <!-- TODO: From Janis: we have to create a nice icon for duplicate, currently this is the only command without an icon    
+        <a href="javascript:action('duplicate');">Copy (Ctrl-D)</a>
+        <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+
+        <input type="text" id="output" />                
+        <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+        <a href="javascript:action('duplicate');">Copy</a>
+        <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+        <a href="javascript:action('group');">Group</a>
+        <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+        <a href="javascript:action('ungroup');">Ungroup</a>
+        -->
+    </div>
+
+    <div id="editor">
+        <!--Left panel-->
+        <div id="left">
+            <div id="figures">
+                <select style="width: 120px;" onchange="setFigureSet(this.options[this.selectedIndex].value);">
+                    <script>
+                        "use strict";
+                        for (var setName in figureSets) {
+                            var set = figureSets[setName];
+                            document.write('<option value="' + setName + '">' + set['name'] + '</option>');
+                        }
+                        buildPanel();
+                    </script>
+                </select>
+            </div>
+            <div id="especial">
+                <select id="espSelect" style="width: 120px;" onchange="setEspecial(this.options[this.selectedIndex].value)">
+                    <option value="entrada" selected>Entrada</option>
+                    <option value="salida">Salida</option>
+                    <option value="repeticion">Repeticion</option>
+                    <option value="reproceso">Reproceso</option>
+                    <option value="trayectos">Opciones</option>
+                </select>
+                <div id="entrada" style=" display: block">
+                    <img src="lib/sets/entrada.png" class="especial" />
+                    <input type="button" value="Añadir" onclick="especial('newLE');"/>
+                    <input id="btnLE" type="button" value="Finalizar" onclick="especial('endLE');" disabled/>
+                </div>
+                <div id="salida" style=" display: none">
+                    <img src="lib/sets/salida.png" class="especial" />
+                    <input type="button" value="Añadir" onclick="especial('newLS');"/>
+                    <input id="btnLS" type="button" value="Finalizar" onclick="especial('endLS');" disabled/>
+                </div>
+                <div id="repeticion" style=" display: none">
+                    <img src="lib/sets/repeticion.png" class="especial"/>
+                    <div class="label">
+                        Repeticiones
+                        <input type="number" id="repNum" min="1" step="1" style="width: 120px;">                           
+                    </div>						
+                    <div class="label">
+                        Retorno
+                        <select id="repOut" style="width: 120px;" onclick="cargarFiguras('repOut')"></select>
+                        <input type="button" value="Añadir" onclick="especial('repetir')"/>
+                    </div>
+                </div>
+                <div id="reproceso" style=" display: none">
+                    <img src="lib/sets/reproceso.png" class="especial" />			
+                    <div class="label">
+                        Reprocesa
+                        <select id="proOut" style="width: 120px;" onclick="cargarFiguras('proOut')"></select>
+                        <input id="btnRepro" type="button" value="Agregar" onclick="especial('repro')"/>
+                    </div>						
+                </div>
+                <div id="trayectos" style=" display: none">
+                    <img src="lib/sets/trayectos.png" class="especial" />
+                    <div class="label" id="trayGen" style=" display: block">
+                        Generar
+                        <input type="number" id="trayNum" min="2" step="1" max="8" style="width: 120px;">
+                        <input type="button" value="Generar" onclick="especial('trayGen')"/>
+                    </div>	
+                    <div class="label" id="traySig" style=" display: none">
+                        Finalizar 
+                        <br><label id="trayName"></label><br>
+                        <input id="btnFin" type="button" value="Siguiente" onclick="especial('trayFin')"/><br>
+                    </div>	
+                    <div class="label" id="trayUnir" style=" display: none">
+                        Continuan                           
+                        <div id="trayChk" style="width: 120px;"></div>                        	
+                        <input id="btnUni" type="button" value="Reunir" onclick="especial('trayUnir')"/>
+                    </div>
+                </div>
+                <div id="error" class="error" style=" display: none"></div>
+            </div>
+            <div id="imgLoad" class="label" style=" display: none">
+                Suba la imagen con la cual trabajara
+                <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/img_icon.png" border="0" width="115px" alt="Image"/></a>
+            </div>
         </div>
-
-        <!--Insert Image dialog content-->
-        <div id="insert-image-dialog">
-            <h2>Insert Image</h2>
-            <form action="./common/controller.php" method="POST" target="upload_target" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="insertImage"/>
-                <div class="insert-image-line">
-                    <input type="radio" name="image-group" value="URL" checked>
-                    <label>From URL:</label>
-                    <input type="text" class="url-input" name="imageURL" id="imageURL"/>
+        <!--THE canvas-->
+        <div style="width: 100%">
+            <div  id="container">
+                <div id="tabs">
+                    <ul id=lista>
+                        <li id="tab1">
+                            <a href='javascript:tabs(tab1,ctab1)'>Cabecera</a>
+                        </li>
+                        <li id="tab2">
+                            <a href='javascript:tabs(tab2,ctab2)'>Diagrama</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="insert-image-line">
-                    <input type="radio" name="image-group" value="Upload">
-                    <label>Upload:</label>
-                    <input type="file" class="right-offset" name="imageFile" id="imageFile"/>
-                </div>
-                <div class="insert-image-line">
-                    <input type="radio" name="image-group" value="Reuse" id="insert-image-reuse-group">
-                    <label>Reuse:</label>
-                    <select id="insert-image-reuse"  name="reuseImageFile">
-                    </select>
-                </div>
-                <div id="upload-image-error">
-                </div>
-                <div class="submit-container">
-                    <input type="submit" value="Insert" />
-                </div>
-            </form>
+                <div id="ctabs">
+                    <div id="ctab1">
+                        <table id="analitico">
+                            <tbody>
+                                <tr>
+                                    <td>Carta No:</td>
+                                    <td></td>
+                                    <td>Hoja No:</td>
+                                    <td></td>
+                                    <td>De:</td>
+                                    <td width="100px;"></td>
+                                    <td colspan=2>Metodo Presente
+                                        <input type="radio" name="metodo"/>
+                                    </td>
+                                    <td colspan=2>Metodo Propuesto
+                                        <input type="radio" name="metodo"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan=3>Material</td>
+                                    <td colspan=5 rowspan=3></td>
+                                    <td colspan=4 align="center">Resumen</td>
+                                </tr>
+                                <tr align="center">
+                                    <td>Actividad</td>
+                                    <td>Presente</td>
+                                    <td>Propuesto</td>
+                                    <td>Ganado</td>
+                                </tr>
+                                <tr>
+                                    <td>Operacion <img src="lib/sets/analitico/circle.png"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan=3>Actividad:</td>
+                                    <td colspan=5 rowspan=3></td>
+                                    <td>Trasporte <img src="lib/sets/analitico/arrow.png"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Demora <img src="lib/sets/analitico/semi_circle_right.png"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Inspeccion <img src="lib/sets/analitico/square.png"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan=2>Ubicacion:</td>
+                                    <td colspan=5 rowspan=2 id="ubic"></td>
+                                    <td>Almacenaje <img src="lib/sets/analitico/triangle_inver.png"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Combinada <img src="lib/sets/analitico/combine.png"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">Analista:</td>
+                                    <td colspan="5" rowspan="2"></td>
+                                    <td>Total actividades</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                <tr>
+                                    <td>Distancia total</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Fecha: </td>
+                                    <td colspan="5"></td>
+                                    <td>Tiempo total</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="ctab2">
+                        <canvas id="a" width="800" height="600">
+                            Your browser does not support HTML5. Please upgrade your browser to any modern version.
+                        </canvas>
+                        <div id="text-editor"></div>
+                        <div id="text-editor-tools"></div>
+                    </div>
+                    <div id="ctab3">
+                        <table id="sinoptico">
+                            <tbody>
+                                <tr>
+                                    <td>Diagrama No:</td>
+                                    <td colspan=3 ></td>
+                                    <td>Hoja No:</td>
+                                    <td></td>
+                                    <td>De:</td>
+                                    <td width="100px;"></td>
+                                </tr>
+                                <tr>
+                                    <td>Fecha:</td>
+                                    <td style="min-width: 120px"></td>
+                                    <td>Presente
+                                        <input type="radio" name="metodo"/>
+                                    </td>
+                                    <td>Propuesto
+                                        <input type="radio" name="metodo"/>
+                                    </td>
+                                    <td colspan=4 align="center">Resumen</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan=4>Actividad</td>
+                                    <td colspan=3 rowspan=4></td>
+                                    <td align="center">Actividad</td>
+                                    <td align="center">Presente</td>
+                                    <td align="center">Propuesto</td>
+                                    <td align="center">Ganado</td>
+                                </tr>
+                                <tr>
+                                    <td>Operacion <img src="lib/sets/sinoptico/circle.png"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Inspeccion <img src="lib/sets/sinoptico/square.png"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Combinada <img src="lib/sets/sinoptico/combine.png"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Analista:</td>
+                                    <td colspan=3></td>
+                                    <td>Total actividades</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                <tr>
+                                    <td>Fecha: </td>
+                                    <td colspan=3></td>
+                                    <td>Tiempo total</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>					
+            </div>
         </div>
+        <!--Right panel-->
+        <div id="right">
+            <center>
+                <div id="minimap">
+                </div>
+            </center>
+            <div id="edit">
+            </div>
+        </div>
+    </div>
 
-        <!--Insert Image hidden iframe-->
-        <iframe id="upload_target" name="upload_target" style="width:0;height:0;border:0px;"></iframe>
+    <!--The import panel-->
+    <div id="import-dialog" style="background-color: white; display: none; margin-top: auto; margin-bottom: auto;">
+        <form action="./common/controller.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="importDiagramExe"/>
+            <h2>Import Diagramo file </h2>
+            <p/>
+            <input type="file" name="diagramFile" id="diagramFile"/>  
+            <p/>
+            <input type="image" src="./assets/images/import.gif"/>
+        </form>
+    </div>
 
-        <script type="text/javascript">
-            "use strict";
-            function loadFill(check) {
-                if (check.checked === true) {
-                    if ($('#colorpickerHolder3').css('display') === 'none') {
-                        $('#colorSelector3').click();
-                    }
-                }
-                else {
-                    if ($('#colorpickerHolder3').css('display') === 'block') {
-                        $('#colorSelector3').click();
-                    }
+    <!--Insert Image dialog content-->
+    <div id="insert-image-dialog">
+        <h2>Insert Image</h2>
+        <form action="./common/controller.php" method="POST" target="upload_target" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="insertImage"/>
+            <div class="insert-image-line">
+                <input type="radio" name="image-group" value="URL" checked>
+                <label>From URL:</label>
+                <input type="text" class="url-input" name="imageURL" id="imageURL"/>
+            </div>
+            <div class="insert-image-line">
+                <input type="radio" name="image-group" value="Upload">
+                <label>Upload:</label>
+                <input type="file" class="right-offset" name="imageFile" id="imageFile"/>
+            </div>
+            <div class="insert-image-line">
+                <input type="radio" name="image-group" value="Reuse" id="insert-image-reuse-group">
+                <label>Reuse:</label>
+                <select id="insert-image-reuse"  name="reuseImageFile">
+                </select>
+            </div>
+            <div id="upload-image-error">
+            </div>
+            <div class="submit-container">
+                <input type="submit" value="Insert" />
+            </div>
+        </form>
+    </div>
+
+    <!--Insert Image hidden iframe-->
+    <iframe id="upload_target" name="upload_target" style="width:0;height:0;border:0px;"></iframe>
+
+    <script type="text/javascript">
+        "use strict";
+        function loadFill(check) {
+            if (check.checked === true) {
+                if ($('#colorpickerHolder3').css('display') === 'none') {
+                    $('#colorSelector3').click();
                 }
             }
-        </script>
-        <br/>
-        <? //require_once dirname(__FILE__) . '/common/analytics.php';?>
-    </body>
+            else {
+                if ($('#colorpickerHolder3').css('display') === 'block') {
+                    $('#colorSelector3').click();
+                }
+            }
+        }
+    </script>
+    <br/>
+    <? //require_once dirname(__FILE__) . '/common/analytics.php';?>
+</body>
 </html>

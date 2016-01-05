@@ -226,7 +226,7 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps) {
     //update button
     var btnUpdate = document.createElement("input");
     btnUpdate.setAttribute("type", "button");
-    btnUpdate.setAttribute("value", "Update");
+    btnUpdate.setAttribute("value", "Actualizar");
 
     btnUpdate.onclick = function() {
         //update canvas props
@@ -267,7 +267,7 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps) {
     //fit button
     var btnFit = document.createElement("input");
     btnFit.setAttribute("type", "button");
-    btnFit.setAttribute("value", "Fit");
+    btnFit.setAttribute("value", "Ajustar");
 
     btnFit.onclick = function() {
         /* Algorithm

@@ -185,7 +185,6 @@ $page = 'editor';
         <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
         <a href="javascript:action('ungroup');">Ungroup</a>
         -->
-    </div>
 
     <div id="editor">
         <!--Left panel-->
@@ -260,7 +259,7 @@ $page = 'editor';
                 </div>
                 <div id="error" class="error" style=" display: none"></div>
             </div>
-            <div id="imgLoad" class="label" style=" display: none">
+            <div id="imgLoad" class="label" style="display: none">
                 Suba la imagen con la cual trabajara
                 <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/img_icon.png" border="0" width="115px" alt="Image"/></a>
             </div>

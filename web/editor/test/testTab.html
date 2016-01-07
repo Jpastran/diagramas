@@ -136,6 +136,28 @@
                 //Busca la url de la pestaña y la cambia
                 $($("#" + li).children('a')).attr('href', href);
             }
+
+            function genResumen() {
+                var array = ['', 'Operacion', 'Trasprote', 'Demora', 'Sostenimiento', 'Total', 'Tiempo del ciclo'];
+                var tbody = $("#gen");
+                for (var i = 0; i < array.length; i++) {
+                    var tr = $('<tr>');
+                    console.log(array[i], i);
+                    if (i != 0) {
+                        tr.append($('<td>' + array[i] + '</td>'));
+                    }
+                    for (var j = 0; j < 3; j++) {
+                        if (i == 0) {
+                            tr.append($('<td>M.I</td>'));
+                            tr.append($('<td>M.D</td>'));
+                        } else {
+                            tr.append($('<td>'));
+                            tr.append($('<td>'));
+                        }
+                    }
+                    tbody.append(tr);
+                }
+            }
         </script>
     </head>
     <body>
@@ -154,40 +176,58 @@
                 </ul>
             </div>
             <div id="ctabs">
-                <div id="ctab4">
-                    <table id="recorrido">
-                        <tbody>
+                <div id="ctab1">
+                    <table id="bimanual">
+                        <tbody id="gen">
                             <tr>
                                 <td>Diagrama No:</td>
-                                <td  ></td>
+                                <td></td>
                                 <td>Hoja No:</td>
                                 <td></td>
                                 <td>De:</td>
                                 <td></td>
+                                <td>Fecha:</td>
+                                <td colspan="6"></td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">Actividad:</td>
+                                <td colspan="5" rowspan="2"></td>
                                 <td>Analista:</td>
-                                <td></td>
+                                <td colspan="6"></td>
                             </tr>
                             <tr>
-                                <td rowspan="12">Actividad:</td>
-                                <td colspan="3" rowspan="12"></td>
-                                <td colspan="2">Metodo Presente
+                                <td colspan="3">Metodo Presente
                                     <input type="radio" name="metodo"/>
                                 </td>
-                                <td colspan="2">Metodo Propuesto
+                                <td colspan="4">Metodo Propuesto
                                     <input type="radio" name="metodo"/>
                                 </td>
                             </tr>
                             <tr>
-                                <td align="center" colspan="4">Resumen</td>
+                                <td align="center" colspan="6">Puesto de trabajo</td>
+                                <td align="center" colspan="7">Resumen</td>
                             </tr>
                             <tr>
-                                <td align="center">Actividad</td>
-                                <td align="center">Presente</td>
-                                <td align="center">Propuesto</td>
-                                <td align="center">Ganado</td>
+                                <td colspan="6" rowspan="8"></td>
+                                <td align="center" rowspan="2">Simbolo</td>
+                                <td align="center" colspan="2">Presente</td>
+                                <td align="center" colspan="2">Propuesto</td>
+                                <td align="center" colspan="2">Ganado</td>
                             </tr>
+                            <tr>
+                                <td>M.I</td>
+                                <td>M.D</td>
+                                <td>M.I</td>
+                                <td>M.D</td>
+                                <td>M.I</td>
+                                <td>M.D</td>
+                            </tr>
+
                             <tr>
                                 <td>Operacion</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -197,55 +237,41 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>Demora</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                            </tr>
-                            <tr>
-                                <td>Inspeccion</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>Almacenaje</td>
+                                <td>Sostenimiento</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>Combinada</td>
+                                <td>Total</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>Total actividades</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Distancia total</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Tiempo total</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Ubicacion:</td>
-                                <td></td>
-                                <td>Escala:1:</td>
+                                <td>Tiempo del ciclo</td>
                                 <td colspan="2"></td>
-                                <td>Fecha:</td>
+                                <td colspan="2"></td>
                                 <td colspan="2"></td>
                             </tr>
                         </tbody>

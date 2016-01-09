@@ -159,15 +159,15 @@
                 }
             }
 
-            function addFila(t, m1, f1, f2, m2) {
+            function addFila() {
                 var table = $('#bimanualT').find('tbody');
                 var tr = $('<tr>');
-                tr.append($('<td>' + t + '</td>'));
-                tr.append($('<td>' + m1 + '</td>'));
-                tr.append($('<td>' + f1 + '</td>'));
-                tr.append($('<td>' + f2 + '</td>'));
-                tr.append($('<td>' + m2 + '</td>'));
-                tr.append($('<td>' + t + '</td>'));
+                tr.append($('<td>' + $('#time').val() + '</td>'));
+                tr.append($('<td>' + $('#mid').val() + '</td>'));
+                tr.append($('<td><img src="../lib/sets/bimanual/' + opr[$('#mis').val()] + '"/></td>'));
+                tr.append($('<td><img src="../lib/sets/bimanual/' + opr[$('#mds').val()] + '"/></td>'));
+                tr.append($('<td>' + $('#mdd').val() + '</td>'));
+                tr.append($('<td>' + $('#time').val() + '</td>'));
                 var td = $('<td>');
                 td.append($('<input/>', {type: 'button', value: 'Editar'}).click(editFila));
                 td.append($('<input type="button" value="Borrar">').click(delFila));
@@ -176,20 +176,40 @@
             }
 
             function delFila() {
-                console.log('Borrar')
+                console.log('Borrar');
                 $(this).parent('td').parent('tr').remove();
             }
 
             var tds;
+            var opr = ['circle.png', 'arrow.png', 'triangle_inver.png', 'semi_circle_right.png'];
+
+            function genSelect() {
+                var sel = $('<select>');
+                sel.append($('<option value="0">Operacion</option>'));
+                sel.append($('<option value="1">Trasporte</option>'));
+                sel.append($('<option value="2">Sostenimiento</option>'));
+                sel.append($('<option value="3">Demora</option>'));
+                return sel;
+            }
+
+            function genImg(td) {
+                var val = $(td).find('select').val();
+                var img = $('<img src="../lib/sets/bimanual/' + opr[val] + '"/>');
+                return img;
+            }
 
             function editFila() {
-                console.log('Editar')
+                console.log('Editar');
                 tds = $(this).parent('td').parent('tr').find('td');
-                for (var i = 0; i < tds.length - 1; i++) {
-                    $(tds[i]).attr('contenteditable', true);
-                    $(tds[i]).attr('class', 'edit');
+                for (var i = 0; i < tds.length - 2; i++) {
+                    if (i != 2 && i != 3) {
+                        $(tds[i]).attr('contenteditable', true);
+                        $(tds[i]).attr('class', 'edit');
+                    }
                 }
                 disBtn(true);
+                $(tds[2]).html(genSelect());
+                $(tds[3]).html(genSelect());
                 $(this).unbind();
                 $(this).attr('value', 'Guardar');
                 $(this).attr('disabled', false);
@@ -198,13 +218,15 @@
 
             function modFila() {
                 if (valFila()) {
-                    console.log('Modificar')
-                    for (var i = 0; i < tds.length - 1; i++) {
+                    console.log('Modificar');
+                    for (var i = 0; i < tds.length - 2; i++) {
                         $(tds[i]).removeAttr('contenteditable');
                         $(tds[i]).removeAttr('class');
                     }
                     disBtn(false);
                     $(this).unbind();
+                    $(tds[2]).html(genImg(tds[2]));
+                    $(tds[3]).html(genImg(tds[3]));
                     $(this).attr('value', 'Editar');
                     $(this).click(editFila);
                     tds[5].textContent = tds[0].textContent;
@@ -222,12 +244,16 @@
 
             function valFila() {
                 var bool = true;
-                for (var i = 0; i < tds.length - 1; i++) {
+                for (var i = 0; i < tds.length - 2; i++) {
                     if (tds[i].textContent == '') {
                         bool = false;
                     }
                 }
                 return bool;
+            }
+
+            function editTime() {
+                $('#tR').html($('#tL').val());
             }
         </script>
     </head>
@@ -235,6 +261,29 @@
         <div class="contenedor">
             <div class="titulo">
                 ¿Sobre que escribiré en el blog?
+            </div>
+            <div>
+                Tiempo
+                <input type="text" id="time">
+                Descripcion mano izquierda
+                <input type="text" id="mid">
+                Simbolo mano izquierda
+                <select id="mis">
+                    <option value="0">Operacion</option>
+                    <option value="1">Trasporte</option>
+                    <option value="2">Sostenimiento</option>
+                    <option value="3">Demora</option>
+                </select>
+                Descripcion mano derecha
+                <input type="text" id="mdd">
+                Simbolo mano izquierda
+                <select id="mds">
+                    <option value="0">Operacion</option>
+                    <option value="1">Trasporte</option>
+                    <option value="2">Sostenimiento</option>
+                    <option value="3">Demora</option>
+                </select>
+                <input type="button" value="Insertar" onclick="addFila()">
             </div>
             <div id="tabs">
                 <ul id=lista>
@@ -360,12 +409,18 @@
                                 <th rowspan="2">Opciones</th>
                             </tr>
                             <tr>
-                                <th>Seg</th>
+                                <th>
+                                    <select id="tL" onchange="editTime()">
+                                        <option value="Seg" selected>Seg</option>
+                                        <option value="Min">Min</option>
+                                        <option value="Hora">Hora</option>
+                                    </select>
+                                </th>
                                 <th>Mano izquierda</th>
                                 <th>MI</th>
                                 <th>MD</th>
                                 <th>Mano derecha</th>
-                                <th>Seg</th>
+                                <th id="tR">Seg</th>
                             </tr>
                         </thead>
                         <tbody>

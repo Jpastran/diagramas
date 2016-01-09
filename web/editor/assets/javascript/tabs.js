@@ -65,3 +65,8 @@ function cambiaCtab(li, ctab) {
     //Busca la url de la pestaña y la cambia
     $($("#" + li).children('a')).attr('href', href);
 }
+
+function tabName(li, name){
+    var a = $(li).find('a');
+    a.html(name);
+}

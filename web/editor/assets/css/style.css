@@ -94,31 +94,27 @@ body {
 }
 #left {
     float: left;
+    width: 130px;
 }
 
 #figures {
-    /*float: left;*/
-    width: 120px;
-    height: 200px;
-    /*border: 1px solid #E5E5E5;*/
     padding: 5px;
     background-color: #F6F6F6;
 }
 
 #especial {
-    /*float: none;*/
-    width: 120px;
-    height: 200px;
-    /*border: 1px solid #E5E5E5;*/
     padding: 5px;
     background-color: #F6F6F6;
     border-top: 5px solid #E5E5E5;
 }
 
 #imgLoad{
-    /*float: none;*/
-    width: 120px;
-    /*border: 1px solid #E5E5E5;*/
+    padding: 5px;
+    background-color: #F6F6F6;
+    border-top: 5px solid #E5E5E5;
+}
+
+#bimLeft{
     padding: 5px;
     background-color: #F6F6F6;
     border-top: 5px solid #E5E5E5;
@@ -137,15 +133,24 @@ body {
     margin-bottom: 3px;
 }
 
+.label textarea{
+    width: 95%;
+    height: 80px;
+    margin-bottom: 5px;
+}
+.label input{
+    width: 95% !important;
+}
+
 select {
     width: auto;
     margin-top: 3px;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
 }
 
 input[type="text"] {
     width: auto;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
 }
 
 input[type="button"] {

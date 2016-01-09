@@ -176,7 +176,6 @@
             }
 
             function delFila() {
-                console.log('Borrar');
                 $(this).parent('td').parent('tr').remove();
             }
 
@@ -199,7 +198,6 @@
             }
 
             function editFila() {
-                console.log('Editar');
                 tds = $(this).parent('td').parent('tr').find('td');
                 for (var i = 0; i < tds.length - 2; i++) {
                     if (i != 2 && i != 3) {
@@ -218,7 +216,6 @@
 
             function modFila() {
                 if (valFila()) {
-                    console.log('Modificar');
                     for (var i = 0; i < tds.length - 2; i++) {
                         $(tds[i]).removeAttr('contenteditable');
                         $(tds[i]).removeAttr('class');

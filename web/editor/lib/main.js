@@ -4935,32 +4935,49 @@ function cargarFiguras(selectId) {
 }
 
 function cambiarVista(id) {
-    var divEsp = document.getElementById('especial');
-    var divRight = document.getElementById('right');
-    var divTools = document.getElementById('aTools');
-    var divImg = document.getElementById('imgLoad');
     if (id == "analitico") {
-        divTools.style.display = 'block';
-        divEsp.style.display = 'block';
-        divImg.style.display = 'none';
+        displayDivs('block', 'block', 'block', 'none', 'none');
         cambiaCtab(tab1, ctab1);
         tabs(tab1, ctab1);
     } else if (id == "sinoptico") {
-        divTools.style.display = 'block';
-        divEsp.style.display = 'none';
-        divImg.style.display = 'none';
+        displayDivs('block', 'block', 'none', 'none', 'none');
         cambiaCtab(tab1, ctab3);
         tabs(tab1, ctab3);
     } else if (id == "recorrido") {
-        divTools.style.display = 'block';
-        divEsp.style.display = 'none';
-        divImg.style.display = 'block';
+        displayDivs('block', 'block', 'none', 'block', 'none');
         cambiaCtab(tab1, ctab4);
         tabs(tab1, ctab4);
+    } else if (id == "bimanual") {
+        displayDivs('none', 'none', 'none', 'none', 'block');
+        cambiaCtab(tab1, ctab5);
+        cambiaCtab(tab2, ctab6);
+        tabs(tab1, ctab5);
     }
-    STACK.reset();
-    CONNECTOR_MANAGER.reset();
-    draw();
-    coor = [iniX, iniY];
-    primer = false;
+    if (id == "bimanual") {
+        tabName(tab2, 'Tabla');
+    } else {
+        tabName(tab2, 'Diagrama');
+        STACK.reset();
+        CONNECTOR_MANAGER.reset();
+        draw();
+        coor = [iniX, iniY];
+        primer = false;
+    }
+}
+
+function displayDivs(right, tools, esp, img, bim) {
+    document.getElementById('right').style.display = right;
+    document.getElementById('aTools').style.display = tools;
+    document.getElementById('especial').style.display = esp;
+    document.getElementById('imgLoad').style.display = img;
+    document.getElementById('bimLeft').style.display = bim;
+    if (bim=='block'){
+        document.getElementById('container').style.right = '10px';
+        document.getElementById('container').style.left = '200px';
+        document.getElementById('left').style.width = '200px';
+    }else{
+        document.getElementById('container').style.right = '';
+        document.getElementById('container').style.left = '';
+        document.getElementById('left').style.width = '';
+    }
 }

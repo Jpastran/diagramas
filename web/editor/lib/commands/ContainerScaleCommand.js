@@ -1,20 +1,20 @@
 "use strict";
 
 /*
-Copyright [2014] [Diagramo]
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+ Copyright [2014] [Diagramo]
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 /* 
  * This is triggered when a container was scaled/expanded
@@ -22,34 +22,31 @@ limitations under the License.
  * @constructor
  * @author Alex Gheorghiu <alex@scriptoid.com>
  */
-function ContainerScaleCommand(containerId, matrix, reverseMatrix){
-    
+function ContainerScaleCommand(containerId, matrix, reverseMatrix) {
+
     this.oType = 'ContainerScaleCommand';
-    
+
     /**Any sequence of many mergeable actions can be packed by the history*/
     this.mergeable = true;
-    
+
     this.containerId = containerId;
-        
-    this.matrix = matrix;           
+
+    this.matrix = matrix;
     this.reverseMatrix = reverseMatrix;
-        
+
 }
 
 
 ContainerScaleCommand.prototype = {
-    
     /**This method got called every time the Command must execute*/
-    execute : function(){  
-        var cont = STACK.containerGetById(this.containerId);                
-        cont.transform(this.matrix);        
+    execute: function() {
+        var cont = STACK.containerGetById(this.containerId);
+        cont.transform(this.matrix);
     },
-    
-    
     /**This method should be called every time the Command should be undone*/
-    undo : function(){        
-        var cont = STACK.containerGetById(this.containerId);                
-        cont.transform(this.reverseMatrix);  
+    undo: function() {
+        var cont = STACK.containerGetById(this.containerId);
+        cont.transform(this.reverseMatrix);
     }
 };
 

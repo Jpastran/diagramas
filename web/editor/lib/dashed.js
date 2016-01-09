@@ -1,20 +1,20 @@
 "use strict";
 
 /*
-Copyright [2014] [Diagramo]
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+ Copyright [2014] [Diagramo]
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 /**
  * Small library to smooth the dashed line support in <canvas>
@@ -53,7 +53,7 @@ var dashSupport = false;
 
 
     /*Add getLineDash(...) to Canvas context*/
-    if (typeof CanvasRenderingContext2D.prototype.getLineDash  !== 'function') {
+    if (typeof CanvasRenderingContext2D.prototype.getLineDash !== 'function') {
         CanvasRenderingContext2D.prototype.getLineDash = function() {
             var _dash = null;
 
@@ -69,14 +69,14 @@ var dashSupport = false;
             return _dash;
         };
     }
-    
+
 
     /**Creates lineDashOffset property for context that miss it*/
     if (!CanvasRenderingContext2D.prototype.hasOwnProperty("lineDashOffset")) {
         if (CanvasRenderingContext2D.prototype.hasOwnProperty("mozDashOffset")) { //Mozilla
             Object.defineProperty(CanvasRenderingContext2D.prototype, "lineDashOffset", {
                 /**ATTENTION: You must first set mozDash in order to use mozDashOffset*/
-                get: function() {                    
+                get: function() {
 //                    console.info("mozDashOffset get");
                     return this.mozDashOffset;
                 },
@@ -87,7 +87,7 @@ var dashSupport = false;
                 enumerable: true
             });
         }
-        else{ //other browsers
+        else { //other browsers
             Object.defineProperty(CanvasRenderingContext2D.prototype, "lineDashOffset", {
                 get: function() {
                     //TODO: add your own implementation
@@ -98,9 +98,9 @@ var dashSupport = false;
                 enumerable: true
             });
         }
-    }    
+    }
 
 //    console.info("Context enhanced with dotted line");
-    
+
     dashSupport = true;
 })();

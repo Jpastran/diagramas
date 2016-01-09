@@ -19,7 +19,7 @@
 figureSets["sinoptico"] = {
     name: 'Diagrama Sinoptico',
     description: 'Diagram set of figures',
-    figures: [     
+    figures: [
         {figureFunction: "circle", image: "circle.png"},
         {figureFunction: "square", image: "square.png"},
         {figureFunction: "combined", image: "combine.png"}
@@ -100,8 +100,8 @@ function figure_circle(x, y) {
 }
 
 function figure_combined(x, y) {
-    var c = new Arc(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2 , FigureDefaults.radiusSize, 0, 360, false, 0);
-	
+    var c = new Arc(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.radiusSize, 0, 360, false, 0);
+
     var r = new Polygon();
     r.addPoint(new Point(x, y));
     r.addPoint(new Point(x + FigureDefaults.segmentSize, y));

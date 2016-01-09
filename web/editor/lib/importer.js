@@ -1,20 +1,20 @@
 "use strict";
 
 /*
-Copyright [2014] [Diagramo]
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+ Copyright [2014] [Diagramo]
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 /* 
  * This is a small library the will help import from older version
@@ -30,13 +30,10 @@ Importer.fileVersions = {
     1: "This version did not have any version number. \n\
         Originally used on Diagramo.com\n\
         File extension named .dia",
-    
     2: "This version did not have any version number.\n\
         Originally used on version 2.3beta\n\
         ",
-    
     3: "Started to be used beginning with version 2.3 final",
-
     4: "Started to be used beginning with version 2.4 final"
 };
 
@@ -45,24 +42,24 @@ Importer.fileVersions = {
  * @returns {JSONObject} the new JSON version
  * Warning: It does modify the original {JSONObject}
  * */
-Importer.importDiagram = function(o){
-    if( !('v' in o) ){
+Importer.importDiagram = function(o) {
+    if (!('v' in o)) {
         this.patch3(o);
     }
-    
+
     /*As now we should have the o.v present
-    we will allow bigger patches than 3 to be applied*/
-    
+     we will allow bigger patches than 3 to be applied*/
+
     //apply all patches until the fileVersion reaches latest version
-    for(var i = o.v + 1; i <= DIAGRAMO.fileVersion; i++){
-        try{
-            this['patch' + i](o);       
-        } catch(error){
+    for (var i = o.v + 1; i <= DIAGRAMO.fileVersion; i++) {
+        try {
+            this['patch' + i](o);
+        } catch (error) {
             Log.error("Importer.importDiagram exception: " + error);
 //            alert("Importer.importDiagram exception: " + error);
         }
     }
-    
+
     return o;
 };
 
@@ -72,17 +69,17 @@ Importer.importDiagram = function(o){
  * @returns {JSONObject} the new JSON version
  * Warning: It does modify the original {JSONObject}
  * */
-Importer.patch3 = function(o){
+Importer.patch3 = function(o) {
     //initially we did not have Containers    
-    if('s' in o){ // 's' stands for Stack
+    if ('s' in o) { // 's' stands for Stack
         var jsonStack = o.s;
-        
+
         //If not containers array present
-        if( !('containers' in jsonStack) ){
+        if (!('containers' in jsonStack)) {
             jsonStack.containers = []; //add an empty container array
-        }                        
-        
-        if( 'figures' in jsonStack ){   // replace deprecated property value with new one
+        }
+
+        if ('figures' in jsonStack) {   // replace deprecated property value with new one
             var deprecatedPropertyValue = 'textSize';
             var deprecatedReplacer = 'size';
             var figures = jsonStack.figures;
@@ -98,16 +95,16 @@ Importer.patch3 = function(o){
             }
         }
     }
-    
-    if( !('p' in o) ){ // 'p' stands for ContainerFigureManager
-        o.p = new ContainerFigureManager() ; //empty ContainerFigureManager
+
+    if (!('p' in o)) { // 'p' stands for ContainerFigureManager
+        o.p = new ContainerFigureManager(); //empty ContainerFigureManager
     }
 
-    if( 'm' in o ){ // 'm' stands for ConnectorManager
+    if ('m' in o) { // 'm' stands for ConnectorManager
         var jsonConnectorManager = o.m;
-        if ( 'connectors' in jsonConnectorManager ) {
+        if ('connectors' in jsonConnectorManager) {
             // properties that may absent
-            var lineStyleProperty = new BuilderProperty('Line Style','style.lineStyle', BuilderProperty.TYPE_LINE_STYLE);
+            var lineStyleProperty = new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE);
             var textSizeProperty = new BuilderProperty('Text Size', 'middleText.size', BuilderProperty.TYPE_TEXT_FONT_SIZE);
             var fontProperty = new BuilderProperty('Font', 'middleText.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY);
             var textAlignProperty = new BuilderProperty('Alignment', 'middleText.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT);
@@ -173,9 +170,9 @@ Importer.patch3 = function(o){
             }
         }
     }
-    
+
     o.v = 3;
-    
+
     return o;
 };
 
@@ -186,7 +183,7 @@ Importer.patch3 = function(o){
  * @returns {JSONObject} the new JSON version
  * Warning: It does modify the original {JSONObject}
  * */
-Importer.patch4 = function(o){
+Importer.patch4 = function(o) {
     o.v = 4;
 
     /**
@@ -197,8 +194,8 @@ Importer.patch4 = function(o){
      *  - Set Text::underlined to false (only Figures, Containers - in primitives and Connectors - in middleText field have it)
      *  - Add text underlined property to all objects with Text primitives (only Figures, Containers - in primitives and Connectors - in middleText field have it)
      * */
-    function addTextUnderline(o){
-        if('s' in o){ // 's' stands for Stack
+    function addTextUnderline(o) {
+        if ('s' in o) { // 's' stands for Stack
             var jsonStack = o.s;
 
             // go through containers
@@ -240,7 +237,7 @@ Importer.patch4 = function(o){
             }
         }
 
-        if( 'm' in o ){ // 'm' stands for ConnectorManager
+        if ('m' in o) { // 'm' stands for ConnectorManager
             var jsonConnectorManager = o.m;
 
             // define typical text underlined property
@@ -266,8 +263,8 @@ Importer.patch4 = function(o){
      *  - Add to all Style instances fields Style::gradientBounds and Style::colorStops
      *  - Initialize Style::gradientBounds and Style::colorStops fields as an empty arrays
      * */
-    function addFillGradient(o){
-        if('s' in o){ // 's' stands for Stack
+    function addFillGradient(o) {
+        if ('s' in o) { // 's' stands for Stack
             var jsonStack = o.s;
 
             // go through containers
@@ -333,7 +330,7 @@ Importer.patch4 = function(o){
             }
         }
 
-        if( 'm' in o ){ // 'm' stands for ConnectorManager
+        if ('m' in o) { // 'm' stands for ConnectorManager
             var jsonConnectorManager = o.m;
 
             // go through connectors
@@ -369,7 +366,7 @@ Importer.patch4 = function(o){
     /** call functions to add support for a new features of release version 4:
      * - Text underline
      * - Gradient as a fill color
-    */
+     */
     addTextUnderline(o);
     addFillGradient(o);
 

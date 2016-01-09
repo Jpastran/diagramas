@@ -1,20 +1,20 @@
 "use strict";
 
 /*
-Copyright [2014] [Diagramo]
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+ Copyright [2014] [Diagramo]
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 /** Container holds one or more figure into a visual (and probably conceptual)
  * unit
@@ -28,19 +28,19 @@ limitations under the License.
  */
 function Container(id, topLeft, bottomRight) {
     /**Group's id*/
-    if(id == null){
-        this.id = STACK.generateId();        
+    if (id == null) {
+        this.id = STACK.generateId();
     }
-    else{
+    else {
         this.id = id;
     }
-    
+
     this.topLeft = topLeft.clone();
-    this.bottomRight = bottomRight.clone();        
+    this.bottomRight = bottomRight.clone();
 
     /**An {Array} of primitives that make the figure*/
     this.primitives = [];
-    
+
     /**An {Array} of primitives*/
     this.properties = [];
 
@@ -51,7 +51,7 @@ function Container(id, topLeft, bottomRight) {
     this.style.lineStyle = Style.LINE_STYLE_CONTINOUS;
     this.style.gradientBounds = this.getBounds();
 
-    
+
     /**We keep the figure position by having different points
      *[central point of the figure, the middle of upper edge]
      * An {Array} or {@link Point}s
@@ -59,10 +59,10 @@ function Container(id, topLeft, bottomRight) {
     //TODO: These coordinates are no necessary as we already have topLeft and bottomRight
     //but this will request changes to code for Container to work
     this.rotationCoords = [
-        new Point( (this.topLeft.x + this.bottomRight.x) / 2, (this.topLeft.y + this.bottomRight.y)/2),
-        new Point( (this.topLeft.x + this.bottomRight.x) / 2, this.topLeft.y)
-    ];    
-    
+        new Point((this.topLeft.x + this.bottomRight.x) / 2, (this.topLeft.y + this.bottomRight.y) / 2),
+        new Point((this.topLeft.x + this.bottomRight.x) / 2, this.topLeft.y)
+    ];
+
     //SHAPE - or decoration of the container
     var headerHeight = 20;
 
@@ -76,33 +76,33 @@ function Container(id, topLeft, bottomRight) {
     var l1 = new Line(
             new Point(this.topLeft.x, hBottomRight.y),
             new Point(this.topLeft.x, this.topLeft.y + roundness)
-        );
+            );
     containerPath.addPrimitive(l1);
 
-    var c1 = new QuadCurve(           
+    var c1 = new QuadCurve(
             new Point(this.topLeft.x, this.topLeft.y + roundness),
             new Point(this.topLeft.x, this.topLeft.y),
             new Point(this.topLeft.x + roundness, this.topLeft.y)
-        );
+            );
     containerPath.addPrimitive(c1);
 
     var l2 = new Line(
             new Point(this.topLeft.x + roundness, this.topLeft.y),
             new Point(hBottomRight.x - roundness, this.topLeft.y)
-        );
+            );
     containerPath.addPrimitive(l2);
 
     var c2 = new QuadCurve(
             new Point(hBottomRight.x - roundness, this.topLeft.y),
             new Point(hBottomRight.x, this.topLeft.y),
             new Point(hBottomRight.x, this.topLeft.y + roundness)
-        );
+            );
     containerPath.addPrimitive(c2);
 
     var l3 = new Line(
             new Point(hBottomRight.x, this.topLeft.y + roundness),
             new Point(hBottomRight.x, hBottomRight.y)
-        );
+            );
     containerPath.addPrimitive(l3);
 
 
@@ -110,39 +110,39 @@ function Container(id, topLeft, bottomRight) {
     var l = new Line(
             new Point(this.topLeft.x, this.topLeft.y + headerHeight),
             new Point(this.bottomRight.x, this.topLeft.y + headerHeight)
-        );
+            );
     containerPath.addPrimitive(l);
-    
+
     l = new Line(
             new Point(this.bottomRight.x, this.topLeft.y + headerHeight),
             new Point(this.bottomRight.x, this.bottomRight.y - roundness)
-        );
+            );
     containerPath.addPrimitive(l);
-    
+
     var c = new QuadCurve(
             new Point(this.bottomRight.x, this.bottomRight.y - roundness),
             new Point(this.bottomRight.x, this.bottomRight.y),
             new Point(this.bottomRight.x - roundness, this.bottomRight.y)
-        );
+            );
     containerPath.addPrimitive(c);
-    
+
     l = new Line(
             new Point(this.bottomRight.x - roundness, this.bottomRight.y),
             new Point(this.topLeft.x + roundness, this.bottomRight.y)
-        );
+            );
     containerPath.primitives.push(l);
-    
+
     c = new QuadCurve(
             new Point(this.topLeft.x + roundness, this.bottomRight.y),
             new Point(this.topLeft.x, this.bottomRight.y),
             new Point(this.topLeft.x, this.bottomRight.y - roundness)
-        );
+            );
     containerPath.addPrimitive(c);
-    
+
     l = new Line(
             new Point(this.topLeft.x, this.bottomRight.y - roundness),
             new Point(this.topLeft.x, this.topLeft.y + headerHeight)
-        );
+            );
     containerPath.primitives.push(l);
 
 
@@ -150,15 +150,15 @@ function Container(id, topLeft, bottomRight) {
 
     this.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     this.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
-    this.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
-    this.properties.push(new BuilderProperty('Line Style', 'style.lineStyle',BuilderProperty.TYPE_LINE_STYLE));
-    
+    this.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
+    this.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
+
     //TITLE
-    var title = new Text("Container", (this.topLeft.x + this.bottomRight.x)/2, this.topLeft.y + Text.DEFAULT_SIZE /*@see https://bitbucket.org/scriptoid/diagramo/issue/31/text-vertical-aligment*/, Text.FONTS[0].Text, Text.DEFAULT_SIZE, false);
+    var title = new Text("Container", (this.topLeft.x + this.bottomRight.x) / 2, this.topLeft.y + Text.DEFAULT_SIZE /*@see https://bitbucket.org/scriptoid/diagramo/issue/31/text-vertical-aligment*/, Text.FONTS[0].Text, Text.DEFAULT_SIZE, false);
 //    title.debug = true;
     title.style.fillStyle = '#000000';
     this.addPrimitive(title);
-    
+
 //    this.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     this.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
     this.properties.push(new BuilderProperty('Text Size', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
@@ -166,7 +166,7 @@ function Container(id, topLeft, bottomRight) {
     this.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     this.properties.push(new BuilderProperty('Text Underlined', 'primitives.1.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     this.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
-    
+
 
     /**Serialization type*/
     this.oType = 'Container';
@@ -177,11 +177,11 @@ function Container(id, topLeft, bottomRight) {
  *@return {Array} of newly constructed {Container}s
  *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
-Container.loadArray = function(v){
+Container.loadArray = function(v) {
     var newContainers = [];
     var containerLength = v.length;
 
-    for(var i = 0; i < containerLength; i++){
+    for (var i = 0; i < containerLength; i++) {
         newContainers.push(Container.load(v[i]));
     }
 
@@ -193,14 +193,14 @@ Container.loadArray = function(v){
  *@return {Container} a newly constructed Container
  *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
-Container.load = function(o){
+Container.load = function(o) {
     // parse first topLeft and bottomRight points from JSON
     var topLeft = Point.load(o.topLeft);
     var bottomRight = Point.load(o.bottomRight);
 
     var newContainer = new Container(Number(o.id), topLeft, bottomRight);
     newContainer.primitives = [];
-    for(var i=0; i< o.primitives.length; i++){
+    for (var i = 0; i < o.primitives.length; i++) {
         var primitive = Util.loadPrimitive(o.primitives[i]);
         if (primitive != null) {
             newContainer.addPrimitive(primitive);
@@ -216,61 +216,56 @@ Container.load = function(o){
 
 Container.prototype = {
     constructor: Container,
-            
-            
     /**Paint the container into certain context
      * @param {Context2D} context - the context where to paint the container
      */
     paint: function(context) {
-        if(this.style){
+        if (this.style) {
             this.style.setupContext(context);
         }
-        for(var i = 0; i<this.primitives.length; i++ ){
+        for (var i = 0; i < this.primitives.length; i++) {
             context.save();
-            var primitive  = this.primitives[i];
-            
+            var primitive = this.primitives[i];
+
 
             var oldStyle = null;
-            if(primitive.style){ //save primitive's style
+            if (primitive.style) { //save primitive's style
                 oldStyle = primitive.style.clone();
             }
 
-            if(primitive.style == null){ //if primitive does not have a style use Figure's one
+            if (primitive.style == null) { //if primitive does not have a style use Figure's one
                 primitive.style = this.style.clone();
             }
-            else{ //if primitive has a style merge it
+            else { //if primitive has a style merge it
                 primitive.style.merge(this.style);
             }
 
-            
+
             primitive.paint(context);
-            primitive.style = oldStyle;		
+            primitive.style = oldStyle;
 
             context.restore();
         }
     },
-        
     transform: function(matrix) {
         //throw "container:transform() Not implemented";
-        if(this.style != null){
+        if (this.style != null) {
             this.style.transform(matrix);
         }
-        
+
         this.bottomRight.transform(matrix);
         this.topLeft.transform(matrix);
-        
-        for(var i = 0; i<this.primitives.length; i++ ){
+
+        for (var i = 0; i < this.primitives.length; i++) {
             this.primitives[i].transform(matrix);
         }
-        
+
         //some figures dont have rotation coords, i.e. those that arent "real" figures, such as the highlight rectangle
-        if(this.rotationCoords.length != 0){
+        if (this.rotationCoords.length != 0) {
             this.rotationCoords[0].transform(matrix);
             this.rotationCoords[1].transform(matrix);
         }
     },
-        
-        
     /**See if a container contains a point
      *@param {Number} x - the x coordinate of the point
      *@param {Number} y - the y coordinate of the point
@@ -278,91 +273,78 @@ Container.prototype = {
     contains: function(x, y) {
         var topRight = new Point(this.bottomRight.x, this.topLeft.y);
         var bottomLeft = new Point(this.topLeft.x, this.bottomRight.y);
-        return Util.isPointInside(new Point(x,y),[this.topLeft, topRight, this.bottomRight, bottomLeft]);
+        return Util.isPointInside(new Point(x, y), [this.topLeft, topRight, this.bottomRight, bottomLeft]);
     },
-
-
-    equals:function(anotherFigure){
-        if( !(anotherFigure instanceof Container) ){
+    equals: function(anotherFigure) {
+        if (!(anotherFigure instanceof Container)) {
             Log.info("Container:equals() 0");
             return false;
         }
 
         //test primitives
-        if(this.primitives.length == anotherFigure.primitives.length){
-            for(var i=0; i<this.primitives.length; i++){
-                if(!this.primitives[i].equals(anotherFigure.primitives[i])){
+        if (this.primitives.length == anotherFigure.primitives.length) {
+            for (var i = 0; i < this.primitives.length; i++) {
+                if (!this.primitives[i].equals(anotherFigure.primitives[i])) {
                     Log.info("Container:equals() 1");
                     return false;
                 }
             }
         }
-        else{
+        else {
             Log.info("Container:equals() 2");
             return false;
         }
 
 
         //test rotation coords
-        if(this.rotationCoords.length == anotherFigure.rotationCoords.length){
-            for(var i in this.rotationCoords){
-                if(!this.rotationCoords[i].equals(anotherFigure.rotationCoords[i])){
+        if (this.rotationCoords.length == anotherFigure.rotationCoords.length) {
+            for (var i in this.rotationCoords) {
+                if (!this.rotationCoords[i].equals(anotherFigure.rotationCoords[i])) {
                     return false;
                 }
             }
         }
-        else{
+        else {
             return false;
         }
 
         //test style
-        if(!this.style.equals(anotherFigure.style)){
+        if (!this.style.equals(anotherFigure.style)) {
             return false;
         }
 
         return true;
     },
-        
-        
     toString: function() {
         return "Container " + this.id + " topLeft: " + this.topLeft + " bottomRight:" + this.bottomRight;
     },
-        
-        
     clone: function() {
         throw "container:clone() Not implemented";
     },
-        
     /**
      * @return {Array<Number>} - returns [minX, minY, maxX, maxY] - bounds, where
      *  all points are in the bounds.
-     */    
+     */
     getBounds: function() {
         return Util.getBounds([this.bottomRight, this.topLeft]);
     },
-        
     /**Detects if */
-    onEdge : function(theX, theY){
+    onEdge: function(theX, theY) {
         var topRight = new Point(this.bottomRight.x, this.topLeft.y);
         var bottomLeft = new Point(this.topLeft.x, this.bottomRight.y);
-        
+
         var edge = new Polygon();
         edge.points = [this.topLeft, topRight, this.bottomRight, bottomLeft];
-        
+
         return edge.near(theX, theY, 3);
     },
-        
-        
     near: function() {
         throw "container:near() Not implemented";
     },
-        
-        
     getPoints: function() {
         throw "container:getPoints() Not implemented";
     },
-
-    addPrimitive:function(primitive){
+    addPrimitive: function(primitive) {
         // add id property to primitive equal its index
         primitive.id = this.primitives.length;
 
@@ -383,13 +365,13 @@ Container.prototype = {
  */
 function ContainerFigure(containerId, figureId) {
     this.containerId = containerId;
-    
+
     this.figureId = figureId;
 }
 
 
 ContainerFigure.prototype = {
-    constructor: ContainerFigure        
+    constructor: ContainerFigure
 };
 
 
@@ -402,142 +384,135 @@ ContainerFigure.prototype = {
  * */
 function ContainerFigureManager() {
     /**An {Array} of [containerId, figureId] */
-    this.data = [];            
+    this.data = [];
 }
 
 ContainerFigureManager.prototype = {
     constructor: ContainerFigure,
-    
     /**Adds a figure to a container
      * @param {Number} containerId the id of the {Container}
      * @param {Number} figureId the id of the {Figure}
      * */
-    addFigure : function(containerId, figureId){
+    addFigure: function(containerId, figureId) {
         var i;
         var v;
         var present = false;
-        
+
         //Test to see if figure is in ANY container ad a figure should be present in ONLY ONE container
-        for(i in this.data){
+        for (i in this.data) {
             v = this.data[i];
-            if(v[1] === figureId){
+            if (v[1] === figureId) {
                 present = true;
                 break;
             }
         }
-        
-        if(!present){
+
+        if (!present) {
             this.data.push([containerId, figureId]);
         }
     },
-         
     /**Removes a figure from a container
      * @param {Number} containerId the id of the {Container}
      * @param {Number} figureId the id of the {Figure}
      * */
-    removeFigure : function(containerId, figureId){
+    removeFigure: function(containerId, figureId) {
         var i;
         var v;
         var index = -1;
-        
-        for(i in this.data){
+
+        for (i in this.data) {
             v = this.data[i];
-            if(v[0] === containerId && v[1] === figureId){
+            if (v[0] === containerId && v[1] === figureId) {
                 index = i;
                 break;
             }
         }
-        
-        if(index !== -1){
+
+        if (index !== -1) {
             this.data.splice(index, 1);
         }
     },
-    
     /**Get all {Figure}s' ids that live inside a container
      * @param {Number} containerId the id of the {Container}
      * @return {Array}{Number} an array of Figure id
      * @author Alex
      * */
-    getAllFigures : function(containerId){
+    getAllFigures: function(containerId) {
         var i;
         var figureIds = [];
-        
-        for(i in this.data){
+
+        for (i in this.data) {
             var v = this.data[i];
-            if(v[0] === containerId){
+            if (v[0] === containerId) {
                 figureIds.push(v[1]);
             }
         }
-        
+
         return figureIds;
     },
-          
     /**Check if a figure is inside a container
      * @param {Number} containerId the id of the {Container}
      * @param {Number} figureId the id of the {Figure}
      * @return {Boolean} true - if figure is inside a container
-     * */        
-    isFigureInContainer : function(containerId, figureId){
+     * */
+    isFigureInContainer: function(containerId, figureId) {
         var i;
         var v;
         var present = false;
-        
-        for(i in this.data){
+
+        for (i in this.data) {
             v = this.data[i];
-            if(v[0] === containerId && v[1] === figureId){
+            if (v[0] === containerId && v[1] === figureId) {
                 present = true;
                 break;
             }
         }
-        
+
         return present;
     },
-    
-    
     /**Check if a figure is inside a container
      * @param {Number} figureId the id of the {Figure}
      * @return {Number} containerId the id of the {Container} or -1 if none found
-     * */        
-    getContainerForFigure : function(figureId){
+     * */
+    getContainerForFigure: function(figureId) {
         var i;
         var v;
         var containerId = -1;
-        
-        for(i in this.data){
+
+        for (i in this.data) {
             v = this.data[i];
-            if( v[1] === figureId){
+            if (v[1] === figureId) {
                 containerId = v[0];
                 break;
             }
         }
-        
+
         return containerId;
     },
-
-    equals:function (anotherManager){
-        if ( !(anotherManager instanceof ContainerFigureManager) ) {
+    equals: function(anotherManager) {
+        if (!(anotherManager instanceof ContainerFigureManager)) {
             Log.info("ContainerFigureManager:equals() 0");
             return false;
         }
 
         // test data
-        if(this.data.length === anotherManager.data.length){
-            for(var i = 0; i < this.data.length; i++){
-                if(this.data[i][0] !== anotherManager.data[i][0]
-                || this.data[i][1] !== anotherManager.data[i][1]){
+        if (this.data.length === anotherManager.data.length) {
+            for (var i = 0; i < this.data.length; i++) {
+                if (this.data[i][0] !== anotherManager.data[i][0]
+                        || this.data[i][1] !== anotherManager.data[i][1]) {
                     Log.info("ContainerFigureManager:equals() 1");
                     return false;
                 }
             }
         }
-        else{
+        else {
             Log.info("ContainerFigureManager:equals() 2");
             return false;
         }
 
         return true;
     }
-    
+
 };
 
 /**Creates a {ContainerFigureManager} out of JSON parsed object
@@ -545,16 +520,16 @@ ContainerFigureManager.prototype = {
  *@return {ContainerFigureManager} a newly constructed ContainerFigureManager
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
-ContainerFigureManager.load = function(o){
-    
+ContainerFigureManager.load = function(o) {
+
     var containerFigureManager = new ContainerFigureManager(); //empty constructor
-        
+
     //TODO: it should work....not tested
     containerFigureManager.data = [];
 
     var dataLength = o.data.length;
     for (var i = 0; i < dataLength; i++) {
-        var newData = [  // convert value to Number
+        var newData = [// convert value to Number
             Number(o.data[i][0]),
             Number(o.data[i][1])
         ];

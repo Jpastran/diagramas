@@ -4971,11 +4971,11 @@ function displayDivs(right, tools, esp, img, bim) {
     document.getElementById('especial').style.display = esp;
     document.getElementById('imgLoad').style.display = img;
     document.getElementById('bimLeft').style.display = bim;
-    if (bim=='block'){
+    if (bim == 'block') {
         document.getElementById('container').style.right = '10px';
         document.getElementById('container').style.left = '200px';
         document.getElementById('left').style.width = '200px';
-    }else{
+    } else {
         document.getElementById('container').style.right = '';
         document.getElementById('container').style.left = '';
         document.getElementById('left').style.width = '';

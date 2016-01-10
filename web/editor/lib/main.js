@@ -4949,13 +4949,14 @@ function cambiarVista(id) {
         tabs(tab1, ctab4);
     } else if (id == "bimanual") {
         displayDivs('none', 'none', 'none', 'none', 'block');
-        cambiaCtab(tab1, ctab5);
-        cambiaCtab(tab2, ctab6);
+        cambiaCtab(tab1, ctab5);       
         tabs(tab1, ctab5);
     }
     if (id == "bimanual") {
         tabName(tab2, 'Tabla');
+        cambiaCtab(tab2, ctab6);
     } else {
+        cambiaCtab(tab2, ctab2);
         tabName(tab2, 'Diagrama');
         STACK.reset();
         CONNECTOR_MANAGER.reset();

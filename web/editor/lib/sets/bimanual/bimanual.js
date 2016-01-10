@@ -1,31 +1,10 @@
+"use strict";
+
 figureSets["bimanual"] = {
     name: 'Diagrama Bimanual',
     description: 'Diagram set of figures',
     figures: []
 };
-
-
-function genResumen() {
-    var array = ['', 'Operacion', 'Trasprote', 'Demora', 'Sostenimiento', 'Total', 'Tiempo del ciclo'];
-    var tbody = $("#gen");
-    for (var i = 0; i < array.length; i++) {
-        var tr = $('<tr>');
-        console.log(array[i], i);
-        if (i != 0) {
-            tr.append($('<td>' + array[i] + '</td>'));
-        }
-        for (var j = 0; j < 3; j++) {
-            if (i == 0) {
-                tr.append($('<td>M.I</td>'));
-                tr.append($('<td>M.D</td>'));
-            } else {
-                tr.append($('<td>'));
-                tr.append($('<td>'));
-            }
-        }
-        tbody.append(tr);
-    }
-}
 
 function addFila() {
     var table = $('#bimanualT').find('tbody');

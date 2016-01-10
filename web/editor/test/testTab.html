@@ -66,7 +66,7 @@
         </style>
         <script type="text/javascript">
             $(document).ready(function() {
-                tabs(tab2, ctab2);
+                tabs(tab1, ctab1);
                 editable();
 
             });
@@ -294,7 +294,7 @@
             </div>
             <div id="ctabs">
                 <div id="ctab1">
-                    <table id="bimanualH">
+                    <table id="maquinaH">
                         <tbody id="gen">
                             <tr>
                                 <td>Diagrama No:</td>
@@ -303,122 +303,55 @@
                                 <td></td>
                                 <td>De:</td>
                                 <td></td>
-                                <td>Fecha:</td>
-                                <td colspan="6"></td>
+                                <td>Resumen</td>
                             </tr>
                             <tr>
+                                <td rowspan="3">Producto:</td>
+                                <td colspan="5" rowspan="3"></td>
+                                <td rowspan="2">Metodo Presente
+                                    <input type="radio" name="metodo"/>
+                                    <br>Metodo Propuesto
+                                    <input type="radio" name="metodo"/>
+                                </td>
+                                <td>Presente</td>
+                                <td>Propuesto</td>
+                                <td>Ganado</td>
+                            </tr>
+                            <tr id="tr3" style="height: 30.85px">
+                            </tr>
+                            <tr id="tr4">
+                                <td>Tiempo Combinado</td>
+                            </tr>
+                            <tr id="tr5">
                                 <td rowspan="2">Actividad:</td>
                                 <td colspan="5" rowspan="2"></td>
+                                <td>Tiempo Independiente</td>
+                            </tr>
+                            <tr id="tr6">
+                                <td>Tiempo Improductivo</td>
+                            </tr>
+                            <tr id="tr7">
+                                <td>Maquina(s):</td>
+                                <td></td>
+                                <td>Velocidad:</td>
+                                <td></td>
+                                <td>Avance:</td>
+                                <td></td>
+                                <td>Tiempo de ciclo<span id="temC"></span></td>
+                            </tr>
+                            <tr id="tr8">
                                 <td>Analista:</td>
-                                <td colspan="6"></td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">Metodo Presente
-                                    <input type="radio" name="metodo"/>
-                                </td>
-                                <td colspan="4">Metodo Propuesto
-                                    <input type="radio" name="metodo"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center" colspan="6">Puesto de trabajo</td>
-                                <td align="center" colspan="7">Resumen</td>
-                            </tr>
-                            <tr>
-                                <td colspan="6" rowspan="8"></td>
-                                <td align="center" rowspan="2">Simbolo</td>
-                                <td align="center" colspan="2">Presente</td>
-                                <td align="center" colspan="2">Propuesto</td>
-                                <td align="center" colspan="2">Ganado</td>
-                            </tr>
-                            <tr>
-                                <td>M.I</td>
-                                <td>M.D</td>
-                                <td>M.I</td>
-                                <td>M.D</td>
-                                <td>M.I</td>
-                                <td>M.D</td>
-                            </tr>
-
-                            <tr>
-                                <td>Operacion</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Trasporte</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Demora</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Sostenimiento</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Total</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Tiempo del ciclo</td>
                                 <td colspan="2"></td>
+                                <td>Fecha:</td>
                                 <td colspan="2"></td>
-                                <td colspan="2"></td>
+                                <td>Eficiencia(%)</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div id="ctab2">
-                    <table id="bimanualT">
+                    <table id="maquinaT">
                         <thead>
-                            <tr>
-                                <th>Tiempo</th>
-                                <th>Descrpcion de la actividad de</th>
-                                <th colspan="2">Simbolo</th>                                
-                                <th>Descrpcion de la actividad de</th>
-                                <th>Tiempo</th>
-                                <th rowspan="2">Opciones</th>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <select id="tL" onchange="editTime()">
-                                        <option value="Seg" selected>Seg</option>
-                                        <option value="Min">Min</option>
-                                        <option value="Hora">Hora</option>
-                                    </select>
-                                </th>
-                                <th>Mano izquierda</th>
-                                <th>MI</th>
-                                <th>MD</th>
-                                <th>Mano derecha</th>
-                                <th id="tR">Seg</th>
-                            </tr>
                         </thead>
                         <tbody>
                         </tbody>

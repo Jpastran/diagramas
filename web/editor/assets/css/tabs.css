@@ -38,7 +38,7 @@ table {
 table img {
     vertical-align: -10px;
 }
-td {
+td, th{
     border: 2px solid #ddd;
     min-width: 30px;
     max-width: 150px;

@@ -133,13 +133,13 @@ body {
     margin-bottom: 3px;
 }
 
-.label textarea{
-    width: 95%;
-    height: 80px;
+#left textarea{
+    width: 90%;
+    height: 60px;
     margin-bottom: 5px;
 }
-.label input{
-    width: 95% !important;
+#left input{
+    width: 90% !important;
 }
 
 select {

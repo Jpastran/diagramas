@@ -8,6 +8,16 @@
             body {
                 background: #D2D2D2;
             }
+            .comb{
+                background: repeating-linear-gradient(135deg, #fff 0px, #fff 4px, #000 4px, #000 7.1px , #fff 7.1px);
+                background-size: 10px 10px;
+            }
+            .inde{
+                background: #000;
+            }
+            .inac{
+                background: #fff;
+            }            
             #tabs {
                 font-size: 3ex;
                 font-weight: bold;
@@ -63,8 +73,13 @@
             .edit {
                 background: #F6F6F6;
             }
+            p {
+                margin: 0;
+            }
         </style>
         <script type="text/javascript">
+            "use strict";
+
             $(document).ready(function() {
                 tabs(tab1, ctab1);
                 editable();
@@ -137,42 +152,8 @@
                 $($("#" + li).children('a')).attr('href', href);
             }
 
-            function addFila() {
-                var table = $('#bimanualT').find('tbody');
-                var tr = $('<tr>');
-                tr.append($('<td>' + $('#time').val() + '</td>'));
-                tr.append($('<td>' + $('#mid').val() + '</td>'));
-                tr.append($('<td><img src="../lib/sets/bimanual/' + opr[$('#mis').val()] + '"/></td>'));
-                tr.append($('<td><img src="../lib/sets/bimanual/' + opr[$('#mds').val()] + '"/></td>'));
-                tr.append($('<td>' + $('#mdd').val() + '</td>'));
-                tr.append($('<td>' + $('#time').val() + '</td>'));
-                var td = $('<td>');
-                td.append($('<input/>', {type: 'button', value: 'Editar'}).click(editFila));
-                td.append($('<input type="button" value="Borrar">').click(delFila));
-                tr.append(td);
-                table.append(tr);
-            }
-
             function delFila() {
                 $(this).parent('td').parent('tr').remove();
-            }
-
-            var tds;
-            var opr = ['circle.png', 'arrow.png', 'triangle_inver.png', 'semi_circle_right.png'];
-
-            function genSelect() {
-                var sel = $('<select>');
-                sel.append($('<option value="0">Operacion</option>'));
-                sel.append($('<option value="1">Trasporte</option>'));
-                sel.append($('<option value="2">Sostenimiento</option>'));
-                sel.append($('<option value="3">Demora</option>'));
-                return sel;
-            }
-
-            function genImg(td) {
-                var val = $(td).find('select').val();
-                var img = $('<img src="../lib/sets/bimanual/' + opr[val] + '"/>');
-                return img;
             }
 
             function editFila() {
@@ -233,32 +214,32 @@
 
             var trInit = [];
 
-            function genResumen(nM, nO) {
+            function genResumen(nO, nM) {
                 var n = parseInt(nM) + parseInt(nO);
                 if (trInit.length != 0) {
                     cleanResum();
                 }
-                if (n < 6 && n > 1 && nM != 0 && nO != 0) {
-                    for (var i = 3; i < 9; i++) {
-                        var tr = $('#tr' + i);
+                for (var i = 3; i < 9; i++) {
+                    var tr = $('#tr' + i);
+                    if (trInit.length < 9) {
                         trInit[i] = $(tr).children();
-                        if (i != 3) {
-                            for (var j = 0; j < n * 3; j++) {
-                                tr.append($('<td>', {contenteditable: 'true', class: 'edit'}));
+                    }
+                    if (i != 3) {
+                        for (var j = 0; j < n * 3; j++) {
+                            tr.append($('<td>', {contenteditable: 'true', class: 'edit'}));
+                        }
+                    } else {
+                        for (var m = 0; m < 3; m++) {
+                            for (var k = 0; k < nO; k++) {
+                                tr.append($('<td>O' + (k + 1) + '</td>'));
                             }
-                        } else {
-                            for (var m = 0; m < 3; m++) {
-                                for (var k = 0; k < nO; k++) {
-                                    tr.append($('<td>O' + (k + 1) + '</td>'));
-                                }
-                                for (var l = 0; l < nM; l++) {
-                                    tr.append($('<td>M' + (l + 1) + '</td>'));
-                                }
+                            for (var l = 0; l < nM; l++) {
+                                tr.append($('<td>M' + (l + 1) + '</td>'));
                             }
                         }
                     }
-                    colspan(n);
                 }
+                colspan(n);
             }
 
             function cleanResum() {
@@ -273,6 +254,62 @@
                 $("#pro").attr('colspan', n);
                 $("#gan").attr('colspan', n);
             }
+
+            function genInit() {
+                var ope = $("#numO").val();
+                var maq = $("#numM").val();
+                var n = parseInt(maq) + parseInt(ope);
+                if (n < 6 && n > 1 && maq != 0 && ope != 0) {
+                    genResumen(ope, maq);
+                    genAddFila(ope, maq);
+                }
+            }
+
+            function genAddFila(op, mq) {
+                var divParent = $('#genFila');
+                genDivs(divParent, 'oper', op, 'Operario');
+                genDivs(divParent, 'maqu', mq, 'Maquina');
+            }
+
+            function genDivs(divParent, om, n, name) {
+                for (var i = 0; i < n; i++) {
+                    var div = $('<div>');
+                    div.append($('<p>' + name + ' ' + (i + 1) + '</p>'));
+                    div.append($('<p>Escala de tiempo</p>'));
+                    div.append($('<input/>', {type: 'text', id: om + 'Cal' + i}));
+                    div.append($('<p>Descripcion</p>'));
+                    div.append($('<input/>', {type: 'text', id: om + 'Des' + i}));
+                    div.append($('<p>Tipo tiempo</p>'));
+                    div.append(tipoTiempo());
+                    div.append($('<input/>', {type: 'button', value: 'Agregar', id: om + i}).click(addEscala));
+                    div.css('float', 'left');
+                    divParent.append(div);
+                }
+            }
+
+            function tipoTiempo() {
+                var sel = $('<select>');
+                sel.append($('<option value="0">Independiente</option>'));
+                sel.append($('<option value="1">Inactivo</option>'));
+                sel.append($('<option value="2">Combinado</option>'));
+                return sel;
+            }
+
+            function addEscala() {
+                var table = $('#bimanualT').find('tbody');
+                var tr = $('<tr>');
+                tr.append($('<td>' + $('#time').val() + '</td>'));
+                tr.append($('<td>' + $('#mid').val() + '</td>'));
+                tr.append($('<td><img src="../lib/sets/bimanual/' + opr[$('#mis').val()] + '"/></td>'));
+                tr.append($('<td><img src="../lib/sets/bimanual/' + opr[$('#mds').val()] + '"/></td>'));
+                tr.append($('<td>' + $('#mdd').val() + '</td>'));
+                tr.append($('<td>' + $('#time').val() + '</td>'));
+                var td = $('<td>');
+                td.append($('<input/>', {type: 'button', value: 'Editar'}).click(editFila));
+                td.append($('<input type="button" value="Borrar">').click(delFila));
+                tr.append(td);
+                table.append(tr);
+            }
         </script>
     </head>
     <body>
@@ -281,27 +318,17 @@
                 ¿Sobre que escribiré en el blog?
             </div>
             <div>
-                Tiempo
-                <input type="text" id="time">
-                Descripcion mano izquierda
-                <input type="text" id="mid">
-                Simbolo mano izquierda
-                <select id="mis">
-                    <option value="0">Operacion</option>
-                    <option value="1">Trasporte</option>
-                    <option value="2">Sostenimiento</option>
-                    <option value="3">Demora</option>
-                </select>
-                Descripcion mano derecha
-                <input type="text" id="mdd">
-                Simbolo mano izquierda
-                <select id="mds">
-                    <option value="0">Operacion</option>
-                    <option value="1">Trasporte</option>
-                    <option value="2">Sostenimiento</option>
-                    <option value="3">Demora</option>
-                </select>
-                <input type="button" value="Insertar" onclick="addFila()">
+                <div id="genInput">
+                    Numero de Operarios
+                    <input type="text" id="numO">
+                    Numero de Maquinas
+                    <input type="text" id="numM">
+                    <input type="button" value="Insertar" onclick="genInit()">
+                </div>
+                <div id="genFila">
+
+                </div>
+                <div style="clear: both"></div>
             </div>
             <div id="tabs">
                 <ul id=lista>
@@ -318,7 +345,7 @@
                     <table id="maquinaH">
                         <tbody id="gen">
                             <tr>
-                                <td>Diagrama No:</td>
+                                <td style="min-width: 95px;">Diagrama No:</td>
                                 <td></td>
                                 <td>Hoja No:</td>
                                 <td></td>

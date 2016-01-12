@@ -212,6 +212,16 @@
                 $('#tR').html($('#tL').val());
             }
 
+            function genInit() {
+                var ope = $("#numO").val();
+                var maq = $("#numM").val();
+                var n = parseInt(maq) + parseInt(ope);
+                if (n < 6 && n > 1 && maq != 0 && ope != 0) {
+                    genResumen(ope, maq);
+                    genColumas(ope, maq);
+                }
+            }
+
             var trInit = [];
 
             function genResumen(nO, nM) {
@@ -255,20 +265,16 @@
                 $("#gan").attr('colspan', n);
             }
 
-            function genInit() {
-                var ope = $("#numO").val();
-                var maq = $("#numM").val();
-                var n = parseInt(maq) + parseInt(ope);
-                if (n < 6 && n > 1 && maq != 0 && ope != 0) {
-                    genResumen(ope, maq);
-                    genAddFila(ope, maq);
-                }
-            }
+            var selArray = [];
 
-            function genAddFila(op, mq) {
+            function genColumas(op, mq) {
                 var divParent = $('#genFila');
+                divParent.html('<select id="selPart"></select>');
+                selArray = [];
                 genDivs(divParent, 'oper', op, 'Operario');
                 genDivs(divParent, 'maqu', mq, 'Maquina');
+                genOption();
+                genThead(op, mq);
             }
 
             function genDivs(divParent, om, n, name) {
@@ -280,9 +286,11 @@
                     div.append($('<p>Descripcion</p>'));
                     div.append($('<input/>', {type: 'text', id: om + 'Des' + i}));
                     div.append($('<p>Tipo tiempo</p>'));
-                    div.append(tipoTiempo());
+                    div.append(tipoTiempo().attr('id', om + 'Tip' + i));
                     div.append($('<input/>', {type: 'button', value: 'Agregar', id: om + i}).click(addEscala));
-                    div.css('float', 'left');
+                    div.css('display', 'none');
+                    div.attr('id', om + 'Div' + i);
+                    selArray.push(om + 'Div' + i);
                     divParent.append(div);
                 }
             }
@@ -294,6 +302,59 @@
                 sel.append($('<option value="2">Combinado</option>'));
                 return sel;
             }
+
+            function genOption() {
+                var sel = $('#selPart');
+                var ope = 1;
+                var maq = 1;
+                for (var i = 0; i < selArray.length; i++) {
+                    var str = selArray[i].slice(0, 4);
+                    if (str == 'oper') {
+                        sel.append($('<option value=' + selArray[i] + '>Operario ' + ope + '</option>'));
+                        ope++;
+                    } else {
+                        sel.append($('<option value=' + selArray[i] + '>Maquina ' + maq + '</option>'));
+                        maq++;
+                    }
+                }
+                sel.change(function() {
+                    selOption($(this).val());
+                });
+                selOption(sel.val());
+            }
+
+            function selOption(id) {
+                var childs = $('#genFila').children();
+                for (var i = 1; i < childs.length; i++) {
+                    $(childs[i]).css('display', 'none');
+                }
+                $('#' + id).css('display', 'block');
+            }
+
+            function verDivs() {
+                var childs = $('#genFila').children();
+                for (var i = 0; i < childs.length; i++) {
+                    $(childs[i]).css('display', 'block');
+                    $(childs[i]).css('float', 'left');
+                }
+                $('#selPart').css('display', 'none');
+            }
+
+            function genThead(op, mq) {
+                var head = $('#maquinaT').find('thead');
+                head.html("");
+                var tr = $('<tr>');
+                for (var i = 0; i < op; i++) {
+                    tr.append('<th>Escala de tiempo</th>');
+                    tr.append('<th colspan="2">Operario ' + (i + 1) + '</th>');
+                }
+                for (var j = 0; j < mq; j++) {
+                    tr.append('<th>Escala de tiempo</th>');
+                    tr.append('<th colspan="2">Maquina ' + (j + 1) + '</th>');
+                }
+                head.append(tr);
+            }
+
 
             function addEscala() {
                 var table = $('#bimanualT').find('tbody');
@@ -323,10 +384,10 @@
                     <input type="text" id="numO">
                     Numero de Maquinas
                     <input type="text" id="numM">
-                    <input type="button" value="Insertar" onclick="genInit()">
+                    <input type="button" value="Generar" onclick="genInit()">
                 </div>
                 <div id="genFila">
-
+                    <select id="selPart"></select>
                 </div>
                 <div style="clear: both"></div>
             </div>

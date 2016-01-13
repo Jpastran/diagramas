@@ -152,66 +152,6 @@
                 $($("#" + li).children('a')).attr('href', href);
             }
 
-            function delFila() {
-                $(this).parent('td').parent('tr').remove();
-            }
-
-            function editFila() {
-                tds = $(this).parent('td').parent('tr').find('td');
-                for (var i = 0; i < tds.length - 2; i++) {
-                    if (i != 2 && i != 3) {
-                        $(tds[i]).attr('contenteditable', true);
-                        $(tds[i]).attr('class', 'edit');
-                    }
-                }
-                disBtn(true);
-                $(tds[2]).html(genSelect());
-                $(tds[3]).html(genSelect());
-                $(this).unbind();
-                $(this).attr('value', 'Guardar');
-                $(this).attr('disabled', false);
-                $(this).click(modFila);
-            }
-
-            function modFila() {
-                if (valFila()) {
-                    for (var i = 0; i < tds.length - 2; i++) {
-                        $(tds[i]).removeAttr('contenteditable');
-                        $(tds[i]).removeAttr('class');
-                    }
-                    disBtn(false);
-                    $(this).unbind();
-                    $(tds[2]).html(genImg(tds[2]));
-                    $(tds[3]).html(genImg(tds[3]));
-                    $(this).attr('value', 'Editar');
-                    $(this).click(editFila);
-                    tds[5].textContent = tds[0].textContent;
-                } else {
-                    alert('Complete correctamente los campos');
-                }
-            }
-
-            function disBtn(bool) {
-                var input = $('#bimanualT').find('input');
-                for (var i = 0; i < input.length; i++) {
-                    $(input[i]).attr("disabled", bool);
-                }
-            }
-
-            function valFila() {
-                var bool = true;
-                for (var i = 0; i < tds.length - 2; i++) {
-                    if (tds[i].textContent == '') {
-                        bool = false;
-                    }
-                }
-                return bool;
-            }
-
-            function editTime() {
-                $('#tR').html($('#tL').val());
-            }
-
             function genInit() {
                 var ope = $("#numO").val();
                 var maq = $("#numM").val();
@@ -271,6 +211,7 @@
                 var divParent = $('#genFila');
                 divParent.html('<select id="selPart"></select>');
                 selArray = [];
+                contCol = [];
                 genDivs(divParent, 'oper', op, 'Operario');
                 genDivs(divParent, 'maqu', mq, 'Maquina');
                 genOption();
@@ -287,7 +228,11 @@
                     div.append($('<input/>', {type: 'text', id: om + 'Des' + i}));
                     div.append($('<p>Tipo tiempo</p>'));
                     div.append(tipoTiempo().attr('id', om + 'Tip' + i));
-                    div.append($('<input/>', {type: 'button', value: 'Agregar', id: om + i}).click(addEscala));
+                    div.append($('<input/>', {
+                        type: 'button', value: 'Agregar', id: om + i
+                    }).click(function() {
+                        addEscala($(this).parent());
+                    }));
                     div.css('display', 'none');
                     div.attr('id', om + 'Div' + i);
                     selArray.push(om + 'Div' + i);
@@ -321,6 +266,9 @@
                     selOption($(this).val());
                 });
                 selOption(sel.val());
+                for (var j = 0; j < selArray.length; j++) {
+                    contCol.push(1);
+                }
             }
 
             function selOption(id) {
@@ -355,21 +303,120 @@
                 head.append(tr);
             }
 
+            var contRow = [];
+            var contCol = [];
+            var alto = 0;
 
-            function addEscala() {
-                var table = $('#bimanualT').find('tbody');
+            function addEscala(divId) {
+                var div = $(divId).children();
+                var time = parseInt($(div[2]).val());
+                var colTd = obtenCol($(divId).attr('id')) * 3;
+                var tr = $(obtenFila(contCol[colTd / 3])).children();
+                console.log(colTd);
+                contCol[colTd / 3] += time;
+                $(tr[colTd]).html(time).attr("rowspan", time);
+                $(tr[colTd + 1]).html($(div[4]).val()).attr("rowspan", time);
+                $(tr[colTd + 2]).attr('class', tiempoClase($(div[6]).val())).attr("rowspan", time);
+            }
+
+            function obtenFila(cont) {
+                var body = $('#maquinaT').find('tbody');
+                while (body.find('tr').length < cont) {
+                    body.append(genFila(contCol.length * 3));
+                }
+                var fila = body.find('tr');
+                return fila[cont - 1];
+            }
+
+            function obtenCol(id) {
+                var pos = 0;
+                for (var i = 0; i < selArray.length; i++) {
+                    if (selArray[i] == id) {
+                        pos = i;
+                    }
+                }
+                return pos;
+            }
+
+            function genFila(num) {
                 var tr = $('<tr>');
-                tr.append($('<td>' + $('#time').val() + '</td>'));
-                tr.append($('<td>' + $('#mid').val() + '</td>'));
-                tr.append($('<td><img src="../lib/sets/bimanual/' + opr[$('#mis').val()] + '"/></td>'));
-                tr.append($('<td><img src="../lib/sets/bimanual/' + opr[$('#mds').val()] + '"/></td>'));
-                tr.append($('<td>' + $('#mdd').val() + '</td>'));
-                tr.append($('<td>' + $('#time').val() + '</td>'));
-                var td = $('<td>');
-                td.append($('<input/>', {type: 'button', value: 'Editar'}).click(editFila));
-                td.append($('<input type="button" value="Borrar">').click(delFila));
-                tr.append(td);
-                table.append(tr);
+                for (var i = 0; i < num; i++) {
+                    tr.append($('<td>'));
+                }
+                alto++;
+                return tr;
+            }
+
+            function tiempoClase(val) {
+                var clase = "";
+                if (val == '0') {
+                    clase = 'inde';
+                } else if (val == '1') {
+                    clase = 'inac';
+                } else if (val == '2') {
+                    clase = 'comb';
+                }
+                return clase;
+            }
+
+            function delFila() {
+                $(this).parent('td').parent('tr').remove();
+            }
+
+            function editFila() {
+                tds = $(this).parent('td').parent('tr').find('td');
+                for (var i = 0; i < tds.length - 2; i++) {
+                    if (i != 2 && i != 3) {
+                        $(tds[i]).attr('contenteditable', true);
+                        $(tds[i]).attr('class', 'edit');
+                    }
+                }
+                disBtn(true);
+                $(tds[2]).html(genSelect());
+                $(tds[3]).html(genSelect());
+                $(this).unbind();
+                $(this).attr('value', 'Guardar');
+                $(this).attr('disabled', false);
+                $(this).click(modFila);
+            }
+
+            function modFila() {
+                if (valFila()) {
+                    for (var i = 0; i < tds.length - 2; i++) {
+                        $(tds[i]).removeAttr('contenteditable');
+                        $(tds[i]).removeAttr('class');
+                    }
+                    disBtn(false);
+                    $(this).unbind();
+                    $(tds[2]).html(genImg(tds[2]));
+                    $(tds[3]).html(genImg(tds[3]));
+                    $(this).attr('value', 'Editar');
+                    $(this).click(editFila);
+                    tds[5].textContent = tds[0].textContent;
+                } else {
+                    alert('Complete correctamente los campos');
+                }
+            }
+
+            function disBtn(bool) {
+                var input = $('#bimanualT').find('input');
+                for (var i = 0; i < input.length; i++) {
+                    $(input[i]).attr("disabled", bool);
+                }
+            }
+
+            function valFila() {
+                var bool = true;
+                for (var i = 0; i < tds.length - 2; i++) {
+                    if (tds[i].textContent == '') {
+                        bool = false;
+                    }
+                }
+                return bool;
+            }
+
+            function editTime() {
+                $('#tR').html($('#tL').val());
             }
         </script>
     </head>

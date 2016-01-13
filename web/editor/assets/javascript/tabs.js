@@ -1,4 +1,4 @@
-
+"use strict";
 //http:programandoointentandolo.com/2012/11/como-crear-pestanas-con-html.html
 function tabs(li, div) {
     //Se ocultan todos los contenedores

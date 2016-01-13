@@ -67,6 +67,7 @@
                 border: 2px solid #ddd;
                 min-width: 30px;
                 max-width: 150px;
+                min-height: 30.85px;
                 line-height: 1.42857143;
                 padding: 3px;
             }
@@ -305,27 +306,28 @@
 
             var contRow = [];
             var contCol = [];
-            var alto = 0;
 
             function addEscala(divId) {
                 var div = $(divId).children();
                 var time = parseInt($(div[2]).val());
-                var colTd = obtenCol($(divId).attr('id')) * 3;
-                var tr = $(obtenFila(contCol[colTd / 3])).children();
-                console.log(colTd);
-                contCol[colTd / 3] += time;
-                $(tr[colTd]).html(time).attr("rowspan", time);
-                $(tr[colTd + 1]).html($(div[4]).val()).attr("rowspan", time);
-                $(tr[colTd + 2]).attr('class', tiempoClase($(div[6]).val())).attr("rowspan", time);
+                var colTd = obtenCol($(divId).attr('id'));
+                var tr = $(obtenFila(contCol[colTd], time , colTd));
+                tr.append('<td rowspan="' + time + '">' + time + '</td>');
+                tr.append('<td rowspan="' + time + '">' + $(div[4]).val() + '</td>');
+                tr.append('<td rowspan="' + time + '" class="' + tiempoClase($(div[6]).val()) + '">');
+
             }
 
-            function obtenFila(cont) {
+            function obtenFila(cont, time, colTd) {
+                console.log(cont, time, colTd);
                 var body = $('#maquinaT').find('tbody');
                 while (body.find('tr').length < cont) {
-                    body.append(genFila(contCol.length * 3));
+                    body.append(genFila(colTd));
                 }
                 var fila = body.find('tr');
-                return fila[cont - 1];
+                var tr = fila[cont - 1];
+                contCol[colTd] += time;
+                return tr;
             }
 
             function obtenCol(id) {
@@ -338,12 +340,17 @@
                 return pos;
             }
 
-            function genFila(num) {
+            function genFila(colTd) {
                 var tr = $('<tr>');
-                for (var i = 0; i < num; i++) {
-                    tr.append($('<td>'));
+                var row = [];
+                for (var i = 0; i < contCol.length; i++) {
+                    if (i == colTd){
+                        row.push(1);
+                    }else{
+                        row.push(0);
+                    }                  
                 }
-                alto++;
+                contRow.push(row);
                 return tr;
             }
 

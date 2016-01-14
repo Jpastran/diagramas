@@ -112,7 +112,6 @@ $page = 'editor';
 
     </head>
     <body onload="init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : '' ?>');" id="body">      
-        <? require_once dirname(__FILE__) . '/header.php'; ?>
         <div id="actions">
             <div id="aSist" style="float: left">
                 <a style="text-decoration: none;" href="#" onclick="return save();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          

@@ -60,7 +60,7 @@ body {
     /*background-color: #F6F6F6;*/
     /*padding-top: 5px;*/
     /*overflow: hidden;*/
-    padding: 6px 4px 6px 10px;
+    padding: 8px 4px 6px 10px;
     z-index: 2;
 }
 
@@ -120,6 +120,12 @@ body {
     border-top: 5px solid #E5E5E5;
 }
 
+#hmaqLeft{
+    padding: 5px;
+    background-color: #F6F6F6;
+    border-top: 5px solid #E5E5E5;
+}
+
 .especial {
     margin: 5px;
     width: 115px;
@@ -138,11 +144,17 @@ body {
     height: 60px;
     margin-bottom: 5px;
 }
+
 #left input{
     width: 90% !important;
 }
+
 #left select{
     width: 95% !important;
+}
+
+#left p{
+    margin: 0;
 }
 
 select {

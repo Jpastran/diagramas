@@ -36,8 +36,9 @@ function loadSets() {
     document.write(
             '<script type="text/javascript" src="./lib/sets/analitico/analitico.js"></script>',
             '<script type="text/javascript" src="./lib/sets/sinoptico/sinoptico.js"></script>',
-            '<script type="text/javascript" src="./lib/sets/recorrido/recorrido.js"></script>',
-            '<script type="text/javascript" src="./lib/sets/bimanual/bimanual.js"></script>'
+            '<script type="text/javascript" src="./lib/sets/recorrido/recorrido.js"></script>',            
+            '<script type="text/javascript" src="./lib/sets/bimanual/bimanual.js"></script>',
+            '<script type="text/javascript" src="./lib/sets/hombre-maquina/hom-maq.js"></script>'
             );
 }
 

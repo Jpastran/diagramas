@@ -52,7 +52,6 @@ $page = 'editor';
 
 <!DOCTYPE html>
 <html>
-    <!--Copyright 2010 Scriptoid s.r.l-->
     <head>
         <title>HTML5 diagram editor</title>
         <meta charset="UTF-8">
@@ -284,6 +283,21 @@ $page = 'editor';
                         <option value="3">Demora</option>
                     </select>
                     <input type="button" value="Insertar" onclick="addFila()">
+                </div>
+                <div id="hmaqLeft" class="label" style="display: none">
+                    <div id="genInput">
+                        Numero de Operarios
+                        <input type="text" id="numO">
+                        Numero de Maquinas
+                        <input type="text" id="numM">
+                        <input type="button" value="Generar" onclick="genInit()">
+                    </div>
+                    <div id="genRD" style="display: none">
+                        <input type="button" value="Deshacer" onclick="doUndo()"> 
+                    </div>
+                    <div id="genFila" style="display: none">
+                        <select id="selPart"></select>
+                    </div>
                 </div>
             </div>
             <!--THE canvas-->
@@ -739,7 +753,7 @@ $page = 'editor';
                                         <td>Avance:</td>
                                         <td></td>
                                         <td>
-                                            Tiempo de ciclo
+                                            T. de ciclo
                                             <select id="timeHM" onchange="editTime()">
                                                 <option value="Seg">Seg</option>
                                                 <option value="Min">Min</option>

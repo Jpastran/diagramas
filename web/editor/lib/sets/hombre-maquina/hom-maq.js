@@ -13,6 +13,10 @@ function genInit() {
     if (n < 6 && n > 1 && maq != 0 && ope != 0) {
         genResumen(ope, maq);
         genColumas(ope, maq);
+        $("#genRD").css("display", "block");
+        $("#genFila").css("display", "block");
+    } else {
+        alert("Numero maximo de actores 5");
     }
 }
 

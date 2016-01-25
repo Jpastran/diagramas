@@ -4936,25 +4936,32 @@ function cargarFiguras(selectId) {
 
 function cambiarVista(id) {
     if (id == "analitico") {
-        displayDivs('block', 'block', 'block', 'none', 'none');
+        displayDivs('block', 'block', 'block', 'none', 'none', 'none');
         cambiaCtab(tab1, ctab1);
         tabs(tab1, ctab1);
     } else if (id == "sinoptico") {
-        displayDivs('block', 'block', 'none', 'none', 'none');
+        displayDivs('block', 'block', 'none', 'none', 'none', 'none');
         cambiaCtab(tab1, ctab3);
         tabs(tab1, ctab3);
     } else if (id == "recorrido") {
-        displayDivs('block', 'block', 'none', 'block', 'none');
+        displayDivs('block', 'block', 'none', 'block', 'none', 'none');
         cambiaCtab(tab1, ctab4);
         tabs(tab1, ctab4);
     } else if (id == "bimanual") {
-        displayDivs('none', 'none', 'none', 'none', 'block');
-        cambiaCtab(tab1, ctab5);       
+        displayDivs('none', 'none', 'none', 'none', 'block', 'none');
+        cambiaCtab(tab1, ctab5);
         tabs(tab1, ctab5);
+    } else if (id == "hom-maq") {
+        displayDivs('none', 'none', 'none', 'none', 'none', 'block');
+        cambiaCtab(tab1, ctab7);
+        tabs(tab1, ctab7);
     }
     if (id == "bimanual") {
         tabName(tab2, 'Tabla');
         cambiaCtab(tab2, ctab6);
+    } else if (id == "hom-maq") {
+        tabName(tab2, 'Tabla');
+        cambiaCtab(tab2, ctab8);
     } else {
         cambiaCtab(tab2, ctab2);
         tabName(tab2, 'Diagrama');
@@ -4966,13 +4973,14 @@ function cambiarVista(id) {
     }
 }
 
-function displayDivs(right, tools, esp, img, bim) {
+function displayDivs(right, tools, esp, img, bim, hmaq) {
     document.getElementById('right').style.display = right;
     document.getElementById('aTools').style.display = tools;
     document.getElementById('especial').style.display = esp;
     document.getElementById('imgLoad').style.display = img;
     document.getElementById('bimLeft').style.display = bim;
-    if (bim == 'block') {
+    document.getElementById('hmaqLeft').style.display = hmaq;
+    if (bim == 'block' || hmaq == 'block') {
         document.getElementById('container').style.right = '10px';
         document.getElementById('container').style.left = '200px';
         document.getElementById('left').style.width = '200px';

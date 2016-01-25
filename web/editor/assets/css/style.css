@@ -52,7 +52,7 @@ body {
 
 #actions {
     /*padding-left: 122px;*/
-    height: 36px;
+    height: 40px;
     background-image: url('../images/logo_background.png');
     background-repeat: repeat-x;
     background-position: top left;
@@ -66,7 +66,7 @@ body {
 
 #editor {
     position: fixed;
-    top: 72px;
+    top: 40px;
     bottom: 0px;
     width: 100%;
     z-index: 2;
@@ -141,6 +141,9 @@ body {
 #left input{
     width: 90% !important;
 }
+#left select{
+    width: 95% !important;
+}
 
 select {
     width: auto;
@@ -161,7 +164,7 @@ input[type="button"] {
 
 #container {
     position: fixed;
-    top: 72px;
+    top: 40px;
     bottom: 0px;
     left: 130px;
     right: 260px;

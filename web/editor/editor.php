@@ -189,7 +189,7 @@ $page = 'editor';
             <!--Left panel-->
             <div id="left">
                 <div id="figures">
-                    <select style="width: 120px;" onchange="setFigureSet(this.options[this.selectedIndex].value);">
+                    <select style="width: 100%;" onchange="setFigureSet(this.options[this.selectedIndex].value);">
                         <script>
                             "use strict";
                             for (var setName in figureSets) {
@@ -201,7 +201,7 @@ $page = 'editor';
                     </select>
                 </div>
                 <div id="especial">
-                    <select id="espSelect" style="width: 120px;" onchange="setEspecial(this.options[this.selectedIndex].value)">
+                    <select id="espSelect" onchange="setEspecial(this.options[this.selectedIndex].value)">
                         <option value="entrada" selected>Entrada</option>
                         <option value="salida">Salida</option>
                         <option value="repeticion">Repeticion</option>
@@ -226,7 +226,7 @@ $page = 'editor';
                         </div>						
                         <div class="label">
                             Retorno
-                            <select id="repOut" style="width: 120px;" onclick="cargarFiguras('repOut')"></select>
+                            <select id="repOut" onclick="cargarFiguras('repOut')"></select>
                             <input type="button" value="Añadir" onclick="especial('repetir')"/>
                         </div>
                     </div>
@@ -234,7 +234,7 @@ $page = 'editor';
                         <img src="lib/sets/reproceso.png" class="especial" />			
                         <div class="label">
                             Reprocesa
-                            <select id="proOut" style="width: 120px;" onclick="cargarFiguras('proOut')"></select>
+                            <select id="proOut" onclick="cargarFiguras('proOut')"></select>
                             <input id="btnRepro" type="button" value="Agregar" onclick="especial('repro')"/>
                         </div>						
                     </div>
@@ -688,6 +688,78 @@ $page = 'editor';
                                         <th>Mano derecha</th>
                                         <th id="tR">Seg</th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="ctab7">
+                            <table id="maquinaH">
+                                <tbody id="gen">
+                                    <tr>
+                                        <td style="min-width: 95px;">Diagrama No:</td>
+                                        <td></td>
+                                        <td>Hoja No:</td>
+                                        <td></td>
+                                        <td>De:</td>
+                                        <td></td>
+                                        <td id="resum" align="center">Resumen</td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="3">Producto:</td>
+                                        <td colspan="5" rowspan="3"></td>
+                                        <td rowspan="2" style="min-width: 150px">
+                                            Metodo Presente
+                                            <input type="radio" name="metodo"/>
+                                            <br>Metodo Propuesto
+                                            <input type="radio" name="metodo"/>
+                                        </td>
+                                        <td id="pre" align="center">Presente</td>
+                                        <td id="pro" align="center">Propuesto</td>
+                                        <td id="gan" align="center">Ganado</td>
+                                    </tr>
+                                    <tr id="tr3" style="height: 30.85px">
+                                    </tr>
+                                    <tr id="tr4">
+                                        <td>Tiempo Combinado</td>
+                                    </tr>
+                                    <tr id="tr5">
+                                        <td rowspan="2">Actividad:</td>
+                                        <td colspan="5" rowspan="2"></td>
+                                        <td>Tiempo Independiente</td>
+                                    </tr>
+                                    <tr id="tr6">
+                                        <td>Tiempo Improductivo</td>
+                                    </tr>
+                                    <tr id="tr7">
+                                        <td>Maquina(s):</td>
+                                        <td></td>
+                                        <td>Velocidad:</td>
+                                        <td></td>
+                                        <td>Avance:</td>
+                                        <td></td>
+                                        <td>
+                                            Tiempo de ciclo
+                                            <select id="timeHM" onchange="editTime()">
+                                                <option value="Seg">Seg</option>
+                                                <option value="Min">Min</option>
+                                                <option value="Hora">Hora</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr id="tr8">
+                                        <td>Analista:</td>
+                                        <td colspan="2"></td>
+                                        <td>Fecha:</td>
+                                        <td colspan="2"></td>
+                                        <td>Eficiencia(%)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="ctab8">
+                            <table id="maquinaT">
+                                <thead>
                                 </thead>
                                 <tbody>
                                 </tbody>

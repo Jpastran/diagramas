@@ -51,3 +51,21 @@ td, th{
     -moz-box-shadow: inset 1px 1px 1px 0px rgba(0,0,0,0.5);
     box-shadow: inset 1px 1px 1px 0px rgba(0,0,0,0.5);
 }
+
+tr {
+    height: 20.85px;
+}
+
+.comb{
+    background: repeating-linear-gradient(135deg, #fff 0px, #fff 4px, #000 4px, #000 7.1px , #fff 7.1px);
+    background-size: 10px 10px;
+    width: 50px;
+}
+.inde{
+    background: #000;
+    width: 50px;
+}
+.inac{
+    background: #fff;
+    width: 50px;
+}  

@@ -322,12 +322,13 @@
                     var time = parseInt($(div[2]).val());
                     if (!isNaN(time)) {
                         var colTd = obtenCol($(divId).attr('id'));
-                        if (colTd == 0 || contCol[colTd] < contCol[colTd - 1]) {
+                        if (valContCol(colTd)) {
                             var tr = $(obtenFila(contCol[colTd], colTd));
                             var td1 = $('<td rowspan="' + time + '">' + time + '</td>');
                             var td2 = $('<td rowspan="' + time + '">' + $(div[4]).val() + '</td>');
                             var td3 = $('<td rowspan="' + time + '" class="' + tiempoClase($(div[6]).val()) + '">');
                             tr.append(td1, td2, td3);
+                            addUndo(td1, td2, td3);
                             contCol[colTd] += time;
                         } else {
                             alert('Genere mas tiempo en la linea anterior');
@@ -338,6 +339,16 @@
                 } else {
                     alert('Complete los campos');
                 }
+            }
+
+            function valContCol(colTd) {
+                var bool = true;
+                for (var i = 1; i <= colTd; i++) {
+                    if (contCol[i] >= contCol[i - 1]) {
+                        bool = false;
+                    }
+                }
+                return bool;
             }
 
             function obtenFila(cont) {
@@ -375,6 +386,7 @@
             function resetBody() {
                 $('#maquinaT').find('tbody').html("");
                 contCol = [];
+                undo = [];
                 genCont();
             }
 
@@ -396,6 +408,26 @@
                     $(times[i]).html(" " + time);
                 }
             }
+
+            var undo = [];
+
+            function addUndo(c1, c2, c3) {
+                var arrCol = [];
+                for (var i = 0; i < contCol.length; i++) {
+                    arrCol.push(contCol[i]);
+                }
+                var trioQ = [c1, c2, c3];
+                var cel = [arrCol, trioQ];
+                undo.push(cel);
+            }
+
+            function doUndo() {
+                var volver = undo.pop();
+                contCol = volver[0];
+                for (var i = 0; i < volver[1].length; i++) {
+                    $(volver[1][i][0]).remove();
+                }
+            }
         </script>
     </head>
     <body>
@@ -411,6 +443,7 @@
                     <input type="text" id="numM">
                     <input type="button" value="Generar" onclick="genInit()">
                     <input type="button" value="Reset" onclick="resetBody()"> 
+                    <input type="button" value="Deshacer" onclick="doUndo()"> 
                 </div>
                 <div id="genFila">
                     <select id="selPart"></select>

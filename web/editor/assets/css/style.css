@@ -108,19 +108,19 @@ body {
     border-top: 5px solid #E5E5E5;
 }
 
-#imgLoad{
+#imgLoad {
     padding: 5px;
     background-color: #F6F6F6;
     border-top: 5px solid #E5E5E5;
 }
 
-#bimLeft{
+#bimLeft {
     padding: 5px;
     background-color: #F6F6F6;
     border-top: 5px solid #E5E5E5;
 }
 
-#hmaqLeft{
+#hmaqLeft {
     padding: 5px;
     background-color: #F6F6F6;
     border-top: 5px solid #E5E5E5;
@@ -139,24 +139,24 @@ body {
     margin-bottom: 3px;
 }
 
-#left textarea{
+#left textarea {
     width: 90%;
     height: 60px;
     margin-bottom: 5px;
 }
 
-#left input{
+#left input {
     width: 90% !important;
 }
-#left input[type="checkbox"]{
+#left input[type="checkbox"] {
     width: 0% !important;
 }
 
-#left select{
+#left select {
     width: 95% !important;
 }
 
-#left p{
+#left p {
     margin: 0;
 }
 

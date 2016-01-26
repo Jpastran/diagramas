@@ -370,14 +370,16 @@ function setFigureSet(id) {
     //alert(name);
     var div = document.getElementById(id);
     if (div != null) {
-        if (currentSetId != null) {
-            Log.info("main.js currentSetId = " + currentSetId);
-            var currentFigureSet = document.getElementById(currentSetId);
-            currentFigureSet.style.display = 'none';
+        if (confirm("Desea cambiar, esto descartara cualquier cambio")) {
+            if (currentSetId != null) {
+                Log.info("main.js currentSetId = " + currentSetId);
+                var currentFigureSet = document.getElementById(currentSetId);
+                currentFigureSet.style.display = 'none';
+            }
+            div.style.display = 'block';
+            currentSetId = id;
+            cambiarVista(id);
         }
-        div.style.display = 'block';
-        currentSetId = id;
-        cambiarVista(id);
     }
 }
 

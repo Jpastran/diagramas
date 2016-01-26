@@ -268,6 +268,7 @@ $page = 'editor';
                     <textarea type="text" id="mid"></textarea>
                     Simbolo mano izquierda<br>
                     <select id="mis">
+                        <option value="-1">-Seleccione-</option>
                         <option value="0">Operacion</option>
                         <option value="1">Trasporte</option>
                         <option value="2">Sostenimiento</option>
@@ -277,6 +278,7 @@ $page = 'editor';
                     <textarea type="" id="mdd"></textarea>
                     <br>Simbolo mano izquierda
                     <select id="mds">
+                        <option value="-1">-Seleccione-</option>
                         <option value="0">Operacion</option>
                         <option value="1">Trasporte</option>
                         <option value="2">Sostenimiento</option>

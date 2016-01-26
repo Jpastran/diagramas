@@ -6,24 +6,53 @@ figureSets["bimanual"] = {
     figures: []
 };
 
-function resetBimanual(){
+function resetBimanual() {
     $('#bimanualT').find('tbody').html("");
 }
 
 function addFila() {
-    var table = $('#bimanualT').find('tbody');
-    var tr = $('<tr>');
-    tr.append($('<td>' + $('#time').val() + '</td>'));
-    tr.append($('<td>' + $('#mid').val() + '</td>'));
-    tr.append($('<td><img src="lib/sets/bimanual/' + opr[$('#mis').val()] + '"/></td>'));
-    tr.append($('<td><img src="lib/sets/bimanual/' + opr[$('#mds').val()] + '"/></td>'));
-    tr.append($('<td>' + $('#mdd').val() + '</td>'));
-    tr.append($('<td>' + $('#time').val() + '</td>'));
-    var td = $('<td>');
-    td.append($('<input/>', {type: 'button', value: 'Editar'}).click(editFila));
-    td.append($('<input type="button" value="Borrar">').click(delFila));
-    tr.append(td);
-    table.append(tr);
+    if (validarBim()) {
+        var table = $('#bimanualT').find('tbody');
+        var tr = $('<tr>');
+        tr.append($('<td>' + $('#time').val() + '</td>'));
+        tr.append($('<td>' + $('#mid').val() + '</td>'));
+        tr.append($('<td><img src="lib/sets/bimanual/' + opr[$('#mis').val()] + '"/></td>'));
+        tr.append($('<td><img src="lib/sets/bimanual/' + opr[$('#mds').val()] + '"/></td>'));
+        tr.append($('<td>' + $('#mdd').val() + '</td>'));
+        tr.append($('<td>' + $('#time').val() + '</td>'));
+        var td = $('<td>');
+        td.append($('<input/>', {type: 'button', value: 'Editar'}).click(editFila));
+        td.append($('<input type="button" value="Borrar">').click(delFila));
+        tr.append(td);
+        table.append(tr);
+        limpiarInsert();
+    }else{
+        alert("Complete todos los campos");
+    }
+}
+
+function validarBim() {
+    var bool = true;
+    if ($('#time').val() == "") {
+        bool = false;
+    } else if ($('#mid').val() == "") {
+        bool = false;
+    } else if ($('#mdd').val() == "") {
+        bool = false;
+    } else if ($('#mis').val() == -1) {
+        bool = false;
+    } else if ($('#mds').val() == -1) {
+        bool = false;
+    }
+    return bool;
+}
+
+function limpiarInsert() {
+    $('#time').val("");
+    $('#mid').val("");
+    $('#mdd').val("");
+    $('#mis').val(-1);
+    $('#mds').val(-1);
 }
 
 function delFila() {

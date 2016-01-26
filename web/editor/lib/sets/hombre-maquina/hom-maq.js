@@ -10,18 +10,20 @@ function genInit() {
     var ope = $("#numO").val();
     var maq = $("#numM").val();
     var n = parseInt(maq) + parseInt(ope);
-    if (n < 6 && n > 1 && maq != 0 && ope != 0) {
+    if (n < 10 && n > 1 && maq != 0 && ope != 0) {
         genResumen(ope, maq);
         genColumas(ope, maq);
         $("#genRD").css("display", "block");
         $("#genFila").css("display", "block");
+        $("#numO").val("");
+        $("#numM").val("");
     } else {
-        alert("Numero maximo de actores 5");
+        alert("Numero maximo de actores 10");
     }
 }
 
 function resetHMaq() {
-    cleanResum();    
+    cleanResum();
     resetBody();
     $('#maquinaT').find('thead').html("");
     $('#genFila').html('<select id="selPart"></select>');
@@ -180,6 +182,7 @@ function addEscala(divId) {
                 tr.append(td1, td2, td3);
                 addUndo(td1, td2, td3);
                 contCol[colTd] += time;
+                limpiarDiv(div);
             } else {
                 alert('Genere mas tiempo en la linea anterior');
             }
@@ -191,14 +194,18 @@ function addEscala(divId) {
     }
 }
 
+function limpiarDiv(div) {
+    $(div[2]).val("");
+    $(div[4]).val("");
+    $(div[6]).val('0');
+}
+
 function valContCol(colTd) {
-    var bool = true;
-    for (var i = 1; i <= colTd; i++) {
-        if (contCol[i] >= contCol[i - 1]) {
-            bool = false;
-        }
+    if (contCol[colTd] >= contCol[colTd - 1] && colTd != 0) {
+        return false;
+    } else {
+        return true;
     }
-    return bool;
 }
 
 function obtenFila(cont) {

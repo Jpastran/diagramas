@@ -262,7 +262,7 @@ $page = 'editor';
                     <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/img_icon.png" border="0" width="115px" alt="Image"/></a>
                 </div>
                 <div id="bimLeft" class="label" style="display: none">
-                    <br>Tiempo
+                    Tiempo
                     <input type="text" id="time">
                     <br>Descripcion mano izquierda
                     <textarea type="text" id="mid"></textarea>

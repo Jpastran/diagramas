@@ -4417,6 +4417,7 @@ function touchCancel(event) {
 //TODO crear un metodo y boton para terminar el diagrama.
 //TODO estudiar el .js de History e implementarlo para coor.
 //TODO Borrar los TODO que no digan un error.
+//TODO Verificar z-index de los conectores
 
 /**
  * Variables usadas por el diagrama
@@ -4839,7 +4840,7 @@ function especial(accion) {
                         document.getElementById('trayUnir').style.display = 'block';
                         var div = document.getElementById('trayChk');
                         for (var i = 0; i < lineas[4]; i++) {
-                            var text = document.createTextNode("Opcion " + (i + 1));
+                            var text = document.createTextNode("Opcion " + (lineas[4] - i));
                             var br = document.createElement("br");
                             var check = document.createElement("input");
                             check.setAttribute("type", "checkbox");
@@ -4867,7 +4868,10 @@ function especial(accion) {
                 for (var i = 0; i < checks.length; i++) {
                     if (checks[i].checked == true) {
                         conectorBuildFull(true, trayecto[checks[i].value], pos, false);
-                        ordenarDelta('v', (tamFig / 2) - 2, 4);
+                        var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
+                        if (turns.length != 4) {
+                            ordenarDelta('v', (tamFig / 2) - 2, turns.length == 6 ? 4 : 3);
+                        }
                     }
                 }
                 var div = document.getElementById('trayChk');
@@ -4876,6 +4880,7 @@ function especial(accion) {
                 }
                 document.getElementById('trayUnir').style.display = 'none';
                 document.getElementById('trayGen').style.display = 'block';
+                document.getElementById('btnFin').value = 'Siguiente';
                 especialSelect(false);
                 coor = pos;
                 coor[1] -= tamFig / 2;
@@ -4939,29 +4944,32 @@ function cambiarVista(id) {
         displayDivs('block', 'block', 'block', 'none', 'none', 'none');
         cambiaCtab(tab1, ctab1);
         tabs(tab1, ctab1);
+        resetAnalitico();
     } else if (id == "sinoptico") {
-        displayDivs('block', 'block', 'none', 'none', 'none', 'none');
+        displayDivs('block', 'block', 'block', 'none', 'none', 'none');
         cambiaCtab(tab1, ctab3);
         tabs(tab1, ctab3);
+        resetSinoptico();
     } else if (id == "recorrido") {
         displayDivs('block', 'block', 'none', 'block', 'none', 'none');
         cambiaCtab(tab1, ctab4);
         tabs(tab1, ctab4);
+        resetRecorrido();
     } else if (id == "bimanual") {
         displayDivs('none', 'none', 'none', 'none', 'block', 'none');
         cambiaCtab(tab1, ctab5);
+        cambiaCtab(tab2, ctab6);
         tabs(tab1, ctab5);
+        resetBimanual();
     } else if (id == "hom-maq") {
         displayDivs('none', 'none', 'none', 'none', 'none', 'block');
         cambiaCtab(tab1, ctab7);
-        tabs(tab1, ctab7);
-    }
-    if (id == "bimanual") {
-        tabName(tab2, 'Tabla');
-        cambiaCtab(tab2, ctab6);
-    } else if (id == "hom-maq") {
-        tabName(tab2, 'Tabla');
         cambiaCtab(tab2, ctab8);
+        tabs(tab1, ctab7);
+        resetHMaq();
+    }
+    if (id == "bimanual" || id == "hom-maq") {
+        tabName(tab2, 'Tabla');
     } else {
         cambiaCtab(tab2, ctab2);
         tabName(tab2, 'Diagrama');
@@ -4969,7 +4977,13 @@ function cambiarVista(id) {
         CONNECTOR_MANAGER.reset();
         draw();
         coor = [iniX, iniY];
+        lineas = [0, 0, 0, 0, 0];
+        savePos = [];
+        trayecto = [];
         primer = false;
+        finLS = false;
+        finSS = false;
+        opciones = false;
     }
 }
 

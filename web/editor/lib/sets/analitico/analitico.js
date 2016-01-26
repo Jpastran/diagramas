@@ -64,6 +64,15 @@ var FigureDefaults = {
     textColor: "#000000"
 };
 
+function resetAnalitico() {
+    oId = 1;
+    tId = 1;
+    iId = 1;
+    dId = 1;
+    aId = 1;
+    cId = 1;
+}
+
 var oId = 1;
 var tId = 1;
 var iId = 1;

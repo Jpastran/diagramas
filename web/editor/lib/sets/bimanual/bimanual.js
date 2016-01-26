@@ -6,6 +6,10 @@ figureSets["bimanual"] = {
     figures: []
 };
 
+function resetBimanual(){
+    $('#bimanualT').find('tbody').html("");
+}
+
 function addFila() {
     var table = $('#bimanualT').find('tbody');
     var tr = $('<tr>');

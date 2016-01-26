@@ -22,9 +22,18 @@ figureSets["sinoptico"] = {
     figures: [
         {figureFunction: "circle", image: "circle.png"},
         {figureFunction: "square", image: "square.png"},
-        {figureFunction: "combined", image: "combine.png"}
+        {figureFunction: "combined", image: "combine.png"},
+        {figureFunction: "LineIn", image: "line_in.png"},
+        {figureFunction: "LineOut", image: "line_out.png"},
+        {figureFunction: "LineDouble", image: "line_double.png"}
     ]
 };
+
+function resetSinoptico() {
+    oIdS = 1;
+    iIdS = 1;
+    cIdS = 1;
+}
 
 var oIdS = 1;
 var iIdS = 1;

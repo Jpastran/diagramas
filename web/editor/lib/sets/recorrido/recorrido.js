@@ -30,6 +30,15 @@ figureSets["recorrido"] = {
     ]
 };
 
+function resetRecorrido() {
+    oIdR = 1;
+    tIdR = 1;
+    iIdR = 1;
+    dIdR = 1;
+    aIdR = 1;
+    cIdR = 1;
+}
+
 var oIdR = 1;
 var tIdR = 1;
 var iIdR = 1;

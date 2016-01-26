@@ -20,6 +20,14 @@ function genInit() {
     }
 }
 
+function resetHMaq() {
+    cleanResum();    
+    resetBody();
+    $('#maquinaT').find('thead').html("");
+    $('#genFila').html('<select id="selPart"></select>');
+    selArray = [];
+}
+
 var trInit = [];
 
 function genResumen(nO, nM) {
@@ -139,15 +147,6 @@ function selOption(id) {
         $(childs[i]).css('display', 'none');
     }
     $('#' + id).css('display', 'block');
-}
-
-function verDivs() {
-    var childs = $('#genFila').children();
-    for (var i = 0; i < childs.length; i++) {
-        $(childs[i]).css('display', 'block');
-        $(childs[i]).css('float', 'left');
-    }
-    $('#selPart').css('display', 'none');
 }
 
 function genThead(op, mq) {

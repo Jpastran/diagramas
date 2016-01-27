@@ -46,6 +46,20 @@ var dIdR = 1;
 var aIdR = 1;
 var cIdR = 1;
 
+function obtRecorr() {
+    var num = [oIdR - 1, tIdR - 1, iIdR - 1, dIdR - 1, aIdR - 1, cIdR - 1];
+    return num;
+}
+
+function desRecorr(num) {
+    oIdR = num[0];
+    tIdR = num[1];
+    iIdR = num[2];
+    dIdR = num[3];
+    aIdR = num[4];
+    cIdR = num[5];
+}
+
 function figure_inspecion(x, y) {
     var r = new Polygon();
     r.addPoint(new Point(x, y));

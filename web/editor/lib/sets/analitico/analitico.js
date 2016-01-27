@@ -80,6 +80,20 @@ var dId = 1;
 var aId = 1;
 var cId = 1;
 
+function obtAnalit() {
+    var num = [oId - 1, tId - 1, iId - 1, dId - 1, aId - 1, cId - 1];
+    return num;
+}
+
+function desAnalit(num) {
+    oId = num[0];
+    tId = num[1];
+    iId = num[2];
+    dId = num[3];
+    aId = num[4];
+    cId = num[5];
+}
+
 function figure_Square(x, y) {
     var r = new Polygon();
     r.addPoint(new Point(x, y));

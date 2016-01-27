@@ -302,7 +302,7 @@ $page = 'editor';
                     </div>
                 </div>
             </div>
-            <!--THE canvas-->
+            
             <div style="width: 100%">
                 <div  id="container">
                     <div id="tabs">
@@ -317,6 +317,7 @@ $page = 'editor';
                     </div>
                     <div id="ctabs">
                         <div id="ctab2">
+                            <!--THE canvas-->
                             <canvas id="a" width="800" height="600">
                                 Your browser does not support HTML5. Please upgrade your browser to any modern version.
                             </canvas>

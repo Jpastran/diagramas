@@ -4486,6 +4486,10 @@ var finSS = false;
 /**Gatillo de opciones de trayecto*/
 var opciones = false;
 
+/**Guarda todos los cambios para en 
+ * las variables y permite el deshacer*/
+var historial = [];
+
 function lineaPrincipal() {
     if (!primer) {
         figureBuild(window.figure_LineInit, coor[0] - tamFig, coor[1]);
@@ -4684,6 +4688,10 @@ function setEspecial(nombre) {
     }
 }
 
+var disbtnLE = true;
+var disbtnLS = true;
+var disEspSel = false;
+
 function especial(accion) {
     var clean = true;
     if (primer) {
@@ -4698,7 +4706,7 @@ function especial(accion) {
                     coor = [coor[0] - (distLine * (lineas[0] - lineas[1])), iniY];
                     figureBuild(window.figure_LineInit, coor[0] - tamFig, coor[1]);
                     lineas[1]++;
-                    document.getElementById('btnLE').disabled = false;
+                    document.getElementById('btnLE').disabled = (disbtnLE = false);
                 } else {
                     errorDiv('Debe poseer al menos un proceso');
                     clean = false;
@@ -4712,7 +4720,7 @@ function especial(accion) {
                         lineas[1]--;
                         coor[1] -= tamFig / 2;
                         if (lineas[1] == 1) {
-                            document.getElementById('btnLE').disabled = true;
+                            document.getElementById('btnLE').disabled = (disbtnLE = true);
                         }
                     } else {
                         errorDiv('Debe poseer al menos un proceso');
@@ -4730,7 +4738,7 @@ function especial(accion) {
                     coor = [coor[0] + distLine, coor[1]];
                     finSS = true;
                     coor[1] -= disCon;
-                    document.getElementById('btnLS').disabled = false;
+                    document.getElementById('btnLS').disabled = (disbtnLS = false);
                     especialSelect(true);
                 } else {
                     errorDiv('Solo se permite en la linea principal');
@@ -4744,7 +4752,7 @@ function especial(accion) {
                     coor = pos;
                     coor[1] -= tamFig / 2;
                     if (lineas[2] == 0) {
-                        document.getElementById('btnLS').disabled = true;
+                        document.getElementById('btnLS').disabled = (disbtnLS = true);
                         especialSelect(false);
                     }
                 }
@@ -4899,7 +4907,8 @@ function especial(accion) {
 
 function especialSelect(bool) {
     var select = document.getElementById('espSelect');
-    bool ? select.disabled = true : select.disabled = false;
+    bool ? select.disabled = (disEspSel = true) :
+            select.disabled = (disEspSel = false);
 }
 
 function errorDiv(textError) {
@@ -4982,10 +4991,14 @@ function cambiarVista(id) {
         lineas = [0, 0, 0, 0, 0];
         savePos = [];
         trayecto = [];
+        historial = [];
         primer = false;
         finLS = false;
         finSS = false;
         opciones = false;
+        disbtnLE = true;
+        disbtnLS = true;
+        disEspSel = false;
     }
 }
 
@@ -5004,5 +5017,66 @@ function displayDivs(right, tools, esp, img, bim, hmaq) {
         document.getElementById('container').style.right = '';
         document.getElementById('container').style.left = '';
         document.getElementById('left').style.width = '';
+    }
+}
+
+function addHistory() {
+    var hist = []
+    if (currentSetId == 'analitico' || currentSetId == 'sinoptico') {
+        var xy = [];
+        xy.push(coor[0]);
+        xy.push(coor[1]);
+        var lines = [];
+        for (var i = 0; i < lineas.length; i++) {
+            lines.push(lineas[i]);
+        }
+        var saves = [];
+        for (var i = 0; i < savePos.length; i++) {
+            saves.push(savePos[i]);
+        }
+        var tray = [];
+        for (var i = 0; i < trayecto.length; i++) {
+            saves.push(trayecto[i]);
+        }
+        var bools = [];
+        bools.push(primer, finLS, finSS, opciones, disbtnLE, disbtnLS, disEspSel);
+        var numDiag = [];
+        if (currentSetId == 'analitico') {
+            numDiag = obtAnalit();
+        } else {
+            numDiag = obtSinop();
+        }
+        hist = [xy, lines, saves, tray, bools, numDiag];
+    } else {
+        hist = obtRecorr();
+    }
+    historial.push(hist);
+}
+
+function backHistory() {
+    var hist = historial.pop();
+    if (currentSetId == 'analitico' || currentSetId == 'sinoptico') {
+        coor = hist[0];
+        lineas = hist[1];
+        savePos = hist[2];
+        trayecto = hist[3];
+        var bool = hist[4];
+        primer = bool[0];
+        finLS = bool[1];
+        finSS = bool[2];
+        opciones = bool[3];
+        disbtnLE = bool[4];
+        document.getElementById('btnLE').disabled = disbtnLE;
+        disbtnLS = bool[5];
+        document.getElementById('btnLS').disabled = disbtnLS;
+        disEspSel = bool[6];
+        document.getElementById('espSelect').disabled = disEspSel;
+        if (currentSetId == 'analitico') {
+            desAnalit(hist[5]);
+        } else {
+            desSinop(hist[5]);
+        }
+    } else {
+        desRecorr(hist);
     }
 }

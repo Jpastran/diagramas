@@ -30,14 +30,26 @@ figureSets["sinoptico"] = {
 };
 
 function resetSinoptico() {
-    oIdS = 1;
-    iIdS = 1;
-    cIdS = 1;
+    nSP = [];
+    nSA = [1, 1, 1];
 }
 
-var oIdS = 1;
-var iIdS = 1;
-var cIdS = 1;
+var nSP = [];
+var nSA = [1, 1, 1];
+
+function sumSinop(pos) {
+    nSP = [nSA[0], nSA[1], nSA[2]];
+    nSA[pos]++;
+    return nSP[pos];
+}
+
+function obtSinop() {
+    return nSP;
+}
+
+function desSinop(num) {
+    nSA = num;
+}
 
 function figure_square(x, y) {
     var r = new Polygon();
@@ -59,9 +71,8 @@ function figure_square(x, y) {
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
     f.addPrimitive(r);
 
-    var t2 = new Text('I-' + iIdS, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('I-' + sumSinop(1), x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    iIdS++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
@@ -87,9 +98,8 @@ function figure_circle(x, y) {
     var c = new Arc(x, y, FigureDefaults.radiusSize, 0, 360, false, 0);
 
     f.addPrimitive(c);
-    var t2 = new Text('O-' + oIdS, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('O-' + sumSinop(0), x, y, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    oIdS++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
@@ -119,13 +129,12 @@ function figure_combined(x, y) {
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-    
+
     f.addPrimitive(r);
     f.addPrimitive(c);
 
-    var t2 = new Text('C-' + cIdS, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('C-' + sumSinop(2), x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    cIdS++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);

@@ -68,7 +68,7 @@ History.addUndo = function(command) {
         /**As we are now positioned on CURRENT_POINTER(where current Command is stored) we will
          *delete anything after it, add new Command and increase CURRENT_POINTER
          **/
-
+        addHistory();
         //remove commands after current command 
         History.COMMANDS.splice(History.CURRENT_POINTER + 1, History.COMMANDS.length);
 
@@ -85,6 +85,7 @@ History.addUndo = function(command) {
  **/
 History.undo = function() {
     if (History.CURRENT_POINTER >= 0) {
+        backHistory();
         Log.info('undo()->Type of action: ' + History.COMMANDS[History.CURRENT_POINTER].oType);
         History.COMMANDS[History.CURRENT_POINTER].undo();
 

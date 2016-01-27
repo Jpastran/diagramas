@@ -306,4 +306,4 @@ Minimap.prototype = {
 
         return position;
     }
-};
+}

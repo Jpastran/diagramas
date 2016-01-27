@@ -3746,7 +3746,7 @@ var currentDiagramId = null;
 function init(diagramId) {
     var canvas = getCanvas();
 
-    minimap = new Minimap(canvas, document.getElementById("minimap"), 115);
+    minimap = new Minimap(canvas, document.getElementById("container"), document.getElementById("minimap"), 115);
     minimap.updateMinimap();
 
 

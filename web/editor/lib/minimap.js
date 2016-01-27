@@ -28,12 +28,13 @@
  * @see See /documents/specs/minimap.jpg for a visual representation of the minimap architecture.
  * @see See minimap.css to fully understand the CSS positioning
  */
-function Minimap(bigCanvas, minimapContainer) {
+function Minimap(bigCanvas, parentNode, minimapContainer) {
     /**Keeps track it minimap is selected or not*/
     this.selected = false;
 
     /**The big canvas DOM object (canvas). You can get it also by document.getElementById('map')*/
     this.bigCanvas = bigCanvas;
+    this.parentNode = parentNode;
 
     /**The minimap DOM object (div). You can get it also by document.getElementById('minimap')*/
     this.minimapContainer = minimapContainer;
@@ -59,7 +60,7 @@ function Minimap(bigCanvas, minimapContainer) {
 
 
     //If big canvas is scrolled --effect--> update minimap position
-    this.bigCanvas.parentNode.onscroll = function(scrollObject) {
+    this.parentNode.onscroll = function(scrollObject) {
         return function(event) {
             scrollObject.updateMinimapPosition();
         }
@@ -179,8 +180,8 @@ Minimap.prototype = {
         this.smallCanvas.height = $(this.minimapContainer).height();
 
         //compute selection size
-        var selectionWidth = this.ratio * ($(this.bigCanvas.parentNode).width() - scrollBarWidth) / 100;
-        var selectionHeight = this.ratio * ($(this.bigCanvas.parentNode).height() - scrollBarWidth) / 100;
+        var selectionWidth = this.ratio * ($(this.parentNode).width() - scrollBarWidth) / 100;
+        var selectionHeight = this.ratio * ($(this.parentNode).height() - scrollBarWidth) / 100;
         if (selectionWidth > $(this.minimapContainer).width()) { //if selection bigger than the container trim it
             selectionWidth = $(this.minimapContainer).width();
         }
@@ -199,8 +200,8 @@ Minimap.prototype = {
         var x = parseInt(this.selection.style.left.replace("px", ""));//+border
         var y = parseInt(this.selection.style.top.replace("px", ""));//+border
 
-        this.bigCanvas.parentNode.scrollLeft = x / this.ratio * 100;
-        this.bigCanvas.parentNode.scrollTop = y / this.ratio * 100;
+        this.parentNode.scrollLeft = x / this.ratio * 100;
+        this.parentNode.scrollTop = y / this.ratio * 100;
     },
     /**
      *Called whenever we scroll the big map/canvas. It will update the minimap
@@ -208,8 +209,8 @@ Minimap.prototype = {
      */
     updateMinimapPosition: function() {
         //get big map's offset
-        var x = parseInt(this.bigCanvas.parentNode.scrollLeft);
-        var y = parseInt(this.bigCanvas.parentNode.scrollTop);
+        var x = parseInt(this.parentNode.scrollLeft);
+        var y = parseInt(this.parentNode.scrollTop);
 
         //compute minimap's offset
         x = x * this.ratio / 100;

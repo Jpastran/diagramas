@@ -331,9 +331,9 @@ $page = 'editor';
                                     <tr>
                                         <td>Carta No:</td>
                                         <td></td>
-                                        <td>Hoja No:</td>
+                                        <td style="text-align: right">Hoja No:</td>
                                         <td></td>
-                                        <td>De:</td>
+                                        <td style="text-align: right">De:</td>
                                         <td width="100px;"></td>
                                         <td colspan=2>Metodo Presente
                                             <input type="radio" name="metodo"/>
@@ -421,20 +421,20 @@ $page = 'editor';
                             <table id="sinoptico">
                                 <tbody>
                                     <tr>
-                                        <td>Diagrama No:</td>
+                                        <td style="min-width: 100px">Diagrama No:</td>
                                         <td colspan=3 ></td>
-                                        <td>Hoja No:</td>
+                                        <td style="text-align: right">Hoja No:</td>
                                         <td></td>
-                                        <td>De:</td>
+                                        <td style="text-align: right">De:</td>
                                         <td width="100px;"></td>
                                     </tr>
                                     <tr>
                                         <td>Fecha:</td>
-                                        <td style="min-width: 120px"></td>
-                                        <td>Presente
+                                        <td style="min-width: 100px"></td>
+                                        <td style="min-width: 100px">Presente
                                             <input type="radio" name="metodo"/>
                                         </td>
-                                        <td>Propuesto
+                                        <td style="min-width: 100px">Propuesto
                                             <input type="radio" name="metodo"/>
                                         </td>
                                         <td colspan=4 align="center">Resumen</td>
@@ -442,7 +442,7 @@ $page = 'editor';
                                     <tr>
                                         <td rowspan=4>Actividad</td>
                                         <td colspan=3 rowspan=4></td>
-                                        <td align="center">Actividad</td>
+                                        <td align="center" style="min-width: 130px">Actividad</td>
                                         <td align="center">Presente</td>
                                         <td align="center">Propuesto</td>
                                         <td align="center">Ganado</td>
@@ -491,7 +491,7 @@ $page = 'editor';
                                         <td width="100px;" ></td>
                                         <td>Hoja No:</td>
                                         <td width="100px;"></td>
-                                        <td>De:</td>
+                                        <td style="text-align: right">De:</td>
                                         <td width="100px;"></td>
                                         <td>Analista:</td>
                                         <td></td>
@@ -711,7 +711,7 @@ $page = 'editor';
                                 </tbody>
                             </table>
                         </div>
-                        <div id="ctab7">
+                        <div id="ctab7" style="overflow:auto">
                             <table id="maquinaH">
                                 <tbody id="gen">
                                     <tr>
@@ -721,11 +721,11 @@ $page = 'editor';
                                         <td></td>
                                         <td>De:</td>
                                         <td></td>
-                                        <td id="resum" align="center">Resumen</td>
+                                        <td id="resum" align="center" colspan="4">Resumen</td>
                                     </tr>
                                     <tr>
-                                        <td rowspan="3">Producto:</td>
-                                        <td colspan="5" rowspan="3"></td>
+                                        <td rowspan="2">Producto:</td>
+                                        <td colspan="5" rowspan="2"></td>
                                         <td rowspan="2" style="min-width: 150px">
                                             Metodo Presente
                                             <input type="radio" name="metodo"/>
@@ -739,23 +739,23 @@ $page = 'editor';
                                     <tr id="tr3" style="height: 30.85px">
                                     </tr>
                                     <tr id="tr4">
+                                        <td rowspan="2">Actividad:</td>
+                                        <td colspan="5" rowspan="2"></td>                                
                                         <td>Tiempo Combinado</td>
                                     </tr>
                                     <tr id="tr5">
-                                        <td rowspan="2">Actividad:</td>
-                                        <td colspan="5" rowspan="2"></td>
                                         <td>Tiempo Independiente</td>
                                     </tr>
                                     <tr id="tr6">
+                                        <td>Maquina(s):</td>
+                                        <td colspan="5"></td>
                                         <td>Tiempo Improductivo</td>
                                     </tr>
                                     <tr id="tr7">
-                                        <td>Maquina(s):</td>
-                                        <td></td>
                                         <td>Velocidad:</td>
-                                        <td></td>
+                                        <td colspan="2"></td>
                                         <td>Avance:</td>
-                                        <td></td>
+                                        <td colspan="2"></td>
                                         <td>
                                             T. de ciclo
                                             <select id="timeHM" onchange="editTime()">
@@ -775,7 +775,7 @@ $page = 'editor';
                                 </tbody>
                             </table>
                         </div>
-                        <div id="ctab8">
+                        <div id="ctab8" style="overflow:auto">
                             <table id="maquinaT">
                                 <thead>
                                 </thead>

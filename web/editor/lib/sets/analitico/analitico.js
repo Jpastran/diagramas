@@ -15,8 +15,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-//TODO agregar la propiedad de texto en el builder, para las lineas
-//TODO corregir los que usan el formato patch para cambiar nombre u eliminar la posibilidad
+
 figureSets["analitico"] = {
     name: 'Diagrama Analitico',
     description: 'Diagram set of figures',
@@ -65,33 +64,25 @@ var FigureDefaults = {
 };
 
 function resetAnalitico() {
-    oId = 1;
-    tId = 1;
-    iId = 1;
-    dId = 1;
-    aId = 1;
-    cId = 1;
+    nAP = [];
+    nAA = [1, 1, 1, 1, 1, 1];
 }
 
-var oId = 1;
-var tId = 1;
-var iId = 1;
-var dId = 1;
-var aId = 1;
-var cId = 1;
+var nAP = [];
+var nAA = [1, 1, 1, 1, 1, 1];
+
+function sumAnali(pos) {
+    nAP = [nAA[0], nAA[1], nAA[2], nAA[3], nAA[4], nAA[5]];
+    nAA[pos]++;
+    return nAP[pos];
+}
 
 function obtAnalit() {
-    var num = [oId - 1, tId - 1, iId - 1, dId - 1, aId - 1, cId - 1];
-    return num;
+    return nAP;
 }
 
 function desAnalit(num) {
-    oId = num[0];
-    tId = num[1];
-    iId = num[2];
-    dId = num[3];
-    aId = num[4];
-    cId = num[5];
+    nAA = num;
 }
 
 function figure_Square(x, y) {
@@ -114,10 +105,8 @@ function figure_Square(x, y) {
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
     f.addPrimitive(r);
 
-    var t1 = new Text('I-' + iId, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t1 = new Text('I-' + sumAnali(0), x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t1.style.fillStyle = FigureDefaults.textColor;
-    iId++;
-
     f.addPrimitive(t1);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
@@ -128,6 +117,8 @@ function figure_Square(x, y) {
 }
 
 function figure_Circle(x, y) {
+    var c = new Arc(x, y, FigureDefaults.radiusSize, 0, 360, false, 0);
+
     var f = new Figure("Circle");
     f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
@@ -139,13 +130,10 @@ function figure_Circle(x, y) {
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
-    var c = new Arc(x, y, FigureDefaults.radiusSize, 0, 360, false, 0);
-
     f.addPrimitive(c);
-    var t2 = new Text('O-' + oId, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
+
+    var t2 = new Text('O-' + sumAnali(1), x, y, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    oId++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
@@ -171,11 +159,10 @@ function figure_TriangleInvert(x, y) {
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
-    var t2 = new Text('A-' + aId, x + FigureDefaults.segmentSize / 2 - 2, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
-    t2.style.fillStyle = FigureDefaults.textColor;
-    aId++;
     f.addPrimitive(t);
+    
+    var t2 = new Text('A-' +  sumAnali(2), x + FigureDefaults.segmentSize / 2 - 2, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
@@ -205,14 +192,11 @@ function figure_SemiCircleRight(x, y) {
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
     f.addPrimitive(c);
     f.addPrimitive(p);
 
-    var t2 = new Text('D-' + dId, x + FigureDefaults.radiusSize / 2 + 5, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('D-' + sumAnali(3), x + FigureDefaults.radiusSize / 2 + 5, y, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    dId++;
-
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.radiusSize / 2 + 5, y - FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
@@ -245,12 +229,10 @@ function figure_Arrow(x, y) {
     f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Distancia', 'dist', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
     f.addPrimitive(p);
 
-    var t2 = new Text('T-' + tId, x + FigureDefaults.segmentSize / 3, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('T-' + sumAnali(4), x + FigureDefaults.segmentSize / 3, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    tId++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
@@ -280,13 +262,11 @@ function figure_Combined(x, y) {
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
     f.addPrimitive(r);
     f.addPrimitive(c);
 
-    var t2 = new Text('C-' + cId, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('C-' + sumAnali(5), x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    cId++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
@@ -364,13 +344,11 @@ function figure_LineIn(x, y) {
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
     f.addPrimitive(r);
     f.addPrimitive(t);
 
     var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize * 2, y + FigureDefaults.segmentSize / 2), ConnectionPoint.TYPE_FIGURE);
@@ -409,13 +387,11 @@ function figure_LineOut(x, y) {
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
     f.addPrimitive(r);
     f.addPrimitive(t);
 
     var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize / 2), ConnectionPoint.TYPE_FIGURE);
@@ -447,12 +423,10 @@ function figure_LineDouble(x, y) {
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
     f.addPrimitive(r);
 
     var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 4), ConnectionPoint.TYPE_FIGURE);
@@ -479,7 +453,6 @@ function figure_MultiPoint(x, y) {
 
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
-
     f.addPrimitive(oc);
     f.addPrimitive(ic);
 
@@ -497,7 +470,6 @@ function figure_Text(x, y) {
 
     var t2 = new Text(FigureDefaults.textStr, x, y + FigureDefaults.radiusSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-
     f.addPrimitive(t2);
 
     f.finalise();

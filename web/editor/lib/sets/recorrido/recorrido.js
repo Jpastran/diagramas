@@ -15,8 +15,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-//TODO agregar la propiedad de texto en el builder, para las lineas
-//TODO corregir los que usan el formato patch para cambiar nombre u eliminar la posibilidad
+
 figureSets["recorrido"] = {
     name: 'Diagrama Recorrido',
     description: 'Diagram set of figures',
@@ -31,33 +30,25 @@ figureSets["recorrido"] = {
 };
 
 function resetRecorrido() {
-    oIdR = 1;
-    tIdR = 1;
-    iIdR = 1;
-    dIdR = 1;
-    aIdR = 1;
-    cIdR = 1;
+    nRP = [];
+    nRA = [1, 1, 1, 1, 1, 1];
 }
 
-var oIdR = 1;
-var tIdR = 1;
-var iIdR = 1;
-var dIdR = 1;
-var aIdR = 1;
-var cIdR = 1;
+var nRP = [];
+var nRA = [1, 1, 1, 1, 1, 1];
+
+function sumRecorr(pos) {
+    nRP = [nRA[0], nRA[1], nRA[2], nRA[3], nRA[4], nRA[5]];
+    nRA[pos]++;
+    return nRP[pos];
+}
 
 function obtRecorr() {
-    var num = [oIdR - 1, tIdR - 1, iIdR - 1, dIdR - 1, aIdR - 1, cIdR - 1];
-    return num;
+    return nRP;
 }
 
 function desRecorr(num) {
-    oIdR = num[0];
-    tIdR = num[1];
-    iIdR = num[2];
-    dIdR = num[3];
-    aIdR = num[4];
-    cIdR = num[5];
+    nRA = num;
 }
 
 function figure_inspecion(x, y) {
@@ -80,10 +71,8 @@ function figure_inspecion(x, y) {
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
     f.addPrimitive(r);
 
-    var t1 = new Text('I-' + iIdR, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t1 = new Text('I-' + sumRecorr(0), x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t1.style.fillStyle = FigureDefaults.textColor;
-    iIdR++;
-
     f.addPrimitive(t1);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
@@ -96,6 +85,8 @@ function figure_inspecion(x, y) {
 }
 
 function figure_operacion(x, y) {
+    var c = new Arc(x, y, FigureDefaults.radiusSize, 0, 360, false, 0);
+
     var f = new Figure("Circle");
     f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
@@ -107,13 +98,10 @@ function figure_operacion(x, y) {
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
-    var c = new Arc(x, y, FigureDefaults.radiusSize, 0, 360, false, 0);
-
     f.addPrimitive(c);
-    var t2 = new Text('O-' + oIdR, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
+
+    var t2 = new Text('O-' + sumRecorr(1), x, y, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    oIdR++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
@@ -141,11 +129,10 @@ function figure_almacenaje(x, y) {
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
-    var t2 = new Text('A-' + aIdR, x + FigureDefaults.segmentSize / 2 - 2, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
-    t2.style.fillStyle = FigureDefaults.textColor;
-    aIdR++;
     f.addPrimitive(t);
+
+    var t2 = new Text('A-' + sumRecorr(2), x + FigureDefaults.segmentSize / 2 - 2, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
@@ -177,14 +164,11 @@ function figure_demora(x, y) {
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
     f.addPrimitive(c);
     f.addPrimitive(p);
 
-    var t2 = new Text('D-' + dIdR, x + FigureDefaults.radiusSize / 2 + 5, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('D-' + sumRecorr(3), x + FigureDefaults.radiusSize / 2 + 5, y, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    dIdR++;
-
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.radiusSize / 2 + 5, y - FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
@@ -219,12 +203,10 @@ function figure_trasporte(x, y) {
     f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Distancia', 'dist', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
     f.addPrimitive(p);
 
-    var t2 = new Text('T-' + tIdR, x + FigureDefaults.segmentSize / 3, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('T-' + sumRecorr(4), x + FigureDefaults.segmentSize / 3, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    tIdR++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
@@ -256,13 +238,11 @@ function figure_combinado(x, y) {
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-
     f.addPrimitive(r);
     f.addPrimitive(c);
 
-    var t2 = new Text('C-' + cIdR, x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('C-' + sumRecorr(5), x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
-    cIdR++;
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);

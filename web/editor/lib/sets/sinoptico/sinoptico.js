@@ -29,17 +29,59 @@ figureSets["sinoptico"] = {
     ]
 };
 
-function resetSinoptico() {
-    nSP = [];
-    nSA = [1, 1, 1];
+var nSP = [0, 0, 0];
+var nSA = [1, 1, 1];
+
+var preS = [77, 81, 85, 91, 97];
+var proS = [78, 82, 86, 92, 98];
+var ganS = [79, 83, 87, 93, 99];
+
+function resumSinop() {
+    var cont = 0;
+    var ctNo = 0;
+    var sel = metSelS(true);
+    var noSel = metSelS(false);
+    for (var i = 0; i < nSA.length; i++) {
+        $("#td" + sel[i]).text(nSA[i] - 1);
+        cont += nSA[i];
+        var numNo = parseInt($("#td" + noSel[i]).text());
+        if (isNaN(numNo)) {
+            $("#td" + noSel[i]).text(0);
+            ctNo += 0;
+        } else {
+            ctNo += numNo;
+        }
+    }
+    $("#td" + sel[sel.length - 2]).text(cont - 3);
+    $("#td" + noSel[noSel.length - 2]).text(ctNo);
+    for (var k = 0; k < ganS.length; k++) {
+        var pre = parseInt($("#td" + preS[k]).text());
+        var pro = parseInt($("#td" + proS[k]).text());
+        if (isNaN(pre))
+            pre = 0;
+        if (isNaN(pro))
+            pro = 0;
+        $("#td" + ganS[k]).text(pre - pro);
+    }
 }
 
-var nSP = [];
-var nSA = [1, 1, 1];
+function metSelS(bool) {
+    if (bool) {
+        return preS;
+    } else {
+        return proS;
+    }
+}
+
+function resetSinoptico() {
+    nSP = [0, 0, 0];
+    nSA = [1, 1, 1];
+}
 
 function sumSinop(pos) {
     nSP = [nSA[0], nSA[1], nSA[2]];
     nSA[pos]++;
+    resumSinop();
     return nSP[pos];
 }
 

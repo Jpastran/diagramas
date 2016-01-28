@@ -71,6 +71,22 @@ function resetAnalitico() {
 var nAP = [];
 var nAA = [1, 1, 1, 1, 1, 1];
 
+var preAnali = [16, 22, 26, 30, 36, 40, 46, 50, 56];
+var proAnali = [17, 23, 27, 31, 37, 41, 47, 51, 57];
+var ganAnali = [18, 24, 28, 32, 38, 42, 48, 52, 58];
+
+function resumAnali() {
+    if (selPreA()){
+        
+    }else{
+        
+    }
+}
+
+function selPreA(){
+    
+}
+
 function sumAnali(pos) {
     nAP = [nAA[0], nAA[1], nAA[2], nAA[3], nAA[4], nAA[5]];
     nAA[pos]++;
@@ -160,8 +176,8 @@ function figure_TriangleInvert(x, y) {
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
     f.addPrimitive(t);
-    
-    var t2 = new Text('A-' +  sumAnali(2), x + FigureDefaults.segmentSize / 2 - 2, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
+
+    var t2 = new Text('A-' + sumAnali(2), x + FigureDefaults.segmentSize / 2 - 2, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
 

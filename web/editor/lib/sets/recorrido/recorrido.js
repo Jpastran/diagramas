@@ -54,6 +54,27 @@ function resumRecorr() {
     }
     $("#td" + sel[sel.length - 3]).text(cont - 6);
     $("#td" + noSel[noSel.length - 3]).text(ctNo);
+    var stak = STACK.figures;
+    var dist = 0;
+    var time = 0;
+    for (var i = 0; i < stak.length; i++) {
+        var figD = parseInt(stak[i].dist);
+        var figT = parseInt(stak[i].time);
+        if (!isNaN(figD)) {
+            dist += figD;
+        }
+        if (!isNaN(figT)) {
+            time += figT;
+        }
+    }
+    $("#td" + sel[sel.length - 2]).text(dist);
+    if (isNaN(parseInt($("#td" + noSel[noSel.length - 2]).text()))) {
+        $("#td" + noSel[noSel.length - 2]).text(0);
+    }
+    $("#td" + sel[sel.length - 1]).text(time);
+    if (isNaN(parseInt($("#td" + noSel[noSel.length - 1]).text()))) {
+        $("#td" + noSel[noSel.length - 1]).text(0);
+    }
     for (var k = 0; k < ganR.length; k++) {
         var pre = parseInt($("#td" + preR[k]).text());
         var pro = parseInt($("#td" + proR[k]).text());

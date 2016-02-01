@@ -3326,6 +3326,8 @@ function draw() {
     minimap.updateMinimap();
 //    Log.groupEnd();
 //alert('Paint 3')
+    
+    refCabecera();
 }
 
 
@@ -4986,6 +4988,8 @@ function cambiarVista(id) {
         tabName(tab2, 'Diagrama');
         STACK.reset();
         CONNECTOR_MANAGER.reset();
+        resetToNoneState();
+        setUpEditPanel(canvasProps);
         draw();
         coor = [iniX, iniY];
         lineas = [0, 0, 0, 0, 0];
@@ -5078,5 +5082,19 @@ function backHistory() {
         }
     } else {
         desRecorr(hist);
+    }
+}
+
+function refCabecera(){
+    if (currentSetId == 'analitico'){
+        resumAnali();
+    } else if (currentSetId == 'sinoptico'){
+        resumSinop();
+    } else if (currentSetId == 'recorrido'){
+        resumRecorr();
+    } else if (currentSetId == 'bimanual'){
+        
+    } else if (currentSetId == 'hom-maq'){
+       
     }
 }

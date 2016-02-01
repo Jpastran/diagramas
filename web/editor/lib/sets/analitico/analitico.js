@@ -88,6 +88,27 @@ function resumAnali() {
     }
     $("#td" + sel[sel.length - 3]).text(cont - 6);
     $("#td" + noSel[noSel.length - 3]).text(ctNo);
+    var stak = STACK.figures;
+    var dist = 0;
+    var time = 0;
+    for (var i = 0; i < stak.length; i++) {
+        var figD = parseInt(stak[i].dist);
+        var figT = parseInt(stak[i].time);
+        if (!isNaN(figD)) {
+            dist += figD;
+        }
+        if (!isNaN(figT)) {
+            time += figT;
+        }
+    }
+    $("#td" + sel[sel.length - 2]).text(dist);
+    if (isNaN(parseInt($("#td" + noSel[noSel.length - 2]).text()))) {
+        $("#td" + noSel[noSel.length - 2]).text(0);
+    }
+    $("#td" + sel[sel.length - 1]).text(time);
+    if (isNaN(parseInt($("#td" + noSel[noSel.length - 1]).text()))) {
+        $("#td" + noSel[noSel.length - 1]).text(0);
+    }
     for (var k = 0; k < ganA.length; k++) {
         var pre = parseInt($("#td" + preA[k]).text());
         var pro = parseInt($("#td" + proA[k]).text());
@@ -354,8 +375,6 @@ function figure_LineInit(x, y) {
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
-    f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
 
     f.addPrimitive(r);
 
@@ -398,8 +417,6 @@ function figure_LineIn(x, y) {
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
-    f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
     f.addPrimitive(r);
     f.addPrimitive(t);
 
@@ -441,8 +458,6 @@ function figure_LineOut(x, y) {
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
-    f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
     f.addPrimitive(r);
     f.addPrimitive(t);
 
@@ -477,8 +492,6 @@ function figure_LineDouble(x, y) {
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
-    f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
     f.addPrimitive(r);
 
     var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);

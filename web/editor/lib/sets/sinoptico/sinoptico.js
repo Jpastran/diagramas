@@ -54,6 +54,18 @@ function resumSinop() {
     }
     $("#td" + sel[sel.length - 2]).text(cont - 3);
     $("#td" + noSel[noSel.length - 2]).text(ctNo);
+    var stak = STACK.figures;
+    var time = 0;
+    for (var i = 0; i < stak.length; i++) {
+        var figT = parseInt(stak[i].time);
+        if (!isNaN(figT)) {
+            time += figT;
+        }
+    }
+    $("#td" + sel[sel.length - 1]).text(time);
+    if (isNaN(parseInt($("#td" + noSel[noSel.length - 1]).text()))) {
+        $("#td" + noSel[noSel.length - 1]).text(0);
+    }
     for (var k = 0; k < ganS.length; k++) {
         var pre = parseInt($("#td" + preS[k]).text());
         var pro = parseInt($("#td" + proS[k]).text());

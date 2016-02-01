@@ -892,7 +892,6 @@ Stack.prototype = {
                 alert("save() no present");
             }
             context.save();
-
             this.figures[i].paint(context);
             context.restore();
 
@@ -908,8 +907,7 @@ Stack.prototype = {
 
         //if we are connecting something we should paint currentCloud too
         if (state == STATE_CONNECTOR_PICK_FIRST || state == STATE_CONNECTOR_PICK_SECOND
-                || state == STATE_CONNECTOR_MOVE_POINT)
-        {
+                || state == STATE_CONNECTOR_MOVE_POINT){
             CONNECTOR_MANAGER.connectionCloudPaint(context);
         }
 

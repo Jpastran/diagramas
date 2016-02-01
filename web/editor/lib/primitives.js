@@ -2897,12 +2897,20 @@ Figure.prototype = {
         if (this.style) {
             this.style.setupContext(context);
         }
+        //Agregar texto de leyenda
+        context.save();
+        context.fillStyle = '#000000';
+        context.font = "12px sans-serif";
+        context.fillText(this.time, this.rotationCoords[0].x + tamFig/2 + 5, this.rotationCoords[0].y - 10);
+        context.fillText(this.info, this.rotationCoords[0].x + tamFig/2 + 5, this.rotationCoords[0].y + 5);
+        context.fillText(this.dist, this.rotationCoords[0].x + tamFig/2 + 5, this.rotationCoords[0].y + 20);
+        context.restore();
+
         for (var i = 0; i < this.primitives.length; i++) {
             context.save();
             var primitive = this.primitives[i];
-
-
             var oldStyle = null;
+
             if (primitive.style) { //save primitive's style
                 oldStyle = primitive.style.clone();
             }
@@ -2914,62 +2922,8 @@ Figure.prototype = {
                 primitive.style.merge(this.style);
             }
 
-
             primitive.paint(context);
             primitive.style = oldStyle;
-
-//            if(this.style.image != null){ //TODO: should a figure has a Style can't just delegate all to primitives?
-//                //clip required for background images, there were two methods, this was the second I tried
-//                //neither work in IE
-//                context.clip();
-//                context.save();
-//                if(this.rotationCoords.length != 0){
-//                    var angle=Util.getAngle(this.rotationCoords[0], this.rotationCoords[1]);
-//                    if(IE && angle==0){
-//                        angle=0.00000001;//stupid excanves, without this it puts all images down and right of the correct location
-//                    //and by an amount relative to the distane from the top left corner
-//                    }
-//
-//                    //if we perform a rotation on the actual rotationCoords[0] (centerPoint), when we try to translate it back,
-//                    //rotationCoords[0] will = 0,0, so we create a clone that does not get changed
-//                    var rotPoint = this.rotationCoords[0].clone();
-//
-//                    //move to origin, make a rotation, move back in place
-//                    this.transform(Matrix.translationMatrix(-rotPoint.x, -rotPoint.y))
-//                    this.transform(Matrix.rotationMatrix(-angle));
-//                    this.transform(Matrix.translationMatrix(rotPoint.x, rotPoint.y))
-//
-//                    //TODO: these are not used...so why the whole acrobatics ?
-//                    //this was the second method that is also not supported by IE, get the image, place it in
-//                    //the correct place, then shrink it, so its still an 'image mask' but it is only a small image
-//                    //context.scale below is also part of this
-//                    //var shrinkBounds = this.getBounds();
-//
-//                    //move back to origin, 'undo' the rotation, move back in place
-//                    this.transform(Matrix.translationMatrix(-rotPoint.x, -rotPoint.y))
-//                    this.transform(Matrix.rotationMatrix(angle));
-//                    this.transform(Matrix.translationMatrix(rotPoint.x, rotPoint.y))
-//
-//                    //rotate current canvas to prepare it to draw the image (you can not roate the image...:D)
-//                    context.translate(rotPoint.x,rotPoint.y);
-//                    context.rotate(angle);
-//                    //context.scale(0.01,0.01)//1/getCanvas().width*shrinkBounds[0]+(shrinkBounds[2]-shrinkBounds[0])/2,1/getCanvas().width*shrinkBounds[1]+(shrinkBounds[3]-shrinkBounds[1])/2)
-//                    context.translate(-rotPoint.x,-rotPoint.y);
-//                }
-//                //draw image
-//                /*context.fill();
-//                context.beginPath();
-//                context.globalCompositeOperation = "source-atop"
-//                 clip works best,but this works too, neither will work in IE*/
-//                //context.fill();
-//                context.drawImage(this.style.image,this.rotationCoords[0].x-this.style.image.width/2,this.rotationCoords[0].y-this.style.image.height/2,this.style.image.width,this.style.image.height)
-//
-//                context.restore();
-//            }
-//            else if (this.style.image!=null){
-//                context.fill();
-//            }
-
             context.restore();
         }
     },

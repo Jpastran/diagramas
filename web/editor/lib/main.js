@@ -4517,24 +4517,9 @@ function canvasBuild(figureFunction) {
         coor[1] -= tamFig / 2;
     } else {
         figureBuild(createFigureFunction, coor[0], coor[1]);
-        legendBuild();
         conectorBuild();
     }
     cleanStates();
-}
-
-function legendBuild() {
-    if (createFigureFunction == window.figure_TriangleInvert) {
-        figureBuild(window.figure_Text, coor[0] + tamFig, coor[1]);
-        console.log(STACK.figureGetById(selectedFigureId));
-    } else if (createFigureFunction == window.figure_Arrow) {
-        figureBuild(window.figure_Text, coor[0] + tamFig, coor[1]);
-        figureBuild(window.figure_Text, coor[0] - tamFig, coor[1] + disCon / 3);
-        figureBuild(window.figure_Text, coor[0] - tamFig, coor[1] - disCon / 3);
-    } else {
-        figureBuild(window.figure_Text, coor[0] + tamFig, coor[1]);
-        figureBuild(window.figure_Text, coor[0] - tamFig, coor[1]);
-    }
 }
 
 function conectorBuild() {

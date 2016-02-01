@@ -336,10 +336,10 @@ $page = 'editor';
                                         <td style="text-align: right">De:</td>
                                         <td width="100px;"></td>
                                         <td colspan=2>Metodo Presente
-                                            <input type="radio" name="metodo"/>
+                                            <input type="radio" name="metA" value="pre" onchange="changeMetA()" checked/>
                                         </td>
                                         <td colspan=2>Metodo Propuesto
-                                            <input type="radio" name="metodo"/>
+                                            <input type="radio" name="metA" value="pro" onchange="changeMetA()"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -432,10 +432,10 @@ $page = 'editor';
                                         <td>Fecha:</td>
                                         <td style="min-width: 100px"></td>
                                         <td style="min-width: 100px">Presente
-                                            <input type="radio" name="metodo"/>
+                                            <input type="radio" name="metS" value="pre" onchange="changeMetS()" checked/>
                                         </td>
                                         <td style="min-width: 100px">Propuesto
-                                            <input type="radio" name="metodo"/>
+                                            <input type="radio" name="metS" value="pro" onchange="changeMetS()"/>
                                         </td>
                                         <td colspan=4 align="center">Resumen</td>
                                     </tr>
@@ -500,10 +500,10 @@ $page = 'editor';
                                         <td rowspan="12">Actividad:</td>
                                         <td colspan="3" rowspan="12"></td>
                                         <td colspan="2">Metodo Presente
-                                            <input type="radio" name="metodo"/>
+                                            <input type="radio" name="metR" value="pre" onchange="changeMetR()" checked/>
                                         </td>
                                         <td colspan="2">Metodo Propuesto
-                                            <input type="radio" name="metodo"/>
+                                            <input type="radio" name="metR" value="pro" onchange="changeMetR()"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -601,10 +601,10 @@ $page = 'editor';
                                     </tr>
                                     <tr>
                                         <td colspan="3">Metodo Presente
-                                            <input type="radio" name="metodo"/>
+                                            <input type="radio" name="metB" value="pre" checked/>
                                         </td>
                                         <td colspan="4">Metodo Propuesto
-                                            <input type="radio" name="metodo"/>
+                                            <input type="radio" name="metB" value="pro"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -728,9 +728,9 @@ $page = 'editor';
                                         <td colspan="5" rowspan="2"></td>
                                         <td rowspan="2" style="min-width: 150px">
                                             Metodo Presente
-                                            <input type="radio" name="metodo"/>
+                                            <input type="radio" name="metH" value="pre" checked/>
                                             <br>Metodo Propuesto
-                                            <input type="radio" name="metodo"/>
+                                            <input type="radio" name="metH" value="pro"/>
                                         </td>
                                         <td id="pre" align="center">Presente</td>
                                         <td id="pro" align="center">Propuesto</td>

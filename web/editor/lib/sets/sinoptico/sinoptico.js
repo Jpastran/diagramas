@@ -66,10 +66,24 @@ function resumSinop() {
 }
 
 function metSelS(bool) {
-    if (bool) {
+    var metS = $('input:radio[name=metS]');
+    if (metS[0].checked && bool) {
         return preS;
     } else {
         return proS;
+    }
+}
+
+function changeMetS() {
+    var pre = [];
+    var pro = [];
+    for (var i = 0; i < ganS.length; i++) {
+        pre[i] = $("#td" + preS[i]).text();
+        pro[i] = $("#td" + proS[i]).text();
+    }
+    for (var j = 0; j < ganS.length; j++) {
+        $("#td" + preS[j]).text(pro[j]);
+        $("#td" + proS[j]).text(pre[j]);
     }
 }
 

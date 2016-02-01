@@ -63,33 +63,73 @@ var FigureDefaults = {
     textColor: "#000000"
 };
 
+var nAP = [];
+var nAA = [1, 1, 1, 1, 1, 1];
+
+var preA = [16, 22, 26, 30, 36, 40, 46, 50, 56];
+var proA = [17, 23, 27, 31, 37, 41, 47, 51, 57];
+var ganA = [18, 24, 28, 32, 38, 42, 48, 52, 58];
+
+function resumAnali() {
+    var cont = 0;
+    var ctNo = 0;
+    var sel = metSelA(true);
+    var noSel = metSelA(false);
+    for (var i = 0; i < nAA.length; i++) {
+        $("#td" + sel[i]).text(nAA[i] - 1);
+        cont += nAA[i];
+        var numNo = parseInt($("#td" + noSel[i]).text());
+        if (isNaN(numNo)) {
+            $("#td" + noSel[i]).text(0);
+            ctNo += 0;
+        } else {
+            ctNo += numNo;
+        }
+    }
+    $("#td" + sel[sel.length - 3]).text(cont - 6);
+    $("#td" + noSel[noSel.length - 3]).text(ctNo);
+    for (var k = 0; k < ganA.length; k++) {
+        var pre = parseInt($("#td" + preA[k]).text());
+        var pro = parseInt($("#td" + proA[k]).text());
+        if (isNaN(pre))
+            pre = 0;
+        if (isNaN(pro))
+            pro = 0;
+        $("#td" + ganA[k]).text(pre - pro);
+    }
+}
+
+function metSelA(bool) {
+    var metA = $('input:radio[name=metA]');
+    if (metA[0].checked && bool) {
+        return preA;
+    } else {
+        return proA;
+    }
+}
+
+function changeMetA() {
+    var pre = [];
+    var pro = [];
+    for (var i = 0; i < ganA.length; i++) {
+        pre[i] = $("#td" + preA[i]).text();
+        pro[i] = $("#td" + proA[i]).text();
+    }
+    for (var j = 0; j < ganA.length; j++) {
+        $("#td" + preA[j]).text(pro[j]);
+        $("#td" + proA[j]).text(pre[j]);
+    }
+}
+
 function resetAnalitico() {
     nAP = [];
     nAA = [1, 1, 1, 1, 1, 1];
 }
 
-var nAP = [];
-var nAA = [1, 1, 1, 1, 1, 1];
-
-var preAnali = [16, 22, 26, 30, 36, 40, 46, 50, 56];
-var proAnali = [17, 23, 27, 31, 37, 41, 47, 51, 57];
-var ganAnali = [18, 24, 28, 32, 38, 42, 48, 52, 58];
-
-function resumAnali() {
-    if (selPreA()){
-        
-    }else{
-        
-    }
-}
-
-function selPreA(){
-    
-}
-
 function sumAnali(pos) {
     nAP = [nAA[0], nAA[1], nAA[2], nAA[3], nAA[4], nAA[5]];
     nAA[pos]++;
+    resumAnali();
     return nAP[pos];
 }
 
@@ -99,37 +139,6 @@ function obtAnalit() {
 
 function desAnalit(num) {
     nAA = num;
-}
-
-function figure_Square(x, y) {
-    var r = new Polygon();
-    r.addPoint(new Point(x, y));
-    r.addPoint(new Point(x + FigureDefaults.segmentSize, y));
-    r.addPoint(new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize));
-    r.addPoint(new Point(x, y + FigureDefaults.segmentSize));
-
-    var f = new Figure("Square");
-    f.style.fillStyle = FigureDefaults.fillStyle;
-    f.style.strokeStyle = FigureDefaults.strokeStyle;
-
-    f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
-    f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
-    f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
-    f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-    f.addPrimitive(r);
-
-    var t1 = new Text('I-' + sumAnali(0), x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
-    t1.style.fillStyle = FigureDefaults.textColor;
-    f.addPrimitive(t1);
-
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
-
-    f.finalise();
-    return f;
 }
 
 function figure_Circle(x, y) {
@@ -148,7 +157,7 @@ function figure_Circle(x, y) {
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
     f.addPrimitive(c);
 
-    var t2 = new Text('O-' + sumAnali(1), x, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('O-' + sumAnali(0), x, y, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
 
@@ -159,13 +168,18 @@ function figure_Circle(x, y) {
     return f;
 }
 
-function figure_TriangleInvert(x, y) {
-    var t = new Polygon();
-    t.addPoint(new Point(x, y));
-    t.addPoint(new Point(x + FigureDefaults.segmentSize, y));
-    t.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize));
+function figure_Arrow(x, y) {
+    var p = new Polyline();
+    p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 4));
+    p.addPoint(new Point(x, y + FigureDefaults.segmentShortSize));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentShortSize));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 4));
+    p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 4));
 
-    var f = new Figure("TriangleInvert");
+    var f = new Figure("Arrow");
     f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
 
@@ -174,10 +188,12 @@ function figure_TriangleInvert(x, y) {
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
+    f.properties.push(new BuilderProperty('Distancia', 'dist', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-    f.addPrimitive(t);
+    f.addPrimitive(p);
 
-    var t2 = new Text('A-' + sumAnali(2), x + FigureDefaults.segmentSize / 2 - 2, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('T-' + sumAnali(1), x + FigureDefaults.segmentSize / 3, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
 
@@ -211,7 +227,7 @@ function figure_SemiCircleRight(x, y) {
     f.addPrimitive(c);
     f.addPrimitive(p);
 
-    var t2 = new Text('D-' + sumAnali(3), x + FigureDefaults.radiusSize / 2 + 5, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t2 = new Text('D-' + sumAnali(2), x + FigureDefaults.radiusSize / 2 + 5, y, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
 
@@ -222,18 +238,14 @@ function figure_SemiCircleRight(x, y) {
     return f;
 }
 
-function figure_Arrow(x, y) {
-    var p = new Polyline();
-    p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 4));
-    p.addPoint(new Point(x, y + FigureDefaults.segmentShortSize));
-    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentShortSize));
-    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize));
-    p.addPoint(new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2));
-    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y));
-    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 4));
-    p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 4));
+function figure_Square(x, y) {
+    var r = new Polygon();
+    r.addPoint(new Point(x, y));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize, y));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize));
+    r.addPoint(new Point(x, y + FigureDefaults.segmentSize));
 
-    var f = new Figure("Arrow");
+    var f = new Figure("Square");
     f.style.fillStyle = FigureDefaults.fillStyle;
     f.style.strokeStyle = FigureDefaults.strokeStyle;
 
@@ -243,11 +255,39 @@ function figure_Arrow(x, y) {
     f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
-    f.properties.push(new BuilderProperty('Distancia', 'dist', BuilderProperty.TYPE_SINGLE_TEXT));
     f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
-    f.addPrimitive(p);
+    f.addPrimitive(r);
 
-    var t2 = new Text('T-' + sumAnali(4), x + FigureDefaults.segmentSize / 3, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    var t1 = new Text('I-' + sumAnali(3), x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    t1.style.fillStyle = FigureDefaults.textColor;
+    f.addPrimitive(t1);
+
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
+
+    f.finalise();
+    return f;
+}
+
+function figure_TriangleInvert(x, y) {
+    var t = new Polygon();
+    t.addPoint(new Point(x, y));
+    t.addPoint(new Point(x + FigureDefaults.segmentSize, y));
+    t.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize));
+
+    var f = new Figure("TriangleInvert");
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
+
+    f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
+    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
+    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
+    f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
+    f.addPrimitive(t);
+
+    var t2 = new Text('A-' + sumAnali(4), x + FigureDefaults.segmentSize / 2 - 2, y + FigureDefaults.segmentSize / 3, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
 

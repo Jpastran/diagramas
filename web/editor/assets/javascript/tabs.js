@@ -21,6 +21,9 @@ function tabs(li, div) {
 
     //Activa el contedino solicitado
     $(div).css('display', '');
+    if (div == ctab2) {
+        minimap.initMinimap();
+    }
 }
 
 function editable() {
@@ -66,7 +69,7 @@ function cambiaCtab(li, ctab) {
     $($("#" + li).children('a')).attr('href', href);
 }
 
-function tabName(li, name){
+function tabName(li, name) {
     var a = $(li).find('a');
     a.html(name);
 }

@@ -4503,23 +4503,38 @@ function lineaPrincipal() {
 function canvasBuild(figureFunction) {
     createFigureFunction = figureFunction;
     lineaPrincipal();
-    if (window.createFigureFunction == window.figure_LineIn) {
-        figureBuild(window.createFigureFunction, coor[0] - tamFig, coor[1] - tamFig * 0.75);
+    if (figureFunction == window.figure_LineIn) {
+        figureBuild(createFigureFunction, coor[0] - tamFig, coor[1] - tamFig * 0.75);
         conectorBuild();
         coor[1] -= tamFig;
-    } else if (window.createFigureFunction == window.figure_LineOut) {
-        figureBuild(window.createFigureFunction, coor[0] + tamFig, coor[1] - tamFig * 0.75);
+    } else if (figureFunction == window.figure_LineOut) {
+        figureBuild(createFigureFunction, coor[0] + tamFig, coor[1] - tamFig * 0.75);
         conectorBuild();
         coor[1] -= tamFig;
-    } else if (window.createFigureFunction == window.figure_LineDouble) {
-        figureBuild(window.createFigureFunction, coor[0], coor[1] - tamFig / 4);
+    } else if (figureFunction == window.figure_LineDouble) {
+        figureBuild(createFigureFunction, coor[0], coor[1] - tamFig / 4);
         conectorBuild();
         coor[1] -= tamFig / 2;
     } else {
-        figureBuild(window.createFigureFunction, coor[0], coor[1]);
+        figureBuild(createFigureFunction, coor[0], coor[1]);
+        legendBuild();
         conectorBuild();
     }
     cleanStates();
+}
+
+function legendBuild() {
+    if (createFigureFunction == window.figure_TriangleInvert) {
+        figureBuild(window.figure_Text, coor[0] + tamFig, coor[1]);
+        console.log(STACK.figureGetById(selectedFigureId));
+    } else if (createFigureFunction == window.figure_Arrow) {
+        figureBuild(window.figure_Text, coor[0] + tamFig, coor[1]);
+        figureBuild(window.figure_Text, coor[0] - tamFig, coor[1] + disCon / 3);
+        figureBuild(window.figure_Text, coor[0] - tamFig, coor[1] - disCon / 3);
+    } else {
+        figureBuild(window.figure_Text, coor[0] + tamFig, coor[1]);
+        figureBuild(window.figure_Text, coor[0] - tamFig, coor[1]);
+    }
 }
 
 function conectorBuild() {

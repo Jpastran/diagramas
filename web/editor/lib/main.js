@@ -3326,7 +3326,7 @@ function draw() {
     minimap.updateMinimap();
 //    Log.groupEnd();
 //alert('Paint 3')
-    
+
     refCabecera();
 }
 
@@ -4414,12 +4414,8 @@ function touchCancel(event) {
 /*======================Diagramas de Procesos========================*/
 
 //TODO Arreglar la seleccion multiple.
-//TODO Corregir autoID o generar la numeracion de forma automatica eliminado y renumeracion.
 //TODO Corregir nivel de los conectores.
-//TODO correjir posiciones en caso de borrado o generar posicion mas baja a partir de busqueda.
-//TODO opcional agregar al lienzo (Nombre del Proceso).
 //TODO crear un metodo y boton para terminar el diagrama.
-//TODO estudiar el .js de History e implementarlo para coor.
 //TODO Borrar los TODO que no digan un error.
 //TODO Verificar z-index de los conectores
 
@@ -4682,7 +4678,6 @@ function setEspecial(nombre) {
         div.style.display = 'block';
         errorDiv('');
         if (nombre == 'repeticion') {
-            cargarFiguras('repIn');
             cargarFiguras('repOut');
         } else if (nombre == 'reproceso') {
             cargarFiguras('proOut');
@@ -4765,16 +4760,30 @@ function especial(accion) {
                     var figFin = STACK.figureGetById(document.getElementById('repOut').value);
                     var coorIn = [coor[0], coor[1] - disFigCon];
                     var coorOut = [figFin.rotationCoords[1].x, figFin.rotationCoords[1].y];
+                    var numR = parseInt(document.getElementById('repNum').value);
                     if (coorIn[0] == coorOut[0]) {
                         if (coorIn[1] > coorOut[1]) {
-                            conectorBuildFull(true, coorIn, coorOut, true);
-                            ordenarDelta('h', -disLinMin, 3);
-                            ordenarDelta('v', -disCon / 2, 2);
-                            ordenarDelta('v', disCon / 2, 4);
-                            clean = true;
-                            figureBuild(window.figure_LineDouble, coor[0], coor[1] - tamFig / 4);
-                            conectorBuild();
-                            coor[1] -= tamFig / 2;
+                            if (numR < 0 && numR > 10) {
+                                conectorBuildFull(true, coorIn, coorOut, true);
+                                ordenarDelta('h', -disLinMin, 3);
+                                ordenarDelta('v', -disCon / 2, 2);
+                                ordenarDelta('v', disCon / 2, 4);
+                                figureBuild(window.figure_LineDouble, coor[0], coor[1] - tamFig / 4);
+                                conectorBuild();
+                                coor[1] -= tamFig / 2;
+                                clean = true;
+                                var figIni = STACK.figureGetById(selectedFigureId);
+                                figIni.primitives[1].str = "Repite " + numR;
+                                for (var j = 0; j < numR; j++) {
+                                    for (var i = 0; i < STACK.figures.length; i++) {
+                                        if (STACK.figures[i].id >= figFin.id && STACK.figures[i].id < figIni.id) {
+                                            reptSumar(STACK.figures[i].name);
+                                        }
+                                    }
+                                }
+                            } else {
+                                errorDiv("Numero de ciclos mayor a 0 y menor a 10");
+                            }
                         } else {
                             errorDiv("La repetcion no puede ser inversa");
                         }
@@ -4907,6 +4916,32 @@ function especial(accion) {
     }
 }
 
+function reptSumar(name) {
+    if (currentSetId == "analitico") {
+        if (name == "Circle") {
+            sumAnali(0);
+        } else if (name == "Arrow") {
+            sumAnali(1);
+        } else if (name == "SemiCircleRight") {
+            sumAnali(2);
+        } else if (name == "Square") {
+            sumAnali(3);
+        } else if (name == "TriangleInvert") {
+            sumAnali(4);
+        } else if (name == "Combine") {
+            sumAnali(5);
+        }
+    } else if (currentSetId == "sinoptico") {
+        if (name == "Circle") {
+            sumSinop(0);
+        } else if (name == "Square") {
+            sumSinop(1);
+        } else if (name == "Combine") {
+            sumSinop(2);
+        }
+    }
+}
+
 function especialSelect(bool) {
     var select = document.getElementById('espSelect');
     bool ? select.disabled = (disEspSel = true) :
@@ -4933,7 +4968,8 @@ function cargarFiguras(selectId) {
         var ids = [];
         for (var i = 0; i < STACK.figures.length; i++) {
             for (var j = 0; j < STACK.figures[i].primitives.length; j++) {
-                if (STACK.figures[i].primitives[j].str !== undefined) {
+                var str = STACK.figures[i].primitives[j].str;
+                if (str !== undefined && str != "Text") {
                     names[i] = STACK.figures[i].primitives[j].str;
                     ids[i] = STACK.figures[i].id;
                 }
@@ -5085,16 +5121,16 @@ function backHistory() {
     }
 }
 
-function refCabecera(){
-    if (currentSetId == 'analitico'){
+function refCabecera() {
+    if (currentSetId == 'analitico') {
         resumAnali();
-    } else if (currentSetId == 'sinoptico'){
+    } else if (currentSetId == 'sinoptico') {
         resumSinop();
-    } else if (currentSetId == 'recorrido'){
+    } else if (currentSetId == 'recorrido') {
         resumRecorr();
-    } else if (currentSetId == 'bimanual'){
-        
-    } else if (currentSetId == 'hom-maq'){
-       
+    } else if (currentSetId == 'bimanual') {
+
+    } else if (currentSetId == 'hom-maq') {
+
     }
 }

@@ -4763,7 +4763,7 @@ function especial(accion) {
                     var numR = parseInt(document.getElementById('repNum').value);
                     if (coorIn[0] == coorOut[0]) {
                         if (coorIn[1] > coorOut[1]) {
-                            if (numR < 0 && numR > 10) {
+                            if (numR > 0 && numR < 10) {
                                 conectorBuildFull(true, coorIn, coorOut, true);
                                 ordenarDelta('h', -disLinMin, 3);
                                 ordenarDelta('v', -disCon / 2, 2);

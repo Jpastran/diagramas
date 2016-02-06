@@ -5128,9 +5128,5 @@ function refCabecera() {
         resumSinop();
     } else if (currentSetId == 'recorrido') {
         resumRecorr();
-    } else if (currentSetId == 'bimanual') {
-
-    } else if (currentSetId == 'hom-maq') {
-
     }
 }

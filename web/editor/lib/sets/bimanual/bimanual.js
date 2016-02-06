@@ -6,6 +6,139 @@ figureSets["bimanual"] = {
     figures: []
 };
 
+var opeB = [187, 188, 189, 190, 191, 192];
+var traB = [194, 195, 196, 197, 198, 199];
+var demB = [201, 202, 203, 204, 205, 206];
+var sosB = [208, 209, 210, 211, 212, 213];
+var totB = [215, 216, 217, 218, 219, 220];
+var tCil = [222, 223, 224];
+
+function resumBim() {
+    var cont = 0;
+    var opersI = [0, 0, 0, 0];
+    var opersD = [0, 0, 0, 0];
+    var tabla = $('#bimanualT').find('tbody').children();
+    for (var i = 0; i < tabla.length; i++) {
+        var tr = $(tabla[i]).children();
+        var time = $(tr).first().text();
+        if (!isNaN(time)) {
+            cont += parseInt(time);
+        }
+        var figI = $(tr[2]).find("img").attr("alt");
+        opersI[figI]++;
+        var figD = $(tr[3]).find("img").attr("alt");
+        opersD[figD]++;
+    }
+    sumSimb(opersI, 0);
+    sumSimb(opersD, 1);
+    var met = metSelB(true);
+    $("#td" + totB[met]).text(tabla.length);
+    $("#td" + totB[met + 1]).text(tabla.length);
+    totalNoSel();
+    met == 2 ? met = 1 : met = 0;
+    $("#td" + tCil[met]).text(cont);
+    met == 1 ? met = 0 : met = 1;
+    $("#td" + tCil[met]).text(0);
+    ganarBim();
+}
+
+function sumSimb(opers, mano) {
+    var pos = 0;
+    var met = metSelB(true);
+    for (var i = 0; i < opers.length; i++) {
+        if (i == 0) {
+            pos = opeB[met + mano];
+        } else if (i == 1) {
+            pos = traB[met + mano];
+        } else if (i == 2) {
+            pos = demB[met + mano];
+        } else if (i == 3) {
+            pos = sosB[met + mano];
+        }
+        $("#td" + pos).text(opers[i]);
+        var noSel = met == 2 ? pos - 2 : pos + 2;
+        if (isNaN(parseInt($("#td" + noSel).text()))) {
+            $("#td" + noSel).text(0);
+        }
+    }
+}
+
+function totalNoSel() {
+    var contI = 0;
+    var contD = 0;
+    var noSel = metSelB(true) == 2 ? 0 : 2;
+    contI += parseInt($("#td" + opeB[noSel]).text());
+    contI += parseInt($("#td" + traB[noSel]).text());
+    contI += parseInt($("#td" + demB[noSel]).text());
+    contI += parseInt($("#td" + sosB[noSel]).text());
+    contD += parseInt($("#td" + opeB[noSel + 1]).text());
+    contD += parseInt($("#td" + traB[noSel + 1]).text());
+    contD += parseInt($("#td" + demB[noSel + 1]).text());
+    contD += parseInt($("#td" + sosB[noSel + 1]).text());
+    $("#td" + totB[noSel]).text(contI);
+    $("#td" + totB[noSel + 1]).text(contD);
+}
+
+function ganarBim() {
+    for (var k = 0; k < 2; k++) {
+        var opeG = parseInt($("#td" + opeB[k]).text()) - parseInt($("#td" + opeB[k + 2]).text());
+        var traG = parseInt($("#td" + traB[k]).text()) - parseInt($("#td" + traB[k + 2]).text());
+        var demG = parseInt($("#td" + demB[k]).text()) - parseInt($("#td" + demB[k + 2]).text());
+        var sosG = parseInt($("#td" + sosB[k]).text()) - parseInt($("#td" + sosB[k + 2]).text());
+        var totG = parseInt($("#td" + totB[k]).text()) - parseInt($("#td" + totB[k + 2]).text());
+        $("#td" + opeB[k + 4]).text(opeG);
+        $("#td" + traB[k + 4]).text(traG);
+        $("#td" + demB[k + 4]).text(demG);
+        $("#td" + sosB[k + 4]).text(sosG);
+        $("#td" + totB[k + 4]).text(totG);
+    }
+    var tCilG = parseInt($("#td" + tCil[0]).text()) - parseInt($("#td" + tCil[1]).text());
+    $("#td" + tCil[3]).text(tCilG);
+}
+
+function metSelB(bool) {
+    var metB = $('input:radio[name=metB]');
+    if (metB[0].checked && bool) {
+        return 0;
+    } else {
+        return 2;
+    }
+}
+
+function changeMetB() {
+    var ope = [];
+    var tra = [];
+    var dem = [];
+    var sos = [];
+    var tot = [];
+    for (var i = 0; i < 4; i++) {
+        ope[i] = $("#td" + opeB[i]).text();
+        tra[i] = $("#td" + traB[i]).text();
+        dem[i] = $("#td" + demB[i]).text();
+        sos[i] = $("#td" + sosB[i]).text();
+        tot[i] = $("#td" + totB[i]).text();
+    }
+    for (var j = 0; j < 2; j++) {
+        $("#td" + opeB[j]).text(ope[j + 2]);
+        $("#td" + traB[j]).text(tra[j + 2]);
+        $("#td" + demB[j]).text(dem[j + 2]);
+        $("#td" + sosB[j]).text(sos[j + 2]);
+        $("#td" + totB[j]).text(tot[j + 2]);
+    }
+    for (var k = 2; k < 4; k++) {
+        $("#td" + opeB[k]).text(ope[k - 2]);
+        $("#td" + traB[k]).text(tra[k - 2]);
+        $("#td" + demB[k]).text(dem[k - 2]);
+        $("#td" + sosB[k]).text(sos[k - 2]);
+        $("#td" + totB[k]).text(tot[k - 2]);
+    }
+    var tot = [];
+    ope[0] = $("#td" + tCil[0]).text();
+    ope[1] = $("#td" + tCil[1]).text();
+    $("#td" + tCil[0]).text(ope[1]);
+    $("#td" + tCil[1]).text(ope[0]);
+}
+
 function resetBimanual() {
     $('#bimanualT').find('tbody').html("");
 }
@@ -16,8 +149,8 @@ function addFila() {
         var tr = $('<tr>');
         tr.append($('<td>' + $('#time').val() + '</td>'));
         tr.append($('<td>' + $('#mid').val() + '</td>'));
-        tr.append($('<td><img src="lib/sets/bimanual/' + opr[$('#mis').val()] + '"/></td>'));
-        tr.append($('<td><img src="lib/sets/bimanual/' + opr[$('#mds').val()] + '"/></td>'));
+        tr.append($('<td><img src="lib/sets/bimanual/' + opr[$('#mis').val()] + '" alt="' + $('#mis').val() + '"/></td>'));
+        tr.append($('<td><img src="lib/sets/bimanual/' + opr[$('#mds').val()] + '" alt="' + $('#mds').val() + '"/></td>'));
         tr.append($('<td>' + $('#mdd').val() + '</td>'));
         tr.append($('<td>' + $('#time').val() + '</td>'));
         var td = $('<td>');
@@ -25,8 +158,9 @@ function addFila() {
         td.append($('<input type="button" value="Borrar">').click(delFila));
         tr.append(td);
         table.append(tr);
+        resumBim();
         limpiarInsert();
-    }else{
+    } else {
         alert("Complete todos los campos");
     }
 }
@@ -60,20 +194,20 @@ function delFila() {
 }
 
 var tds;
-var opr = ['circle.png', 'arrow.png', 'triangle_inver.png', 'semi_circle_right.png'];
+var opr = ['circle.png', 'arrow.png', 'semi_circle_right.png', 'triangle_inver.png'];
 
 function genSelect() {
     var sel = $('<select>');
     sel.append($('<option value="0">Operacion</option>'));
     sel.append($('<option value="1">Trasporte</option>'));
-    sel.append($('<option value="2">Sostenimiento</option>'));
-    sel.append($('<option value="3">Demora</option>'));
+    sel.append($('<option value="2">Demora</option>'));
+    sel.append($('<option value="3">Sostenimiento</option>'));
     return sel;
 }
 
 function genImg(td) {
     var val = $(td).find('select').val();
-    var img = $('<img src="lib/sets/bimanual/' + opr[val] + '"/>');
+    var img = $('<img src="lib/sets/bimanual/' + opr[val] + '" alt="' + val + '"/>');
     return img;
 }
 

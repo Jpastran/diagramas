@@ -98,7 +98,7 @@ $page = 'editor';
             loadCommands();
             $(document).ready(function() {
                 init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : '' ?>');
-                tabs(tab2, ctab2);
+                tabs(tab2, ctab2);                
                 editable();
             });
         </script>
@@ -273,8 +273,8 @@ $page = 'editor';
                         <option value="-1">-Seleccione-</option>
                         <option value="0">Operacion</option>
                         <option value="1">Trasporte</option>
-                        <option value="2">Sostenimiento</option>
-                        <option value="3">Demora</option>
+                        <option value="2">Demora</option>
+                        <option value="3">Sostenimiento</option>
                     </select>
                     <br>Descripcion mano derecha
                     <textarea type="" id="mdd"></textarea>
@@ -283,8 +283,8 @@ $page = 'editor';
                         <option value="-1">-Seleccione-</option>
                         <option value="0">Operacion</option>
                         <option value="1">Trasporte</option>
-                        <option value="2">Sostenimiento</option>
-                        <option value="3">Demora</option>
+                        <option value="2">Demora</option>
+                        <option value="3">Sostenimiento</option>
                     </select>
                     <input type="button" value="Insertar" onclick="addFila()">
                 </div>
@@ -602,10 +602,10 @@ $page = 'editor';
                                     </tr>
                                     <tr>
                                         <td colspan="3">Metodo Presente
-                                            <input type="radio" name="metB" value="pre" checked/>
+                                            <input type="radio" name="metB" value="pre" onchange="changeMetB()" checked/>
                                         </td>
                                         <td colspan="4">Metodo Propuesto
-                                            <input type="radio" name="metB" value="pro"/>
+                                            <input type="radio" name="metB" value="pro" onchange="changeMetB()"/>
                                         </td>
                                     </tr>
                                     <tr>

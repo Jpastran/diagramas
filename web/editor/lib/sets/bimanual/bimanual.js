@@ -93,7 +93,7 @@ function ganarBim() {
         $("#td" + totB[k + 4]).text(totG);
     }
     var tCilG = parseInt($("#td" + tCil[0]).text()) - parseInt($("#td" + tCil[1]).text());
-    $("#td" + tCil[3]).text(tCilG);
+    $("#td" + tCil[2]).text(tCilG);
 }
 
 function metSelB(bool) {
@@ -241,6 +241,7 @@ function modFila() {
         $(this).attr('value', 'Editar');
         $(this).click(editFila);
         tds[5].textContent = tds[0].textContent;
+        resumBim();
     } else {
         alert('Complete correctamente los campos');
     }
@@ -267,3 +268,23 @@ function editTime() {
     $('#tR').html($('#tL').val());
 }
 
+function bimImg() {
+    var td = $("#td175");
+    td.css('max-width', '400px');
+    td.css('max-height', '300px');
+    td.attr('align', 'center');
+    td.removeAttr('class');
+    td.removeAttr('contenteditable');
+    var link = $('<a href="javascript:showInsertImageDialog();" title="Add image"></a>');
+    link.append('<img src="assets/images/img_icon.png" alt="Image" border="0">');
+    td.append(link);
+}
+
+function bimInsertImg(imgSrc) {
+    var imageURL = appURL + '/editor/data/import/' + imgSrc;
+    var img = $('<img src="' + imageURL + '" alt="Image" border="0">');
+    img.css('max-width', '400px');
+    img.css('max-height', '300px');
+    var link = $("#td175").find('a');
+    link.html(img);
+}

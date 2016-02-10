@@ -3859,14 +3859,15 @@ function action(action) {
                 currentTextEditor.destroy();
                 currentTextEditor = null;
             }
-
             //creates a container
-            var cmdFigureCreate = new InsertedImageFigureCreateCommand(insertedImageFileName, 100, 100);
-            cmdFigureCreate.execute();
-            History.addUndo(cmdFigureCreate);
-
-            redraw = true;
-
+            if (currentSetId == "recorrido") {
+                var cmdFigureCreate = new InsertedImageFigureCreateCommand(insertedImageFileName, 100, 100);
+                cmdFigureCreate.execute();
+                History.addUndo(cmdFigureCreate);
+                redraw = true;
+            } else if (currentSetId == "bimanual") {
+                bimInsertImg(insertedImageFileName);
+            }            
             break;
 
         case 'ungroup':

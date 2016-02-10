@@ -35,6 +35,7 @@ function editable() {
             $(tds[i]).attr('id', 'td' + i);
         }
     }
+    bimImg();
 }
 
 var resp = [];

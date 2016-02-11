@@ -13,6 +13,7 @@ function genInit() {
     var maq = $("#numM").val();
     var n = parseInt(maq) + parseInt(ope);
     if (n < 10 && n > 1 && maq > 0 && ope > 0) {
+        acN = n;
         genTrInit();
         resetHMaq();
         genResumen(ope, maq);
@@ -21,7 +22,6 @@ function genInit() {
         $("#genFila").css("display", "block");
         $("#numO").val("");
         $("#numM").val("");
-        acN = n;
     } else {
         alert("Numero maximo de actores 10, minimo uno de cada uno");
     }
@@ -43,7 +43,7 @@ function genResumen(nO, nM) {
         var tr = $('#tr' + i);
         if (i != 3) {
             for (var j = 0; j < n * 3; j++) {
-                tr.append($('<td>', {id: 'hm' + id, contenteditable: 'true', class: 'edit'}));
+                tr.append($('<td>', {id: 'hm' + id, contenteditable: 'true', class: 'edit'}).html(0));
                 id++;
             }
         } else {
@@ -72,19 +72,20 @@ function genTrInit() {
 var preH = [];
 var proH = [];
 var ganH = [];
+var valH = [];
 
 function genPPG() {
-    preH = [];
-    proH = [];
-    ganH = [];
     var max = 3 * acN;
     for (var i = 0; i < max; i++) {
         var col = [];
+        var val = [];
         for (var j = 0; j < 5; j++) {
             col[j] = i + (j * max);
+            val[j] = 0;
         }
         if (i < max / 3) {
             preH[i] = col;
+            valH[i] = val;
         } else if (i < acN * 2) {
             proH[i - acN] = col;
         } else {
@@ -102,10 +103,73 @@ function metSelH(bool) {
     }
 }
 
+function sumResum(nCol, time, tipo) {
+    valH[nCol][tipo] += time;
+    var met = metSelH(true);
+    $("#hm" + met[nCol][tipo]).text(valH[nCol][tipo]);
+}
+
+function resumHM() {
+    var met = metSelH(true);
+    var noMet = metSelH(false);
+    for (var j = 0; j < met.length; j++) {
+        var ciclo = 0;
+        var noClo = 0;
+        var act = 0;
+        var noAct = 0;
+        for (var i = 0; i < 5; i++) {
+            if (i < 3) {
+                if (i == 2) {
+                    act = ciclo;
+                    noAct = noClo;
+                }
+                var num = parseInt($("#hm" + met[j][i]).text());
+                var noNum = parseInt($("#hm" + noMet[j][i]).text());
+                ciclo += num;
+                noClo += noNum;
+                $("#hm" + ganH[j][i]).text(num - noNum);
+            } else if (i == 3) {
+                $("#hm" + met[j][i]).text(ciclo);
+                $("#hm" + noMet[j][i]).text(noClo);
+                $("#hm" + ganH[j][i]).text(ciclo - noClo);
+            } else {
+                var efic = ciclo == 0 ? 0 : (act / ciclo) * 100;
+                var noEfi = noClo == 0 ? 0 : (noAct / noClo) * 100;
+                $("#hm" + met[j][i]).text(efic.toFixed(1));
+                $("#hm" + noMet[j][i]).text(noEfi.toFixed(1));
+                $("#hm" + ganH[j][i]).text((efic - noEfi).toFixed(1));
+            }
+        }
+    }
+}
+
+function changeMetH() {
+    var pre = [];
+    var pro = [];
+    for (var i = 0; i < ganH.length; i++) {
+        pre[i] = [];
+        pro[i] = [];
+        for (var j = 0; j < ganH[i].length; j++) {
+            pre[i][j] = $("#hm" + preH[i][j]).text();
+            pro[i][j] = $("#hm" + proH[i][j]).text();
+        }
+    }
+    for (var i = 0; i < ganH.length; i++) {
+        for (var j = 0; j < ganH[i].length; j++) {
+            $("#hm" + preH[i][j]).text(pro[i][j]);
+            $("#hm" + proH[i][j]).text(pre[i][j]);
+        }
+    }
+}
+
 function cleanResum() {
     for (var i = 3; i < 9; i++) {
         $('#tr' + i).html(trInit[i]);
     }
+    preH = [];
+    proH = [];
+    ganH = [];
+    valH = [];
 }
 
 function colspan(n) {
@@ -217,13 +281,14 @@ function addEscala(divId) {
         if (!isNaN(time)) {
             var colTd = obtenCol($(divId).attr('id'));
             if (valContCol(colTd)) {
-                var tr = $(obtenFila(contCol[colTd], colTd));
+                var tr = $(obtenFila(contCol[colTd]));
                 var td1 = $('<td rowspan="' + time + '">' + time + '</td>');
                 var td2 = $('<td rowspan="' + time + '">' + $(div[4]).val() + '</td>');
                 var td3 = $('<td rowspan="' + time + '" class="' + tiempoClase($(div[6]).val()) + '">');
                 tr.append(td1, td2, td3);
                 addUndo(td1, td2, td3);
                 contCol[colTd] += time;
+                sumResum(colTd, time, $(div[6]).val());
                 limpiarDiv(div);
             } else {
                 alert('Genere mas tiempo en la linea anterior');
@@ -234,6 +299,7 @@ function addEscala(divId) {
     } else {
         alert('Complete los campos');
     }
+    resumHM();
 }
 
 function limpiarDiv(div) {
@@ -261,13 +327,11 @@ function obtenFila(cont) {
 }
 
 function obtenCol(id) {
-    var pos = 0;
     for (var i = 0; i < selArray.length; i++) {
         if (selArray[i] == id) {
-            pos = i;
+            return i;
         }
     }
-    return pos;
 }
 
 function tiempoClase(val) {

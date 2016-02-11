@@ -96,7 +96,6 @@ $page = 'editor';
                 init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : '' ?>');
                 tabs(tab2, ctab2);                
                 editable();
-                setFigureSet("hom-maq");
             });
         </script>
 
@@ -162,6 +161,7 @@ $page = 'editor';
                 <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Agregar comentario"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
+            <!--Agregar un boton para refrescar las tablas-->
         </div>
         <!--
         <a href="javascript:action('undo');" title="Undo (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>           
@@ -726,9 +726,9 @@ $page = 'editor';
                                         <td colspan="5" rowspan="2"></td>
                                         <td rowspan="2" style="min-width: 150px">
                                             Metodo Presente
-                                            <input type="radio" name="metH" value="pre" checked/>
+                                            <input type="radio" name="metH" value="pre" onchange="changeMetH()" checked/>
                                             <br>Metodo Propuesto
-                                            <input type="radio" name="metH" value="pro"/>
+                                            <input type="radio" name="metH" value="pro" onchange="changeMetH()"/>
                                         </td>
                                         <td id="pre" align="center">Presente</td>
                                         <td id="pro" align="center">Propuesto</td>

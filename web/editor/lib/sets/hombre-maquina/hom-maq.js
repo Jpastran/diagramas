@@ -6,19 +6,24 @@ figureSets["hom-maq"] = {
     figures: []
 };
 
+var acN = 0;
+
 function genInit() {
     var ope = $("#numO").val();
     var maq = $("#numM").val();
     var n = parseInt(maq) + parseInt(ope);
-    if (n < 10 && n > 1 && maq != 0 && ope != 0) {
+    if (n < 10 && n > 1 && maq > 0 && ope > 0) {
+        genTrInit();
+        resetHMaq();
         genResumen(ope, maq);
         genColumas(ope, maq);
         $("#genRD").css("display", "block");
         $("#genFila").css("display", "block");
         $("#numO").val("");
         $("#numM").val("");
+        acN = n;
     } else {
-        alert("Numero maximo de actores 10");
+        alert("Numero maximo de actores 10, minimo uno de cada uno");
     }
 }
 
@@ -27,24 +32,19 @@ function resetHMaq() {
     resetBody();
     $('#maquinaT').find('thead').html("");
     $('#genFila').html('<select id="selPart"></select>');
-    selArray = [];
 }
 
 var trInit = [];
 
 function genResumen(nO, nM) {
     var n = parseInt(nM) + parseInt(nO);
-    if (trInit.length != 0) {
-        cleanResum();
-    }
+    var id = 0;
     for (var i = 3; i < 9; i++) {
         var tr = $('#tr' + i);
-        if (trInit.length < 9) {
-            trInit[i] = $(tr).children();
-        }
         if (i != 3) {
             for (var j = 0; j < n * 3; j++) {
-                tr.append($('<td>', {contenteditable: 'true', class: 'edit'}));
+                tr.append($('<td>', {id: 'hm' + id, contenteditable: 'true', class: 'edit'}));
+                id++;
             }
         } else {
             for (var m = 0; m < 3; m++) {
@@ -58,6 +58,48 @@ function genResumen(nO, nM) {
         }
     }
     colspan(n);
+    genPPG();
+}
+
+function genTrInit() {
+    if (trInit.length < 9) {
+        for (var i = 3; i < 9; i++) {
+            trInit[i] = $('#tr' + i).children();
+        }
+    }
+}
+
+var preH = [];
+var proH = [];
+var ganH = [];
+
+function genPPG() {
+    preH = [];
+    proH = [];
+    ganH = [];
+    var max = 3 * acN;
+    for (var i = 0; i < max; i++) {
+        var col = [];
+        for (var j = 0; j < 5; j++) {
+            col[j] = i + (j * max);
+        }
+        if (i < max / 3) {
+            preH[i] = col;
+        } else if (i < acN * 2) {
+            proH[i - acN] = col;
+        } else {
+            ganH[i - acN * 2] = col;
+        }
+    }
+}
+
+function metSelH(bool) {
+    var metS = $('input:radio[name=metH]');
+    if (metS[0].checked && bool) {
+        return preH;
+    } else {
+        return proH;
+    }
 }
 
 function cleanResum() {
@@ -110,9 +152,9 @@ function genDivs(divParent, om, n, name) {
 
 function tipoTiempo() {
     var sel = $('<select>');
-    sel.append($('<option value="0">Independiente</option>'));
-    sel.append($('<option value="1">Inactivo</option>'));
-    sel.append($('<option value="2">Combinado</option>'));
+    sel.append($('<option value="1">Independiente</option>'));
+    sel.append($('<option value="2">Inactivo</option>'));
+    sel.append($('<option value="0">Combinado</option>'));
     return sel;
 }
 
@@ -230,11 +272,11 @@ function obtenCol(id) {
 
 function tiempoClase(val) {
     var clase = "";
-    if (val == '0') {
+    if (val == '1') {
         clase = 'inde';
-    } else if (val == '1') {
-        clase = 'inac';
     } else if (val == '2') {
+        clase = 'inac';
+    } else if (val == '0') {
         clase = 'comb';
     }
     return clase;

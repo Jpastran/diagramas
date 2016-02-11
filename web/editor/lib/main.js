@@ -370,7 +370,7 @@ function setFigureSet(id) {
     //alert(name);
     var div = document.getElementById(id);
     if (div != null) {
-        if (confirm("Desea cambiar, esto descartara cualquier cambio")) {
+        //if (confirm("Desea cambiar, esto descartara cualquier cambio")) {
             if (currentSetId != null) {
                 Log.info("main.js currentSetId = " + currentSetId);
                 var currentFigureSet = document.getElementById(currentSetId);
@@ -379,7 +379,7 @@ function setFigureSet(id) {
             div.style.display = 'block';
             currentSetId = id;
             cambiarVista(id);
-        }
+        //}
     }
 }
 

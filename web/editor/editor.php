@@ -24,9 +24,7 @@ session_start();
 
 require_once dirname(__FILE__) . '/common/rememberme.php';
 
-
 $delegate = new Delegate();
-
 
 #print_r($_SESSION['userId']);
 $loggedUser = null;
@@ -49,14 +47,11 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
 $page = 'editor';
 ?>
 
-
 <!DOCTYPE html>
 <html>
     <head>
         <title>HTML5 diagram editor</title>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=9" />
-        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js"></script>    
+        <meta charset="UTF-8"> 
 
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/minimap.css" />
@@ -66,10 +61,11 @@ $page = 'editor';
         <script type="text/javascript" src="./assets/javascript/tabs.js"></script>
         <script type="text/javascript" src="./assets/javascript/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
-
-        <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
+        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js"></script>
+        
         <script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>
-
+        <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
+        
         <script type="text/javascript" src="./lib/loadScript.js"></script>
 
         <script type="text/javascript">
@@ -100,6 +96,7 @@ $page = 'editor';
                 init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : '' ?>');
                 tabs(tab2, ctab2);                
                 editable();
+                setFigureSet("hom-maq");
             });
         </script>
 

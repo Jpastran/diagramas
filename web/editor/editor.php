@@ -110,7 +110,7 @@ $page = 'editor';
     <body id="body">      
         <div style="display: none"><? require_once dirname(__FILE__) . '/header.php'; ?></div>
         <div id="actions">
-            <div id="aSist" style="float: left">
+            <div style="float: left">
                 <a style="text-decoration: none;" href="#" onclick="return save();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
@@ -159,6 +159,10 @@ $page = 'editor';
                 <a href="javascript:action('ungroup');" title="Desagrupar (Ctrl-U)"><img src="assets/images/ungroup.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
                 <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Agregar comentario"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            </div>
+            <div style="float: left">
+                <a href="javascript:refCabecera();"  title="Refrescar Cabecera"><img  src="assets/images/rotate.png" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
             <!--Agregar un boton para refrescar las tablas-->

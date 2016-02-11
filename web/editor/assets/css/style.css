@@ -220,6 +220,7 @@ input[type="button"] {
 #edit div.label input.text, #edit div.line input.text {
     float: right;
     margin: 0;
+    width: 60%;
 }
 #edit div.label .prop-icon {
     width: 20px;

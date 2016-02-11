@@ -32,6 +32,8 @@ function resetHMaq() {
     resetBody();
     $('#maquinaT').find('thead').html("");
     $('#genFila').html('<select id="selPart"></select>');
+    $("#genRD").css("display", "none");
+    $("#genFila").css("display", "none");
 }
 
 var trInit = [];
@@ -110,34 +112,36 @@ function sumResum(nCol, time, tipo) {
 }
 
 function resumHM() {
-    var met = metSelH(true);
-    var noMet = metSelH(false);
-    for (var j = 0; j < met.length; j++) {
-        var ciclo = 0;
-        var noClo = 0;
-        var act = 0;
-        var noAct = 0;
-        for (var i = 0; i < 5; i++) {
-            if (i < 3) {
-                if (i == 2) {
-                    act = ciclo;
-                    noAct = noClo;
+    if (ganH.length != 0) {
+        var met = metSelH(true);
+        var noMet = metSelH(false);
+        for (var j = 0; j < met.length; j++) {
+            var ciclo = 0;
+            var noClo = 0;
+            var act = 0;
+            var noAct = 0;
+            for (var i = 0; i < 5; i++) {
+                if (i < 3) {
+                    if (i == 2) {
+                        act = ciclo;
+                        noAct = noClo;
+                    }
+                    var num = parseInt($("#hm" + met[j][i]).text());
+                    var noNum = parseInt($("#hm" + noMet[j][i]).text());
+                    ciclo += num;
+                    noClo += noNum;
+                    $("#hm" + ganH[j][i]).text(num - noNum);
+                } else if (i == 3) {
+                    $("#hm" + met[j][i]).text(ciclo);
+                    $("#hm" + noMet[j][i]).text(noClo);
+                    $("#hm" + ganH[j][i]).text(ciclo - noClo);
+                } else {
+                    var efic = ciclo == 0 ? 0 : (act / ciclo) * 100;
+                    var noEfi = noClo == 0 ? 0 : (noAct / noClo) * 100;
+                    $("#hm" + met[j][i]).text(efic.toFixed(1));
+                    $("#hm" + noMet[j][i]).text(noEfi.toFixed(1));
+                    $("#hm" + ganH[j][i]).text((efic - noEfi).toFixed(1));
                 }
-                var num = parseInt($("#hm" + met[j][i]).text());
-                var noNum = parseInt($("#hm" + noMet[j][i]).text());
-                ciclo += num;
-                noClo += noNum;
-                $("#hm" + ganH[j][i]).text(num - noNum);
-            } else if (i == 3) {
-                $("#hm" + met[j][i]).text(ciclo);
-                $("#hm" + noMet[j][i]).text(noClo);
-                $("#hm" + ganH[j][i]).text(ciclo - noClo);
-            } else {
-                var efic = ciclo == 0 ? 0 : (act / ciclo) * 100;
-                var noEfi = noClo == 0 ? 0 : (noAct / noClo) * 100;
-                $("#hm" + met[j][i]).text(efic.toFixed(1));
-                $("#hm" + noMet[j][i]).text(noEfi.toFixed(1));
-                $("#hm" + ganH[j][i]).text((efic - noEfi).toFixed(1));
             }
         }
     }
@@ -380,7 +384,14 @@ function addUndo(c1, c2, c3) {
         arrCol.push(contCol[i]);
     }
     var trioQ = [c1, c2, c3];
-    var cel = [arrCol, trioQ];
+    var arrVal = [];
+    for (var i = 0; i < valH.length; i++) {
+        arrVal[i] = [];
+        for (var j = 0; j < valH[i].length; j++) {
+            arrVal[i].push(valH[i][j]);
+        }
+    }
+    var cel = [arrCol, trioQ, arrVal];
     undo.push(cel);
 }
 
@@ -389,6 +400,11 @@ function doUndo() {
     contCol = volver[0];
     for (var i = 0; i < volver[1].length; i++) {
         $(volver[1][i][0]).remove();
+    }
+    for (var i = 0; i < volver[2].length; i++) {
+        for (var j = 0; j < volver[2][i].length; j++) {
+            valH[i][j] = volver[2][i][j];
+        }
     }
 }
 

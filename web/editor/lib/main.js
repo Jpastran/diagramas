@@ -371,14 +371,14 @@ function setFigureSet(id) {
     var div = document.getElementById(id);
     if (div != null) {
         //if (confirm("Desea cambiar, esto descartara cualquier cambio")) {
-            if (currentSetId != null) {
-                Log.info("main.js currentSetId = " + currentSetId);
-                var currentFigureSet = document.getElementById(currentSetId);
-                currentFigureSet.style.display = 'none';
-            }
-            div.style.display = 'block';
-            currentSetId = id;
-            cambiarVista(id);
+        if (currentSetId != null) {
+            Log.info("main.js currentSetId = " + currentSetId);
+            var currentFigureSet = document.getElementById(currentSetId);
+            currentFigureSet.style.display = 'none';
+        }
+        div.style.display = 'block';
+        currentSetId = id;
+        cambiarVista(id);
         //}
     }
 }
@@ -3867,7 +3867,7 @@ function action(action) {
                 redraw = true;
             } else if (currentSetId == "bimanual") {
                 bimInsertImg(insertedImageFileName);
-            }            
+            }
             break;
 
         case 'ungroup':
@@ -4489,6 +4489,10 @@ var opciones = false;
  * las variables y permite el deshacer*/
 var historial = [];
 
+/**Guarda todos las figuras afectadas en
+ * la repeticion para la cabecera*/
+var sumRepet = [];
+
 function lineaPrincipal() {
     if (!primer) {
         figureBuild(window.figure_LineInit, coor[0] - tamFig, coor[1]);
@@ -4689,6 +4693,9 @@ function setEspecial(nombre) {
 var disbtnLE = true;
 var disbtnLS = true;
 var disEspSel = false;
+var trayGen = 'block';
+var traySig = 'none';
+var trayUnir = 'none';
 
 function especial(accion) {
     var clean = true;
@@ -4755,7 +4762,7 @@ function especial(accion) {
                     }
                 }
                 break;
-            case 'repetir'://TODO agregar el numero de loop y cambiar idStr figura y txt del pausa, actualizar imagen
+            case 'repetir':
                 clean = false;
                 if (document.getElementById('repOut').value != "") {
                     var figFin = STACK.figureGetById(document.getElementById('repOut').value);
@@ -4774,11 +4781,12 @@ function especial(accion) {
                                 coor[1] -= tamFig / 2;
                                 clean = true;
                                 var figIni = STACK.figureGetById(selectedFigureId);
-                                figIni.primitives[1].str = "Repite " + numR;
+                                figIni.primitives[1].str = "Repite " + numR + " veces";
                                 for (var j = 0; j < numR; j++) {
                                     for (var i = 0; i < STACK.figures.length; i++) {
                                         if (STACK.figures[i].id >= figFin.id && STACK.figures[i].id < figIni.id) {
                                             reptSumar(STACK.figures[i].name);
+                                            sumRepet.push(STACK.figures[i]);
                                         }
                                     }
                                 }
@@ -4835,11 +4843,11 @@ function especial(accion) {
                         trayecto[i][1] -= tamFig / 2;
                     }
                     coor = trayecto[options - 1];
-                    document.getElementById('trayGen').style.display = 'none';
-                    document.getElementById('traySig').style.display = 'block';
+                    document.getElementById('trayGen').style.display = (trayGen = 'none');
+                    document.getElementById('traySig').style.display = (traySig = 'block');
                     lineas[3] = options - 1;//Trayecto actual
                     lineas[4] = options;//Numero de trayectos
-                    document.getElementById('trayName').innerHTML = 'Opcion ' + (lineas[3] + 1);
+                    document.getElementById('trayName').innerHTML = 'Opcion ' + (lineas[4] - lineas[3]);
                     especialSelect(true);
                 } else {
                     errorDiv('Opciones solo puden ser numeros enteros de 2 a 8');
@@ -4854,12 +4862,12 @@ function especial(accion) {
                         coor = trayecto[lineas[3]];
                         clean = true;
                         opciones = true;
-                        document.getElementById('trayName').innerHTML = 'Opcion ' + (lineas[3] + 1);
+                        document.getElementById('trayName').innerHTML = 'Opcion ' + (lineas[4] - lineas[3]);
                         if (lineas[3] == 0)
                             document.getElementById('btnFin').value = 'Terminar';
                     } else if (lineas[3] == 0) {
-                        document.getElementById('traySig').style.display = 'none';
-                        document.getElementById('trayUnir').style.display = 'block';
+                        document.getElementById('traySig').style.display = (traySig = 'none');
+                        document.getElementById('trayUnir').style.display = (trayUnir = 'block');
                         var div = document.getElementById('trayChk');
                         for (var i = 0; i < lineas[4]; i++) {
                             var text = document.createTextNode("Opcion " + (lineas[4] - i));
@@ -4900,8 +4908,8 @@ function especial(accion) {
                 while (div.hasChildNodes()) {
                     div.removeChild(div.firstChild);
                 }
-                document.getElementById('trayUnir').style.display = 'none';
-                document.getElementById('trayGen').style.display = 'block';
+                document.getElementById('trayUnir').style.display = (trayUnir = 'none');
+                document.getElementById('trayGen').style.display = (trayGen = 'block');
                 document.getElementById('btnFin').value = 'Siguiente';
                 especialSelect(false);
                 coor = pos;
@@ -4970,7 +4978,7 @@ function cargarFiguras(selectId) {
         for (var i = 0; i < STACK.figures.length; i++) {
             for (var j = 0; j < STACK.figures[i].primitives.length; j++) {
                 var str = STACK.figures[i].primitives[j].str;
-                if (str !== undefined && str != "Text") {
+                if (str !== undefined && str != "Text" && valFigName(STACK.figures[i].name)) {
                     names[i] = STACK.figures[i].primitives[j].str;
                     ids[i] = STACK.figures[i].id;
                 }
@@ -4987,6 +4995,14 @@ function cargarFiguras(selectId) {
         stackFigure = STACK.figures.length;
     }
     errorDiv('');
+}
+
+function valFigName(str) {
+    if (str == "LineInit" || str == "LineDouble" || str == "LineOut" || str == "LineIn") {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function cambiarVista(id) {
@@ -5033,6 +5049,7 @@ function cambiarVista(id) {
         savePos = [];
         trayecto = [];
         historial = [];
+        sumRepet = [];
         primer = false;
         finLS = false;
         finSS = false;
@@ -5062,7 +5079,7 @@ function displayDivs(right, tools, esp, img, bim, hmaq) {
 }
 
 function addHistory() {
-    var hist = []
+    var hist = [];
     if (currentSetId == 'analitico' || currentSetId == 'sinoptico') {
         var xy = [];
         xy.push(coor[0]);
@@ -5079,6 +5096,10 @@ function addHistory() {
         for (var i = 0; i < trayecto.length; i++) {
             saves.push(trayecto[i]);
         }
+        var rept = [];
+        for (var i = 0; i < sumRepet.length; i++) {
+            rept.push(sumRepet[i]);
+        }
         var bools = [];
         bools.push(primer, finLS, finSS, opciones, disbtnLE, disbtnLS, disEspSel);
         var numDiag = [];
@@ -5087,7 +5108,9 @@ function addHistory() {
         } else {
             numDiag = obtSinop();
         }
-        hist = [xy, lines, saves, tray, bools, numDiag];
+        var trayDiv = [];
+        trayDiv.push(trayGen, traySig, trayUnir);
+        hist = [xy, lines, saves, tray, rept, bools, numDiag, trayDiv];
     } else {
         hist = obtRecorr();
     }
@@ -5101,7 +5124,8 @@ function backHistory() {
         lineas = hist[1];
         savePos = hist[2];
         trayecto = hist[3];
-        var bool = hist[4];
+        sumRepet = hist[4];
+        var bool = hist[5];
         primer = bool[0];
         finLS = bool[1];
         finSS = bool[2];
@@ -5113,10 +5137,17 @@ function backHistory() {
         disEspSel = bool[6];
         document.getElementById('espSelect').disabled = disEspSel;
         if (currentSetId == 'analitico') {
-            desAnalit(hist[5]);
+            desAnalit(hist[6]);
         } else {
-            desSinop(hist[5]);
+            desSinop(hist[6]);
         }
+        var tray = hist[7];
+        trayGen = tray[0];
+        document.getElementById('trayGen').style.display = trayGen;
+        traySig = tray[1];
+        document.getElementById('traySig').style.display = traySig;
+        trayUnir = tray[2];
+        document.getElementById('trayUnir').style.display = trayUnir;
     } else {
         desRecorr(hist);
     }
@@ -5129,9 +5160,9 @@ function refCabecera() {
         resumSinop();
     } else if (currentSetId == 'recorrido') {
         resumRecorr();
-    }else if (currentSetId == 'bimanual') {
+    } else if (currentSetId == 'bimanual') {
         resumBim();
-    }else if (currentSetId == 'hom-maq') {
+    } else if (currentSetId == 'hom-maq') {
         resumHM();
     }
 }

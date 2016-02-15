@@ -44,7 +44,7 @@ function resumRecorr() {
     for (var i = 0; i < nRA.length; i++) {
         $("#td" + sel[i]).text(nRA[i] - 1);
         cont += nRA[i];
-        var numNo = parseInt($("#td" + noSel[i]).text());
+        var numNo = parseFloat($("#td" + noSel[i]).text());
         if (isNaN(numNo)) {
             $("#td" + noSel[i]).text(0);
             ctNo += 0;
@@ -58,8 +58,8 @@ function resumRecorr() {
     var dist = 0;
     var time = 0;
     for (var i = 0; i < stak.length; i++) {
-        var figD = parseInt(stak[i].dist);
-        var figT = parseInt(stak[i].time);
+        var figD = parseFloat(stak[i].dist);
+        var figT = parseFloat(stak[i].time);
         if (!isNaN(figD)) {
             dist += figD;
         }
@@ -68,16 +68,16 @@ function resumRecorr() {
         }
     }
     $("#td" + sel[sel.length - 2]).text(dist);
-    if (isNaN(parseInt($("#td" + noSel[noSel.length - 2]).text()))) {
+    if (isNaN(parseFloat($("#td" + noSel[noSel.length - 2]).text()))) {
         $("#td" + noSel[noSel.length - 2]).text(0);
     }
     $("#td" + sel[sel.length - 1]).text(time);
-    if (isNaN(parseInt($("#td" + noSel[noSel.length - 1]).text()))) {
+    if (isNaN(parseFloat($("#td" + noSel[noSel.length - 1]).text()))) {
         $("#td" + noSel[noSel.length - 1]).text(0);
     }
     for (var k = 0; k < ganR.length; k++) {
-        var pre = parseInt($("#td" + preR[k]).text());
-        var pro = parseInt($("#td" + proR[k]).text());
+        var pre = parseFloat($("#td" + preR[k]).text());
+        var pro = parseFloat($("#td" + proR[k]).text());
         if (isNaN(pre))
             pre = 0;
         if (isNaN(pro))

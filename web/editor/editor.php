@@ -62,10 +62,10 @@ $page = 'editor';
         <script type="text/javascript" src="./assets/javascript/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
         <script type="text/javascript" src="./assets/javascript/dropdownmenu.js"></script>
-        
+
         <script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>
         <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
-        
+
         <script type="text/javascript" src="./lib/loadScript.js"></script>
 
         <script type="text/javascript">
@@ -78,7 +78,8 @@ $page = 'editor';
              * Option 2:
              * Use http://code.google.com/p/js-uri/
              **/
-            var appURL = '<?= $WEBADDRESS ?>';
+            var webDir = '<?= $WEBADDRESS ?>';
+            var appURL = webDir.replace("localhost", window.location.host);
             var figureSetsURL = appURL + '/editor/lib/sets';
             var insertImageURL = appURL + '/editor/data/import/';
 
@@ -94,7 +95,7 @@ $page = 'editor';
             loadCommands();
             $(document).ready(function() {
                 init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : '' ?>');
-                tabs(tab2, ctab2);                
+                tabs(tab2, ctab2);
                 editable();
             });
         </script>

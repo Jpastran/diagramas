@@ -149,7 +149,7 @@ body {
     width: 90% !important;
 }
 #left input[type="checkbox"] {
-    width: 0% !important;
+    width: 10% !important;
 }
 
 #left select {

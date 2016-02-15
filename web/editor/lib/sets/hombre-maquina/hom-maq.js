@@ -11,7 +11,7 @@ var acN = 0;
 function genInit() {
     var ope = $("#numO").val();
     var maq = $("#numM").val();
-    var n = parseInt(maq) + parseInt(ope);
+    var n = parseFloat(maq) + parseFloat(ope);
     if (n < 10 && n > 1 && maq > 0 && ope > 0) {
         acN = n;
         genTrInit();
@@ -39,7 +39,7 @@ function resetHMaq() {
 var trInit = [];
 
 function genResumen(nO, nM) {
-    var n = parseInt(nM) + parseInt(nO);
+    var n = parseFloat(nM) + parseFloat(nO);
     var id = 0;
     for (var i = 3; i < 9; i++) {
         var tr = $('#tr' + i);
@@ -126,18 +126,20 @@ function resumHM() {
                         act = ciclo;
                         noAct = noClo;
                     }
-                    var num = parseInt($("#hm" + met[j][i]).text());
-                    var noNum = parseInt($("#hm" + noMet[j][i]).text());
+                    var num = valH[j][i];
+                    var noNum = parseFloat($("#hm" + noMet[j][i]).text());
                     ciclo += num;
                     noClo += noNum;
                     $("#hm" + ganH[j][i]).text(num - noNum);
                 } else if (i == 3) {
-                    $("#hm" + met[j][i]).text(ciclo);
+                    valH[j][i] = ciclo;
+                    $("#hm" + met[j][i]).text(valH[j][i]);
                     $("#hm" + noMet[j][i]).text(noClo);
                     $("#hm" + ganH[j][i]).text(ciclo - noClo);
                 } else {
                     var efic = ciclo == 0 ? 0 : (act / ciclo) * 100;
                     var noEfi = noClo == 0 ? 0 : (noAct / noClo) * 100;
+                    valH[j][i] = efic.toFixed(1);
                     $("#hm" + met[j][i]).text(efic.toFixed(1));
                     $("#hm" + noMet[j][i]).text(noEfi.toFixed(1));
                     $("#hm" + ganH[j][i]).text((efic - noEfi).toFixed(1));
@@ -281,7 +283,7 @@ var contCol = [];
 function addEscala(divId) {
     if (valDiv(divId)) {
         var div = $(divId).children();
-        var time = parseInt($(div[2]).val());
+        var time = parseFloat($(div[2]).val());
         if (!isNaN(time)) {
             var colTd = obtenCol($(divId).attr('id'));
             if (valContCol(colTd)) {

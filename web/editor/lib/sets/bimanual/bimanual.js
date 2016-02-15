@@ -22,7 +22,7 @@ function resumBim() {
         var tr = $(tabla[i]).children();
         var time = $(tr).first().text();
         if (!isNaN(time)) {
-            cont += parseInt(time);
+            cont += parseFloat(time);
         }
         var figI = $(tr[2]).find("img").attr("alt");
         opersI[figI]++;
@@ -57,7 +57,7 @@ function sumSimb(opers, mano) {
         }
         $("#td" + pos).text(opers[i]);
         var noSel = met == 2 ? pos - 2 : pos + 2;
-        if (isNaN(parseInt($("#td" + noSel).text()))) {
+        if (isNaN(parseFloat($("#td" + noSel).text()))) {
             $("#td" + noSel).text(0);
         }
     }
@@ -67,32 +67,32 @@ function totalNoSel() {
     var contI = 0;
     var contD = 0;
     var noSel = metSelB(true) == 2 ? 0 : 2;
-    contI += parseInt($("#td" + opeB[noSel]).text());
-    contI += parseInt($("#td" + traB[noSel]).text());
-    contI += parseInt($("#td" + demB[noSel]).text());
-    contI += parseInt($("#td" + sosB[noSel]).text());
-    contD += parseInt($("#td" + opeB[noSel + 1]).text());
-    contD += parseInt($("#td" + traB[noSel + 1]).text());
-    contD += parseInt($("#td" + demB[noSel + 1]).text());
-    contD += parseInt($("#td" + sosB[noSel + 1]).text());
+    contI += parseFloat($("#td" + opeB[noSel]).text());
+    contI += parseFloat($("#td" + traB[noSel]).text());
+    contI += parseFloat($("#td" + demB[noSel]).text());
+    contI += parseFloat($("#td" + sosB[noSel]).text());
+    contD += parseFloat($("#td" + opeB[noSel + 1]).text());
+    contD += parseFloat($("#td" + traB[noSel + 1]).text());
+    contD += parseFloat($("#td" + demB[noSel + 1]).text());
+    contD += parseFloat($("#td" + sosB[noSel + 1]).text());
     $("#td" + totB[noSel]).text(contI);
     $("#td" + totB[noSel + 1]).text(contD);
 }
 
 function ganarBim() {
     for (var k = 0; k < 2; k++) {
-        var opeG = parseInt($("#td" + opeB[k]).text()) - parseInt($("#td" + opeB[k + 2]).text());
-        var traG = parseInt($("#td" + traB[k]).text()) - parseInt($("#td" + traB[k + 2]).text());
-        var demG = parseInt($("#td" + demB[k]).text()) - parseInt($("#td" + demB[k + 2]).text());
-        var sosG = parseInt($("#td" + sosB[k]).text()) - parseInt($("#td" + sosB[k + 2]).text());
-        var totG = parseInt($("#td" + totB[k]).text()) - parseInt($("#td" + totB[k + 2]).text());
+        var opeG = parseFloat($("#td" + opeB[k]).text()) - parseFloat($("#td" + opeB[k + 2]).text());
+        var traG = parseFloat($("#td" + traB[k]).text()) - parseFloat($("#td" + traB[k + 2]).text());
+        var demG = parseFloat($("#td" + demB[k]).text()) - parseFloat($("#td" + demB[k + 2]).text());
+        var sosG = parseFloat($("#td" + sosB[k]).text()) - parseFloat($("#td" + sosB[k + 2]).text());
+        var totG = parseFloat($("#td" + totB[k]).text()) - parseFloat($("#td" + totB[k + 2]).text());
         $("#td" + opeB[k + 4]).text(opeG);
         $("#td" + traB[k + 4]).text(traG);
         $("#td" + demB[k + 4]).text(demG);
         $("#td" + sosB[k + 4]).text(sosG);
         $("#td" + totB[k + 4]).text(totG);
     }
-    var tCilG = parseInt($("#td" + tCil[0]).text()) - parseInt($("#td" + tCil[1]).text());
+    var tCilG = parseFloat($("#td" + tCil[0]).text()) - parseFloat($("#td" + tCil[1]).text());
     $("#td" + tCil[2]).text(tCilG);
 }
 

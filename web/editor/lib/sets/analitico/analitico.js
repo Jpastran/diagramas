@@ -78,7 +78,7 @@ function resumAnali() {
     for (var i = 0; i < nAA.length; i++) {
         $("#td" + sel[i]).text(nAA[i] - 1);
         cont += nAA[i];
-        var numNo = parseInt($("#td" + noSel[i]).text());
+        var numNo = parseFloat($("#td" + noSel[i]).text());
         if (isNaN(numNo)) {
             $("#td" + noSel[i]).text(0);
             ctNo += 0;
@@ -92,8 +92,8 @@ function resumAnali() {
     var dist = 0;
     var time = 0;
     for (var i = 0; i < stak.length; i++) {
-        var figD = parseInt(stak[i].dist);
-        var figT = parseInt(stak[i].time);
+        var figD = parseFloat(stak[i].dist);
+        var figT = parseFloat(stak[i].time);
         if (!isNaN(figD)) {
             dist += figD;
         }
@@ -101,17 +101,27 @@ function resumAnali() {
             time += figT;
         }
     }
+    for (var i = 0; i < sumRepet.length; i++) {
+        var repFigD = parseFloat(sumRepet[i].dist);
+        var repFigT = parseFloat(sumRepet[i].time);
+        if (!isNaN(repFigD)) {
+            dist += repFigD;
+        }
+        if (!isNaN(repFigT)) {
+            time += repFigT;
+        }
+    }
     $("#td" + sel[sel.length - 2]).text(dist);
-    if (isNaN(parseInt($("#td" + noSel[noSel.length - 2]).text()))) {
+    if (isNaN(parseFloat($("#td" + noSel[noSel.length - 2]).text()))) {
         $("#td" + noSel[noSel.length - 2]).text(0);
     }
     $("#td" + sel[sel.length - 1]).text(time);
-    if (isNaN(parseInt($("#td" + noSel[noSel.length - 1]).text()))) {
+    if (isNaN(parseFloat($("#td" + noSel[noSel.length - 1]).text()))) {
         $("#td" + noSel[noSel.length - 1]).text(0);
     }
     for (var k = 0; k < ganA.length; k++) {
-        var pre = parseInt($("#td" + preA[k]).text());
-        var pro = parseInt($("#td" + proA[k]).text());
+        var pre = parseFloat($("#td" + preA[k]).text());
+        var pro = parseFloat($("#td" + proA[k]).text());
         if (isNaN(pre))
             pre = 0;
         if (isNaN(pro))

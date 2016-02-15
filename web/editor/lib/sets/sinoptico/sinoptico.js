@@ -44,7 +44,7 @@ function resumSinop() {
     for (var i = 0; i < nSA.length; i++) {
         $("#td" + sel[i]).text(nSA[i] - 1);
         cont += nSA[i];
-        var numNo = parseInt($("#td" + noSel[i]).text());
+        var numNo = parseFloat($("#td" + noSel[i]).text());
         if (isNaN(numNo)) {
             $("#td" + noSel[i]).text(0);
             ctNo += 0;
@@ -57,18 +57,24 @@ function resumSinop() {
     var stak = STACK.figures;
     var time = 0;
     for (var i = 0; i < stak.length; i++) {
-        var figT = parseInt(stak[i].time);
+        var figT = parseFloat(stak[i].time);
         if (!isNaN(figT)) {
             time += figT;
         }
     }
+    for (var i = 0; i < sumRepet.length; i++) {
+        var repFig = parseFloat(sumRepet[i].time);
+        if (!isNaN(repFig)) {
+            time += repFig;
+        }
+    }
     $("#td" + sel[sel.length - 1]).text(time);
-    if (isNaN(parseInt($("#td" + noSel[noSel.length - 1]).text()))) {
+    if (isNaN(parseFloat($("#td" + noSel[noSel.length - 1]).text()))) {
         $("#td" + noSel[noSel.length - 1]).text(0);
     }
     for (var k = 0; k < ganS.length; k++) {
-        var pre = parseInt($("#td" + preS[k]).text());
-        var pro = parseInt($("#td" + proS[k]).text());
+        var pre = parseFloat($("#td" + preS[k]).text());
+        var pro = parseFloat($("#td" + proS[k]).text());
         if (isNaN(pre))
             pre = 0;
         if (isNaN(pro))

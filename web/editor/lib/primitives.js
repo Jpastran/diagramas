@@ -2901,9 +2901,11 @@ Figure.prototype = {
         context.save();
         context.fillStyle = '#000000';
         context.font = "12px sans-serif";
-        context.fillText(this.time, this.rotationCoords[0].x + tamFig/2 + 5, this.rotationCoords[0].y - 10);
-        context.fillText(this.info, this.rotationCoords[0].x + tamFig/2 + 5, this.rotationCoords[0].y + 5);
-        context.fillText(this.dist, this.rotationCoords[0].x + tamFig/2 + 5, this.rotationCoords[0].y + 20);
+        context.fillText(this.info, this.rotationCoords[0].x + tamFig / 2 + 5, this.rotationCoords[0].y - 10);
+        if (this.time != '')
+            context.fillText(this.time + " " + valTiempo, this.rotationCoords[0].x + tamFig / 2 + 5, this.rotationCoords[0].y + 5);
+        if (this.dist != '')
+            context.fillText(this.dist + " " + valDistan, this.rotationCoords[0].x + tamFig / 2 + 5, this.rotationCoords[0].y + 20);
         context.restore();
 
         for (var i = 0; i < this.primitives.length; i++) {

@@ -268,11 +268,11 @@ function genThead(op, mq) {
     head.html("");
     var tr = $('<tr>');
     for (var i = 0; i < op; i++) {
-        tr.append($('<th>Escala de tiempo<span></span></th>').css('width', '90px'));
+        tr.append($('<th>Escala de tiempo en<span></span></th>').css('width', '90px'));
         tr.append($('<th colspan="2">Operario ' + (i + 1) + '</th>').css('min-width', '200px'));
     }
     for (var j = 0; j < mq; j++) {
-        tr.append($('<th>Escala de tiempo<span></span></th>').css('width', '90px'));
+        tr.append($('<th>Escala de tiempo en<span></span></th>').css('width', '90px'));
         tr.append($('<th colspan="2">Maquina ' + (j + 1) + '</th>').css('min-width', '200px'));
     }
     head.append(tr);
@@ -370,7 +370,7 @@ function valDiv(divId) {
     return bool;
 }
 
-function editTime() {
+function editTimeHM() {
     var time = $('#timeHM').val();
     var times = $('#maquinaT').find('thead').find('span');
     for (var i = 0; i < times.length; i++) {

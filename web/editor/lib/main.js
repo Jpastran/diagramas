@@ -5166,3 +5166,14 @@ function refCabecera() {
         resumHM();
     }
 }
+
+var valTiempo = 'seg';
+var valDistan = 'm';
+
+function paintUD(value){
+    valTiempo = value;    
+}
+
+function paintUT(value){   
+    valDistan = value;
+}

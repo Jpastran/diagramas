@@ -264,7 +264,7 @@ function valFila() {
     return bool;
 }
 
-function editTime() {
+function editTimeB() {
     $('#tR').html($('#tL').val());
 }
 

@@ -404,7 +404,12 @@ $page = 'editor';
                                         <td></td>
                                         <td></td>
                                     <tr>
-                                        <td>Distancia total</td>
+                                        <td>Distancia total
+                                            <select id="distA" onchange="paintUD(this.options[this.selectedIndex].value)">
+                                                <option value="cm">cm</option>
+                                                <option value="m" selected>m</option>
+                                                <option value="km">km</option>
+                                            </select></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -412,7 +417,13 @@ $page = 'editor';
                                     <tr>
                                         <td>Fecha: </td>
                                         <td colspan="5"></td>
-                                        <td>Tiempo total</td>
+                                        <td>Tiempo total
+                                            <select id="timeA" onchange="paintUT(this.options[this.selectedIndex].value)">
+                                                <option value="seg" selected>seg</option>
+                                                <option value="min">min</option>
+                                                <option value="hora">hora</option>
+                                            </select>
+                                        </td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -478,7 +489,12 @@ $page = 'editor';
                                     <tr>
                                         <td>Fecha: </td>
                                         <td colspan=3></td>
-                                        <td>Tiempo total</td>
+                                        <td>Tiempo total
+                                            <select id="timeS" onchange="paintUT(this.options[this.selectedIndex].value)">
+                                                <option value="seg" selected>seg</option>
+                                                <option value="min">min</option>
+                                                <option value="hora">hora</option>
+                                            </select></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -561,13 +577,23 @@ $page = 'editor';
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Distancia total</td>
+                                        <td>Distancia total
+                                            <select id="distR" onchange="paintUD(this.options[this.selectedIndex].value)">
+                                                <option value="cm">cm</option>
+                                                <option value="m" selected>m</option>
+                                                <option value="km">km</option>
+                                            </select></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Tiempo total</td>
+                                        <td>Tiempo total
+                                            <select id="timeR" onchange="paintUT(this.options[this.selectedIndex].value)">
+                                                <option value="seg" selected>seg</option>
+                                                <option value="min">min</option>
+                                                <option value="hora">hora</option>
+                                            </select></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -697,7 +723,7 @@ $page = 'editor';
                                     </tr>
                                     <tr>
                                         <th>
-                                            <select id="tL" onchange="editTime()">
+                                            <select id="tL" onchange="editTimeB()">
                                                 <option value="Seg" selected>Seg</option>
                                                 <option value="Min">Min</option>
                                                 <option value="Hora">Hora</option>
@@ -761,10 +787,10 @@ $page = 'editor';
                                         <td colspan="2"></td>
                                         <td>
                                             T. de ciclo
-                                            <select id="timeHM" onchange="editTime()">
-                                                <option value="Seg">Seg</option>
-                                                <option value="Min">Min</option>
-                                                <option value="Hora">Hora</option>
+                                            <select id="timeHM" onchange="editTimeHM()">
+                                                <option value="seg">Seg</option>
+                                                <option value="min">Min</option>
+                                                <option value="hora">Hora</option>
                                             </select>
                                         </td>
                                     </tr>

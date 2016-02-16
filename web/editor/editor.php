@@ -404,7 +404,7 @@ $page = 'editor';
                                         <td></td>
                                         <td></td>
                                     <tr>
-                                        <td>Distancia total
+                                        <td>Distancia T.
                                             <select id="distA" onchange="paintUD(this.options[this.selectedIndex].value)">
                                                 <option value="cm">cm</option>
                                                 <option value="m" selected>m</option>
@@ -417,7 +417,7 @@ $page = 'editor';
                                     <tr>
                                         <td>Fecha: </td>
                                         <td colspan="5"></td>
-                                        <td>Tiempo total
+                                        <td>Tiempo T.
                                             <select id="timeA" onchange="paintUT(this.options[this.selectedIndex].value)">
                                                 <option value="seg" selected>seg</option>
                                                 <option value="min">min</option>
@@ -489,7 +489,7 @@ $page = 'editor';
                                     <tr>
                                         <td>Fecha: </td>
                                         <td colspan=3></td>
-                                        <td>Tiempo total
+                                        <td>Tiempo T. 
                                             <select id="timeS" onchange="paintUT(this.options[this.selectedIndex].value)">
                                                 <option value="seg" selected>seg</option>
                                                 <option value="min">min</option>
@@ -529,7 +529,7 @@ $page = 'editor';
                                         <td align="center" colspan="4">Resumen</td>
                                     </tr>
                                     <tr>
-                                        <td align="center">Actividad</td>
+                                        <td align="center" style="min-width: 130px">Actividad</td>
                                         <td align="center">Presente</td>
                                         <td align="center">Propuesto</td>
                                         <td align="center">Ganado</td>
@@ -577,7 +577,7 @@ $page = 'editor';
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Distancia total
+                                        <td>Distancia T. 
                                             <select id="distR" onchange="paintUD(this.options[this.selectedIndex].value)">
                                                 <option value="cm">cm</option>
                                                 <option value="m" selected>m</option>
@@ -588,7 +588,7 @@ $page = 'editor';
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Tiempo total
+                                        <td>Tiempo T. 
                                             <select id="timeR" onchange="paintUT(this.options[this.selectedIndex].value)">
                                                 <option value="seg" selected>seg</option>
                                                 <option value="min">min</option>

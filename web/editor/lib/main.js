@@ -5170,10 +5170,36 @@ function refCabecera() {
 var valTiempo = 'seg';
 var valDistan = 'm';
 
-function paintUD(value){
-    valTiempo = value;    
+function paintUD(value) {
+    valTiempo = value;
 }
 
-function paintUT(value){   
+function paintUT(value) {
     valDistan = value;
+}
+
+function printDiagram() {
+    //TODO crear el css de impresion  o que herede el css 
+    //TODO buscar el tamaño adecuado de impresion
+    //TODO autogenerar el string del print area
+    //TODO acomodar el fit del lienzo
+    var id = currentSetId;
+    var str = "";
+    if (id == 'analitico') {
+        str += "#ctab1";
+    } else if (id == 'sinoptico') {
+        str += "#ctab3";
+    } else if (id == 'recorrido') {
+        str += "#ctab4";
+    } else if (id == 'bimanual') {
+        str += "#ctab5,#ctab6";
+    } else if (id == 'hom-maq') {
+        str += "#ctab7,#ctab8";
+    }
+    if (id != "bimanual" && id != "hom-maq") {
+        var img = getCanvas().toDataURL("image/png");
+        $("#imgCanvas").html("").append($('<img src="' + img + '"/>'));
+        str += ",#imgCanvas"
+    }
+    $(str).printArea();
 }

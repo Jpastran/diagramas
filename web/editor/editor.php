@@ -62,6 +62,7 @@ $page = 'editor';
         <script type="text/javascript" src="./assets/javascript/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
         <script type="text/javascript" src="./assets/javascript/dropdownmenu.js"></script>
+        <script type="text/javascript" src="./assets/javascript/printArea.js"></script>
 
         <script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>
         <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
@@ -164,6 +165,8 @@ $page = 'editor';
             </div>
             <div style="float: left">
                 <a href="javascript:refCabecera();"  title="Refrescar Cabecera"><img  src="assets/images/rotate.png" border="0" height ="16"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a href="javascript:printDiagram();"  title="Refrescar Cabecera"><img  src="assets/images/icon_print.png" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
             <!--Agregar un boton para refrescar las tablas-->
@@ -870,6 +873,8 @@ $page = 'editor';
         <!--Insert Image hidden iframe-->
         <iframe id="upload_target" name="upload_target" style="width:0;height:0;border:0px;"></iframe>
 
+        <div id="imgCanvas" style="display: none"></div>
+        
         <script type="text/javascript">
             "use strict";
             function loadFill(check) {

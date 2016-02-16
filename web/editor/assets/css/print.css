@@ -1,0 +1,36 @@
+table { 
+    border: 2px solid #ddd;
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+table img {
+    vertical-align: -10px;
+}
+td, th{
+    border: 2px solid #ddd;
+    min-width: 30px;
+    max-width: 150px;
+    line-height: 1.42857143;
+    padding: 5px;
+}
+tr {
+    height: 20.85px;
+}
+.comb{
+    background: repeating-linear-gradient(135deg, #fff 0px, #fff 4px, #000 4px, #000 7.1px , #fff 7.1px);
+    background-size: 10px 10px;
+    width: 50px;
+}
+.inde{
+    background: #000;
+    width: 50px;
+}
+.inac{
+    background: #fff;
+    width: 50px;
+}
+
+#ctab1,#ctab3,#ctab4,#ctab5,#ctab7{
+    white-space: nowrap;
+}

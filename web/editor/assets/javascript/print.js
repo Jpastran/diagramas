@@ -1,5 +1,8 @@
 $(document).ready(function() {
     noEditable();
+    var hex = idGen();
+    $("#valId").text(hex);
+    console.log(decodeId(hex));
 });
 
 function noEditable() {
@@ -17,4 +20,16 @@ function noEditable() {
         if (i != 1)
             $(biman[i]).children().last().remove();
     }
+}
+
+function idGen() {
+    var time = new Date().getTime();
+    var hex = time.toString(16);
+    return hex;
+}
+
+function decodeId(hex) {
+    var time = new Date(parseInt(hex, 16));
+    var date = time.toString();
+    return date;
 }

@@ -5208,7 +5208,9 @@ function paintUT(value) {
 function printDiagram() {
     //TODO buscar el tamaño adecuado de impresion
     var id = currentSetId;
-    var str = "";
+    var diag = $('#selDiag option:selected').text();
+    $('#diagName').text(diag.toUpperCase());
+    var str = "#headDiv,";
     if (id == 'analitico') {
         str += "#ctab1";
     } else if (id == 'sinoptico') {

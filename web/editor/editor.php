@@ -50,7 +50,7 @@ $page = 'editor';
 <!DOCTYPE html>
 <html>
     <head>
-        <title>HTML5 diagram editor</title>
+        <title>Diagramet - Editor</title>
         <meta charset="UTF-8"> 
 
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
@@ -58,7 +58,7 @@ $page = 'editor';
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/tabs.css" />
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/simplemodal/css/diagramo.css" />
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/colorPicker_new.css" />
-        
+
         <script type="text/javascript" src="./assets/javascript/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="./lib/loadScript.js"></script>
 
@@ -67,15 +67,15 @@ $page = 'editor';
         <div style="display: none"><? require_once dirname(__FILE__) . '/header.php'; ?></div>
         <div id="actions" >           
             <div style="float: left">
-               <!-- 
-                <a style="text-decoration: none;" href="#" onclick="return save();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                <a style="text-decoration: none;" href="./myDiagrams.php" title="Abrir diagrama"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
-                <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Imprimir diagrama"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
-                <?}?>
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <!-- 
+                 <a style="text-decoration: none;" href="#" onclick="return save();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
+                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                 <a style="text-decoration: none;" href="./myDiagrams.php" title="Abrir diagrama"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
+                 <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
+                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                 <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Imprimir diagrama"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
+                 <?}?>
+                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
                 -->
                 <a href="./common/controller.php?action=newDiagramExe" title="Nuevo"><img src="assets/images/icon_new.jpg" border="0" height="16"></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
@@ -106,7 +106,7 @@ $page = 'editor';
                 <input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Alinear a la malla" />
                 <span class="toolbarText">Snap to grid</span>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                
+
                 <a href="javascript:action('front');" title="Mover al frente"><img src="assets/images/icon_front.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
@@ -124,11 +124,22 @@ $page = 'editor';
 
                 <a href="javascript:action('ungroup');" title="Desagrupar (Ctrl-U)"><img src="assets/images/ungroup.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                
+
                 <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Agregar comentario"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
         </div>
+
+        <div id="headDiv" style="display: none">
+            <div id="logoCuc"><img src="assets/images/logo_CUC.png"></div>
+            <div id="textHead">
+                <p>FACULTAD DE INGENIERIAS</p>
+                <p>PROGRAMA DE INGENIERIA INDUSTRIAL</p>
+                <p id="diagName"></p>
+            </div>
+            <div id="valId"></div>
+        </div>
+        
         <div id="editor">
             <!--Left panel-->
             <div id="left">

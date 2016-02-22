@@ -1,3 +1,35 @@
+body {
+    border: 2px solid #ddd;
+}
+
+#headDiv{
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+#logoCuc{
+    float: left;
+    padding-right: 50px;
+    width: 10%;
+}
+#textHead{
+    float: left;
+    font-weight: bold;
+    margin: auto;
+    width: 70%;
+}
+
+#textHead p{
+    margin: 5px;
+}
+#valId {
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
 table { 
     border: 2px solid #ddd;
     width: 100%;

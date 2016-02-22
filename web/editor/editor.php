@@ -139,7 +139,7 @@ $page = 'editor';
             </div>
             <div id="valId"></div>
         </div>
-        
+
         <div id="editor">
             <!--Left panel-->
             <div id="left">
@@ -210,44 +210,48 @@ $page = 'editor';
                     <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/img_icon.png" border="0" width="115px" alt="Image"/></a>
                 </div>
                 <div id="bimLeft" class="label" style="display: none">
-                    Tiempo
-                    <input type="text" id="time">
-                    <br>Descripcion mano izquierda
-                    <textarea type="text" id="mid"></textarea>
-                    Simbolo mano izquierda<br>
-                    <select id="mis">
-                        <option value="-1">-Seleccione-</option>
-                        <option value="0">Operacion</option>
-                        <option value="1">Trasporte</option>
-                        <option value="2">Demora</option>
-                        <option value="3">Sostenimiento</option>
-                    </select>
-                    <br>Descripcion mano derecha
-                    <textarea type="" id="mdd"></textarea>
-                    <br>Simbolo mano izquierda
-                    <select id="mds">
-                        <option value="-1">-Seleccione-</option>
-                        <option value="0">Operacion</option>
-                        <option value="1">Trasporte</option>
-                        <option value="2">Demora</option>
-                        <option value="3">Sostenimiento</option>
-                    </select>
-                    <input type="button" value="Insertar" onclick="addFila()">
+                    <form>
+                        Tiempo
+                        <input type="text" id="time">
+                        <br>Descripcion mano izquierda
+                        <textarea type="text" id="mid"></textarea>
+                        Simbolo mano izquierda<br>
+                        <select id="mis">
+                            <option value="-1">-Seleccione-</option>
+                            <option value="0">Operacion</option>
+                            <option value="1">Trasporte</option>
+                            <option value="2">Demora</option>
+                            <option value="3">Sostenimiento</option>
+                        </select>
+                        <br>Descripcion mano derecha
+                        <textarea type="" id="mdd"></textarea>
+                        <br>Simbolo mano izquierda
+                        <select id="mds">
+                            <option value="-1">-Seleccione-</option>
+                            <option value="0">Operacion</option>
+                            <option value="1">Trasporte</option>
+                            <option value="2">Demora</option>
+                            <option value="3">Sostenimiento</option>
+                        </select>
+                        <input type="button" value="Insertar" onclick="addFila()">
+                    </form>
                 </div>
                 <div id="hmaqLeft" class="label" style="display: none">
-                    <div id="genInput">
-                        Numero de Operarios
-                        <input type="text" id="numO">
-                        Numero de Maquinas
-                        <input type="text" id="numM">
-                        <input type="button" value="Generar" onclick="genInit()">
-                    </div>
-                    <div id="genRD" style="display: none">
-                        <input type="button" value="Deshacer" onclick="doUndoHM()"> 
-                    </div>
-                    <div id="genFila" style="display: none">
-                        <select id="selPart"></select>
-                    </div>
+                    <form>
+                        <div id="genInput">
+                            Numero de Operarios
+                            <input type="text" id="numO">
+                            Numero de Maquinas
+                            <input type="text" id="numM">
+                            <input type="button" value="Generar" onclick="genInit()">
+                        </div>
+                        <div id="genRD" style="display: none">
+                            <input type="button" value="Deshacer" onclick="doUndoHM()"> 
+                        </div>
+                        <div id="genFila" style="display: none">
+                            <select id="selPart"></select>
+                        </div>
+                    </form>
                 </div>
             </div>
 

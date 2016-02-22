@@ -264,8 +264,13 @@ function valFila() {
     return bool;
 }
 
-function editTimeB() {
-    $('#tR').html($('#tL').val());
+function editTimeB(h) {
+    if (h == '') {
+        $('#tR').html($('#tL').val());
+    } else {
+        $('#tL').val($('#timeB').val());
+        $('#tR').html($('#timeB').val());
+    }
 }
 
 function bimImg() {

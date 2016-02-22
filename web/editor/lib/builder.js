@@ -1231,6 +1231,12 @@ TextEditorPopup.prototype = {
 
 
 function buildPanel() {
+    for (var setName in figureSets) {        
+        var option = document.createElement('option');
+        option.value = setName;
+        option.textContent = figureSets[setName]['name'];
+        document.getElementById('selDiag').appendChild(option);
+    }
     //var first = true;
     var firstPanel = true;
     for (var setName in figureSets) {

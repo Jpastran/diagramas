@@ -22,7 +22,9 @@ function tabs(li, div) {
     //Activa el contedino solicitado
     $(div).css('display', '');
     if (div == ctab2) {
-        minimap.initMinimap();
+        $(window).load(function() {
+            minimap.initMinimap();
+        });
     }
 }
 

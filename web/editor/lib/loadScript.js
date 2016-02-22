@@ -5,9 +5,40 @@
  * Libera carga del editor.php  
  * Modificar con cuidado
  */
+$(window).load(function() {
+    buildPanel();
+    tabs(tab2, ctab2);  
+    editable();   
+});
+
+loadLibs();
+loadSets();
+loadCommands();
+loadQuery();
+
+/*Option 1:
+ *We can use window.location like this:
+ * url = window.location.protocol + window.location.hostname + ":" + window.location.port + ....
+ * @see http://www.w3schools.com/jsref/obj_location.asp
+ * 
+ * Option 2:
+ * Use http://code.google.com/p/js-uri/
+ **/
+var appURL = window.location.host + "/diagramo/web";
+var figureSetsURL = appURL + "/editor/lib/sets";
+var insertImageURL = appURL + "/editor/data/import/";
+
+function showImport() {
+    //alert("ok");
+    var r = confirm("Current diagram will be deleted. Are you sure?");
+    if (r === true) {
+        $('#import-dialog').modal(); // jQuery object; this demo
+    }
+}
 
 function loadLibs() {
     document.write(
+            '<script type="text/javascript" src="./lib/builder.js"></script>',
             '<script type="text/javascript" src="./lib/dashed.js"></script>',
             '<script type="text/javascript" src="./lib/canvasprops.js"></script>',
             '<script type="text/javascript" src="./lib/style.js"></script>',
@@ -21,7 +52,6 @@ function loadLibs() {
             '<script type="text/javascript" src="./lib/connections.js"></script>',
             '<script type="text/javascript" src="./lib/connectionManagers.js"></script>',
             '<script type="text/javascript" src="./lib/handles.js"></script>',
-            '<script type="text/javascript" src="./lib/builder.js"></script>',
             '<script type="text/javascript" src="./lib/text.js"></script>',
             '<script type="text/javascript" src="./lib/log.js"></script>',
             '<script type="text/javascript" src="./lib/browserReady.js"></script>',
@@ -71,5 +101,18 @@ function loadCommands() {
             '<script type="text/javascript" src="./lib/commands/CanvasChangeSizeCommand.js"></script>',
             '<script type="text/javascript" src="./lib/commands/CanvasFitCommand.js"></script>',
             '<script type="text/javascript" src="./lib/commands/InsertedImageFigureCreateCommand.js"></script>'
+            );
+}
+
+function loadQuery() {
+    document.write(
+            '<script type="text/javascript" src="./assets/javascript/json2.js"></script>',
+            '<script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>',
+            '<script type="text/javascript" src="./assets/javascript/dropdownmenu.js"></script>',
+            '<script type="text/javascript" src="./assets/javascript/tabs.js"></script>',
+            '<script type="text/javascript" src="./assets/javascript/printArea.js"></script>',
+            '<script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>',
+            '<script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>',
+            '<!--[if IE]><script src="./assets/javascript/excanvas.js"></script><![endif]-->'
             );
 }

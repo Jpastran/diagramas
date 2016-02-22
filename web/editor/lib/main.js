@@ -846,6 +846,7 @@ function onKeyDown(ev) {
             break;
 
         case KEY.DELETE: //Delete
+            break;
             //delete any Figure or Group
             //            alert('Delete pressed' + this);
             switch (state) {
@@ -3806,9 +3807,13 @@ function action(action) {
     switch (action) {
 
         case 'undo':
-            Log.info("main.js->action()->Undo. Nr of actions in the STACK: " + History.COMMANDS.length);
-            History.undo();
-            redraw = true;
+            if (currentSetId == "hom-maq") {
+                doUndoHM();
+            } else if (currentSetId != "bimanual") {
+                Log.info("main.js->action()->Undo. Nr of actions in the STACK: " + History.COMMANDS.length);
+                History.undo();
+                redraw = true;
+            }
             break;
 
 //        case 'redo':
@@ -3864,6 +3869,18 @@ function action(action) {
                 var cmdFigureCreate = new InsertedImageFigureCreateCommand(insertedImageFileName, 100, 100);
                 cmdFigureCreate.execute();
                 History.addUndo(cmdFigureCreate);
+                setTimeout(function() {
+                    var workAreaBounds = STACK.getWorkAreaBounds();
+                    var cmdCanvasFit = new CanvasFitCommand(
+                            workAreaBounds[2] - workAreaBounds[0] + DIAGRAMO.CANVAS_FIT_PADDING * 2,
+                            workAreaBounds[3] - workAreaBounds[1] + DIAGRAMO.CANVAS_FIT_PADDING * 2,
+                            workAreaBounds[0] - DIAGRAMO.CANVAS_FIT_PADDING, // new (0,0) point goes this X coordinate
+                            workAreaBounds[1] - DIAGRAMO.CANVAS_FIT_PADDING   // new (0,0) point goes this Y coordinate
+                            );
+                    cmdCanvasFit.execute();
+                    History.addUndo(cmdCanvasFit);
+                    draw();
+                }, 1000);
                 redraw = true;
             } else if (currentSetId == "bimanual") {
                 bimInsertImg(insertedImageFileName);
@@ -4416,7 +4433,6 @@ function touchCancel(event) {
 
 //TODO Arreglar la seleccion multiple.
 //TODO Corregir nivel de los conectores.
-//TODO crear un metodo y boton para terminar el diagrama.
 //TODO Borrar los TODO que no digan un error.
 //TODO Verificar z-index de los conectores
 
@@ -4696,6 +4712,8 @@ var disEspSel = false;
 var trayGen = 'block';
 var traySig = 'none';
 var trayUnir = 'none';
+var trayName = 'Opcion 1';
+var btnFin = 'Siguiente';
 
 function especial(accion) {
     var clean = true;
@@ -4847,7 +4865,8 @@ function especial(accion) {
                     document.getElementById('traySig').style.display = (traySig = 'block');
                     lineas[3] = options - 1;//Trayecto actual
                     lineas[4] = options;//Numero de trayectos
-                    document.getElementById('trayName').innerHTML = 'Opcion ' + (lineas[4] - lineas[3]);
+                    trayName = 'Opcion ' + (lineas[4] - lineas[3]);
+                    document.getElementById('trayName').innerHTML = trayName;
                     especialSelect(true);
                 } else {
                     errorDiv('Opciones solo puden ser numeros enteros de 2 a 8');
@@ -4862,13 +4881,17 @@ function especial(accion) {
                         coor = trayecto[lineas[3]];
                         clean = true;
                         opciones = true;
-                        document.getElementById('trayName').innerHTML = 'Opcion ' + (lineas[4] - lineas[3]);
+                        trayName = 'Opcion ' + (lineas[4] - lineas[3])
+                        document.getElementById('trayName').innerHTML = trayName;
                         if (lineas[3] == 0)
-                            document.getElementById('btnFin').value = 'Terminar';
+                            document.getElementById('btnFin').value = (btnFin = 'Terminar');
                     } else if (lineas[3] == 0) {
                         document.getElementById('traySig').style.display = (traySig = 'none');
                         document.getElementById('trayUnir').style.display = (trayUnir = 'block');
                         var div = document.getElementById('trayChk');
+                        while (div.hasChildNodes()) {
+                            div.removeChild(div.firstChild);
+                        }
                         for (var i = 0; i < lineas[4]; i++) {
                             var text = document.createTextNode("Opcion " + (lineas[4] - i));
                             var br = document.createElement("br");
@@ -4910,7 +4933,7 @@ function especial(accion) {
                 }
                 document.getElementById('trayUnir').style.display = (trayUnir = 'none');
                 document.getElementById('trayGen').style.display = (trayGen = 'block');
-                document.getElementById('btnFin').value = 'Siguiente';
+                document.getElementById('btnFin').value = (btnFin = 'Siguiente');
                 especialSelect(false);
                 coor = pos;
                 coor[1] -= tamFig / 2;
@@ -5109,7 +5132,7 @@ function addHistory() {
             numDiag = obtSinop();
         }
         var trayDiv = [];
-        trayDiv.push(trayGen, traySig, trayUnir);
+        trayDiv.push(trayGen, traySig, trayUnir, trayName, btnFin);
         hist = [xy, lines, saves, tray, rept, bools, numDiag, trayDiv];
     } else {
         hist = obtRecorr();
@@ -5148,6 +5171,10 @@ function backHistory() {
         document.getElementById('traySig').style.display = traySig;
         trayUnir = tray[2];
         document.getElementById('trayUnir').style.display = trayUnir;
+        trayName = tray[3];
+        document.getElementById('trayName').innerHTML = trayName;
+        btnFin = tray[4];
+        document.getElementById('btnFin').value = btnFin;
     } else {
         desRecorr(hist);
     }
@@ -5171,18 +5198,15 @@ var valTiempo = 'seg';
 var valDistan = 'm';
 
 function paintUD(value) {
-    valTiempo = value;
-}
-
-function paintUT(value) {
     valDistan = value;
 }
 
+function paintUT(value) {
+    valTiempo = value;
+}
+
 function printDiagram() {
-    //TODO crear el css de impresion  o que herede el css 
     //TODO buscar el tamaño adecuado de impresion
-    //TODO autogenerar el string del print area
-    //TODO acomodar el fit del lienzo
     var id = currentSetId;
     var str = "";
     if (id == 'analitico') {

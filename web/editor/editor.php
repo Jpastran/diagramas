@@ -56,71 +56,34 @@ $page = 'editor';
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/minimap.css" />
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/tabs.css" />
-
-        <script type="text/javascript" src="./assets/javascript/json2.js"></script>
-        <script type="text/javascript" src="./assets/javascript/tabs.js"></script>
+        <link rel="stylesheet" media="screen" type="text/css" href="./assets/simplemodal/css/diagramo.css" />
+        <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/colorPicker_new.css" />
+        
         <script type="text/javascript" src="./assets/javascript/jquery-1.11.0.min.js"></script>
-        <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
-        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js"></script>
-        <script type="text/javascript" src="./assets/javascript/printArea.js"></script>
-
-        <script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>
-        <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
-
         <script type="text/javascript" src="./lib/loadScript.js"></script>
 
-        <script type="text/javascript">
-            "use strict";
-            /*Option 1:
-             *We can use window.location like this:
-             * url = window.location.protocol + window.location.hostname + ":" + window.location.port + ....
-             * @see http://www.w3schools.com/jsref/obj_location.asp
-             * 
-             * Option 2:
-             * Use http://code.google.com/p/js-uri/
-             **/
-            var webDir = '<?= $WEBADDRESS ?>';
-            var appURL = webDir.replace("localhost", window.location.host);
-            var figureSetsURL = appURL + '/editor/lib/sets';
-            var insertImageURL = appURL + '/editor/data/import/';
-
-            function showImport() {
-                //alert("ok");
-                var r = confirm("Current diagram will be deleted. Are you sure?");
-                if (r === true) {
-                    $('#import-dialog').modal(); // jQuery object; this demo
-                }
-            }
-            loadLibs();
-            loadSets();
-            loadCommands();
-            $(document).ready(function() {
-                init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : '' ?>');
-                tabs(tab2, ctab2);
-                editable();
-            });
-        </script>
-
-        <script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>
-        <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/colorPicker_new.css" />
-
-        <!--[if IE]>
-        <script src="./assets/javascript/excanvas.js"></script>
-        <![endif]-->
-
     </head>
-    <body id="body">      
+    <body id="body" onload="init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : '' ?>');">      
         <div style="display: none"><? require_once dirname(__FILE__) . '/header.php'; ?></div>
-        <div id="actions">
+        <div id="actions" >           
             <div style="float: left">
+               <!-- 
                 <a style="text-decoration: none;" href="#" onclick="return save();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
                 <a style="text-decoration: none;" href="./myDiagrams.php" title="Abrir diagrama"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
                 <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
                 <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Imprimir diagrama"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
                 <?}?>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                -->
+                <a href="./common/controller.php?action=newDiagramExe" title="Nuevo"><img src="assets/images/icon_new.jpg" border="0" height="16"></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a href="javascript:refCabecera();"  title="Refrescar Cabecera"><img  src="assets/images/rotate.png" border="0" height ="16"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a href="javascript:printDiagram();"  title="Imprimir"><img  src="assets/images/icon_print.png" border="0" height ="16"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a href="javascript:action('undo');" title="Deshacer (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>           
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
             <div id="aTools" style="float: left">
@@ -143,6 +106,7 @@ $page = 'editor';
                 <input type="checkbox" onclick="snapToGrid();" id="snapCheckbox" title="Alinear a la malla" />
                 <span class="toolbarText">Snap to grid</span>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                
                 <a href="javascript:action('front');" title="Mover al frente"><img src="assets/images/icon_front.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
@@ -160,50 +124,16 @@ $page = 'editor';
 
                 <a href="javascript:action('ungroup');" title="Desagrupar (Ctrl-U)"><img src="assets/images/ungroup.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                
                 <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Agregar comentario"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
-            <div style="float: left">
-                <a href="javascript:refCabecera();"  title="Refrescar Cabecera"><img  src="assets/images/rotate.png" border="0" height ="16"/></a>
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                <a href="javascript:printDiagram();"  title="Refrescar Cabecera"><img  src="assets/images/icon_print.png" border="0" height ="16"/></a>
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            </div>
-            <!--Agregar un boton para refrescar las tablas-->
         </div>
-        <!--
-        <a href="javascript:action('undo');" title="Undo (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>           
-        <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
-        <a href="javascript:action('redo');" title="Redo (Ctrl-Y)"><img src="assets/images/arrow_redo.png" border="0"/></a>
-        <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>  
-        --> 
-        <!-- TODO: From Janis: we have to create a nice icon for duplicate, currently this is the only command without an icon    
-        <a href="javascript:action('duplicate');">Copy (Ctrl-D)</a>
-        <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-
-        <input type="text" id="output" />                
-        <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-        <a href="javascript:action('duplicate');">Copy</a>
-        <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-        <a href="javascript:action('group');">Group</a>
-        <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-        <a href="javascript:action('ungroup');">Ungroup</a>
-        -->
-
         <div id="editor">
             <!--Left panel-->
             <div id="left">
                 <div id="figures">
-                    <select style="width: 100%;" onchange="setFigureSet(this.options[this.selectedIndex].value);">
-                        <script>
-                            "use strict";
-                            for (var setName in figureSets) {
-                                var set = figureSets[setName];
-                                document.write('<option value="' + setName + '">' + set['name'] + '</option>');
-                            }
-                            buildPanel();
-                        </script>
+                    <select id="selDiag" onchange="setFigureSet(this.options[this.selectedIndex].value);">
                     </select>
                 </div>
                 <div id="especial">
@@ -302,7 +232,7 @@ $page = 'editor';
                         <input type="button" value="Generar" onclick="genInit()">
                     </div>
                     <div id="genRD" style="display: none">
-                        <input type="button" value="Deshacer" onclick="doUndo()"> 
+                        <input type="button" value="Deshacer" onclick="doUndoHM()"> 
                     </div>
                     <div id="genFila" style="display: none">
                         <select id="selPart"></select>
@@ -705,7 +635,13 @@ $page = 'editor';
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Tiempo del ciclo</td>
+                                        <td>T. del ciclo
+                                            <select id="timeB" onchange="editTimeB('H')">
+                                                <option value="Seg" selected>seg</option>
+                                                <option value="Min">min</option>
+                                                <option value="Hora">hora</option>
+                                            </select>
+                                        </td>
                                         <td colspan="2"></td>
                                         <td colspan="2"></td>
                                         <td colspan="2"></td>
@@ -848,17 +784,17 @@ $page = 'editor';
                 <input type="hidden" name="action" value="insertImage"/>
                 <div class="insert-image-line">
                     <input type="radio" name="image-group" value="URL" checked>
-                    <label>From URL:</label>
+                    <label>Desde URL:</label>
                     <input type="text" class="url-input" name="imageURL" id="imageURL"/>
                 </div>
                 <div class="insert-image-line">
                     <input type="radio" name="image-group" value="Upload">
-                    <label>Upload:</label>
+                    <label>Subir:</label>
                     <input type="file" class="right-offset" name="imageFile" id="imageFile"/>
                 </div>
                 <div class="insert-image-line">
                     <input type="radio" name="image-group" value="Reuse" id="insert-image-reuse-group">
-                    <label>Reuse:</label>
+                    <label>Reusar:</label>
                     <select id="insert-image-reuse"  name="reuseImageFile">
                     </select>
                 </div>
@@ -874,7 +810,7 @@ $page = 'editor';
         <iframe id="upload_target" name="upload_target" style="width:0;height:0;border:0px;"></iframe>
 
         <div id="imgCanvas" style="display: none"></div>
-        
+
         <script type="text/javascript">
             "use strict";
             function loadFill(check) {

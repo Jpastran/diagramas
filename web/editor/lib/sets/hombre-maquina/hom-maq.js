@@ -397,7 +397,7 @@ function addUndo(c1, c2, c3) {
     undo.push(cel);
 }
 
-function doUndo() {
+function doUndoHM() {
     var volver = undo.pop();
     contCol = volver[0];
     for (var i = 0; i < volver[1].length; i++) {

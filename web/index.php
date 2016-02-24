@@ -23,5 +23,5 @@ if (!file_exists(dirname(__FILE__) . '/editor/data/diagramo.db') ) { //no settin
 }
 //End Check installation
 
-header("Location: ./editor/login.php");
+header("Location: ./editor/editor.php");
 ?>

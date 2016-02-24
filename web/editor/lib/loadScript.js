@@ -7,8 +7,8 @@
  */
 $(window).load(function() {
     buildPanel();
-    tabs(tab2, ctab2);  
-    editable();   
+    tabs(tab2, ctab2);
+    editable();
 });
 
 loadLibs();
@@ -23,8 +23,9 @@ loadQuery();
  * 
  * Option 2:
  * Use http://code.google.com/p/js-uri/
+ * http://localhost/diagramo/web
  **/
-var appURL = window.location.host + "/diagramo/web";
+var appURL = "http://" + window.location.host + "/diagramo/web";
 var figureSetsURL = appURL + "/editor/lib/sets";
 var insertImageURL = appURL + "/editor/data/import/";
 

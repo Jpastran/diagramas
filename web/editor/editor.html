@@ -1,52 +1,3 @@
-<?
-
-/*
-Copyright [2014] [Diagramo]
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
-require_once dirname(__FILE__) . '/common/delegate.php';
-
-if (!isset($_SESSION)) {
-session_start();
-}
-
-require_once dirname(__FILE__) . '/common/rememberme.php';
-
-$delegate = new Delegate();
-
-#print_r($_SESSION['userId']);
-$loggedUser = null;
-if(isset($_SESSION['userId']) && is_numeric($_SESSION['userId'])){
-$loggedUser = $delegate->userGetById($_SESSION['userId']);
-}
-
-//start diagram guardian
-if(isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId'])){
-if( !isset($_SESSION['userId']) ){
-print "Not allocated to this diagram";
-exit();
-}
-}
-//end diagram guardian
-
-//get the address where the app reside
-$WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
-
-$page = 'editor';
-?>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -64,19 +15,8 @@ $page = 'editor';
 
     </head>
     <body id="body" onload="init('');">      
-        <div style="display: none"><? require_once dirname(__FILE__) . '/header.php'; ?></div>
         <div id="actions" >           
             <div style="float: left">
-                <!-- 
-                 <a style="text-decoration: none;" href="#" onclick="return save();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
-                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                 <a style="text-decoration: none;" href="./myDiagrams.php" title="Abrir diagrama"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
-                 <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
-                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                 <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Imprimir diagrama"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
-                 <?}?>
-                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                -->
                 <a href="./common/controller.php?action=newDiagramExe" title="Nuevo"><img src="assets/images/icon_new.jpg" border="0" height="16"></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
                 <a href="javascript:refCabecera();"  title="Refrescar Cabecera"><img  src="assets/images/rotate.png" border="0" height ="16"/></a>
@@ -92,13 +32,7 @@ $page = 'editor';
 
                 <a href="javascript:action('connector-jagged');" title="Conector Cuadrado"><img src="assets/images/icon_connector_jagged.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                <!--
-                <a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-    
-                <a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/container.png" border="0" alt="Container"/></a>
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                -->
+
                 <input type="checkbox" onclick="showGrid();" id="gridCheckbox"  title="Mostrar malla" />
                 <span class="toolbarText">Show grid</span>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>

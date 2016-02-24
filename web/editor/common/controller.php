@@ -830,11 +830,6 @@ function getUploadedImageFileNames() {
 */
 function insertImage() {
 
-    if (!is_numeric($_SESSION['userId'])) { //no user logged
-        print "Not allowed";
-        exit();
-    }
-
     $imgSource = $_REQUEST['image-group'];
 
 

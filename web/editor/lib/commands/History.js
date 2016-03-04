@@ -67,8 +67,7 @@ History.addUndo = function(command) {
     if (doUndo) {
         /**As we are now positioned on CURRENT_POINTER(where current Command is stored) we will
          *delete anything after it, add new Command and increase CURRENT_POINTER
-         **/
-        addHistory();
+         **/       
         //remove commands after current command 
         History.COMMANDS.splice(History.CURRENT_POINTER + 1, History.COMMANDS.length);
 
@@ -77,21 +76,24 @@ History.addUndo = function(command) {
 
         //increase the current pointer
         History.CURRENT_POINTER++;
+        
+        addHistory();
     }
-}
+};
 
 /**Undo current command
  *TODO: nice to compress/merge some actions like many Translate in a row
  **/
 History.undo = function() {
     if (History.CURRENT_POINTER >= 0) {
-        backHistory();
         Log.info('undo()->Type of action: ' + History.COMMANDS[History.CURRENT_POINTER].oType);
         History.COMMANDS[History.CURRENT_POINTER].undo();
 
         History.CURRENT_POINTER--;
+        
+        backHistory();
     }
-}
+};
 
 /**Redo a command
  *TODO: nice to compress/merge some actions like many Translate in a row
@@ -103,13 +105,13 @@ History.redo = function() {
 
         History.CURRENT_POINTER++;
     }
-}
+};
 
 /**Pack identical commands into a single, equivalend command.
  *It will pack only consecutive and same type commands (until a TurningPointCommand is founded)
  **/
 History.pack = function() {
     //TODO: implement
-}
+};
 
 

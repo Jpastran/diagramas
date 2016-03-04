@@ -106,6 +106,7 @@ function changeMetR() {
         $("#td" + preR[j]).text(pro[j]);
         $("#td" + proR[j]).text(pre[j]);
     }
+    refCabecera();
 }
 
 function resetRecorrido() {

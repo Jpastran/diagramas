@@ -63,8 +63,8 @@ var FigureDefaults = {
     textColor: "#000000"
 };
 
-var nAP = [];
-var nAA = [1, 1, 1, 1, 1, 1];
+var nAP = [0, 0, 0, 0, 0, 0];
+var nAA = [0, 0, 0, 0, 0, 0];
 
 var preA = [16, 22, 26, 30, 36, 40, 46, 50, 56];
 var proA = [17, 23, 27, 31, 37, 41, 47, 51, 57];
@@ -150,22 +150,27 @@ function changeMetA() {
         $("#td" + preA[j]).text(pro[j]);
         $("#td" + proA[j]).text(pre[j]);
     }
+    refCabecera();
 }
 
 function resetAnalitico() {
     nAP = [];
-    nAA = [1, 1, 1, 1, 1, 1];
+    nAA = [0, 0, 0, 0, 0, 0];
 }
 
 function sumAnali(pos) {
     nAP = [nAA[0], nAA[1], nAA[2], nAA[3], nAA[4], nAA[5]];
     nAA[pos]++;
     resumAnali();
-    return nAP[pos];
+    return nAA[pos];
 }
 
-function obtAnalit() {
-    return nAP;
+function obtAnalit(bool) {
+    if (bool) {
+        return [nAA[0], nAA[1], nAA[2], nAA[3], nAA[4], nAA[5]];
+    } else {
+        return nAP;
+    }
 }
 
 function desAnalit(num) {

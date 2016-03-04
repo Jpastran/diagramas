@@ -4548,7 +4548,7 @@ function conectorBuild() {
         connectorPickFirst(coor[0], coor[1] - disFigCon);
         connectorPickSecond(pos[0], pos[1]);
         ordenarJagged(pos);
-        coor = pos;
+        savePos.push(pos);
         finLS = false;
     } else if (finSS) {
         var pos = savePos.pop();
@@ -4561,8 +4561,7 @@ function conectorBuild() {
         connectorType = Connector.TYPE_STRAIGHT;
         connectorPickFirst(coor[0], coor[1] - disFigCon);
         connectorPickSecond(coor[0], coor[1] - tamFig / 2);
-        if (opciones)
-            opciones = false;
+        opciones = false;
     }
     var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
     History.addUndo(cmdCreateCon);
@@ -4586,6 +4585,9 @@ function figureBuild(figureFunction, x, y) {
 
 function cleanStates() {
     coor[1] += disFig;
+    if (selTray) {
+       trayecto[lineas[3]] = coor;
+    }
     resetToNoneState();
     mousePressed = false;
     createFigureFunction = null;
@@ -4631,9 +4633,7 @@ function dropFigure() {
 }
 
 function ordenarJagged(pos) {
-
     var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
-
     if (finLS) {
         if (turns.length == 4) {
             turns[1] = turns[0];
@@ -4714,22 +4714,25 @@ var traySig = 'none';
 var trayUnir = 'none';
 var trayName = 'Opcion 1';
 var btnFin = 'Siguiente';
+var selAP = false;
+var selTray = false;
 
 function especial(accion) {
     var clean = true;
     if (primer) {
         switch (accion) {
-            case 'newLE'://TODO corregir los posibles errores en linea secundaria.
+            case 'newLE':
                 if (coor[1] != (iniY + disFig)) {
+                    selAP = true;
                     figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
                     coor[1] -= tamFig / 2;
                     savePos.push(coor);
                     lineas[0]++;
                     coor = [coor[0] - (distLine * (lineas[0] - lineas[1])), iniY];
-                    figureBuild(window.figure_LineInit, coor[0] - tamFig, coor[1]);
                     lineas[1]++;
                     document.getElementById('btnLE').disabled = (disbtnLE = false);
+                    figureBuild(window.figure_LineInit, coor[0] - tamFig, coor[1]);
                 } else {
                     errorDiv('Debe poseer al menos un proceso');
                     clean = false;
@@ -4739,7 +4742,9 @@ function especial(accion) {
                 if (lineas[1] != 1) {
                     if (coor[1] != (iniY + disFig)) {
                         finLS = true;
+                        selAP = true;
                         conectorBuild();
+                        coor = savePos.pop();
                         lineas[1]--;
                         coor[1] -= tamFig / 2;
                         if (lineas[1] == 1) {
@@ -4754,6 +4759,7 @@ function especial(accion) {
             case 'newLS':
                 if (lineas[1] == 1) {
                     lineas[2]++;//Numero de salidas activas
+                    selAP = true;
                     figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
                     coor[1] -= tamFig / 2;
@@ -4790,6 +4796,7 @@ function especial(accion) {
                     if (coorIn[0] == coorOut[0]) {
                         if (coorIn[1] > coorOut[1]) {
                             if (numR > 0 && numR < 10) {
+                                selAP = true;
                                 conectorBuildFull(true, coorIn, coorOut, true);
                                 ordenarDelta('h', -disLinMin, 3);
                                 ordenarDelta('v', -disCon / 2, 2);
@@ -4821,13 +4828,14 @@ function especial(accion) {
                     errorDiv("Los valores no pueden ser nulos");
                 }
                 break;
-            case 'repro'://TODO Entrada quitar triangulo agregar punto superior.
+            case 'repro':
                 clean = false;
                 if (document.getElementById('proOut').value != "") {
                     var figFin = STACK.figureGetById(document.getElementById('proOut').value);
                     var coorIn = [coor[0], coor[1] - disFigCon];
                     var coorOut = [figFin.rotationCoords[1].x, figFin.rotationCoords[1].y];
                     if (coorIn[0] == coorOut[0]) {
+                        selAP = true;
                         conectorBuildFull(true, coorIn, coorOut, true);
                         ordenarDelta('v', -disCon / 2, 2);
                         ordenarDelta('v', disCon / 2, 4);
@@ -4844,6 +4852,7 @@ function especial(accion) {
             case 'trayGen':
                 var options = parseInt(document.getElementById('trayNum').value);
                 if (options >= 2 && options <= 8) {
+                    selAP = true;
                     figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
                     coor[1] -= tamFig / 2;
@@ -4868,6 +4877,7 @@ function especial(accion) {
                     trayName = 'Opcion ' + (lineas[4] - lineas[3]);
                     document.getElementById('trayName').innerHTML = trayName;
                     especialSelect(true);
+                    selTray = true;
                 } else {
                     errorDiv('Opciones solo puden ser numeros enteros de 2 a 8');
                     clean = false;
@@ -4903,6 +4913,7 @@ function especial(accion) {
                             div.appendChild(text);
                             div.appendChild(br);
                         }
+                        selTray = false;
                     }
                 } else {
                     errorDiv('La opcion debe tener al menos un proceso');
@@ -4920,6 +4931,7 @@ function especial(accion) {
                 var checks = document.getElementsByName("opcion");
                 for (var i = 0; i < checks.length; i++) {
                     if (checks[i].checked == true) {
+                        selAP = true;
                         conectorBuildFull(true, trayecto[checks[i].value], pos, false);
                         var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
                         if (turns.length != 4) {
@@ -5104,20 +5116,20 @@ function displayDivs(right, tools, esp, img, bim, hmaq) {
 function addHistory() {
     var hist = [];
     if (currentSetId == 'analitico' || currentSetId == 'sinoptico') {
-        var xy = [];
-        xy.push(coor[0]);
-        xy.push(coor[1]);
+        var xy = [coor[0], coor[1]];
         var lines = [];
         for (var i = 0; i < lineas.length; i++) {
             lines.push(lineas[i]);
         }
         var saves = [];
         for (var i = 0; i < savePos.length; i++) {
-            saves.push(savePos[i]);
+            var pos = [savePos[i][0], savePos[i][1]];
+            saves.push(pos);
         }
         var tray = [];
         for (var i = 0; i < trayecto.length; i++) {
-            saves.push(trayecto[i]);
+            var pos = [trayecto[i][0], trayecto[i][1]];
+            tray.push(pos);
         }
         var rept = [];
         for (var i = 0; i < sumRepet.length; i++) {
@@ -5127,12 +5139,13 @@ function addHistory() {
         bools.push(primer, finLS, finSS, opciones, disbtnLE, disbtnLS, disEspSel);
         var numDiag = [];
         if (currentSetId == 'analitico') {
-            numDiag = obtAnalit();
+            numDiag = obtAnalit(selAP);
         } else {
-            numDiag = obtSinop();
+            numDiag = obtSinop(selAP);
         }
+        selAP = false;
         var trayDiv = [];
-        trayDiv.push(trayGen, traySig, trayUnir, trayName, btnFin);
+        trayDiv.push(trayGen, traySig, trayUnir, trayName, btnFin, selTray);
         hist = [xy, lines, saves, tray, rept, bools, numDiag, trayDiv];
     } else {
         hist = obtRecorr();
@@ -5175,6 +5188,7 @@ function backHistory() {
         document.getElementById('trayName').innerHTML = trayName;
         btnFin = tray[4];
         document.getElementById('btnFin').value = btnFin;
+        selTray = tray[5]
     } else {
         desRecorr(hist);
     }
@@ -5206,7 +5220,7 @@ function paintUT(value) {
 }
 
 function printDiagram() {
-    //TODO buscar el tamaño adecuado de impresion
+    refCabecera();
     var id = currentSetId;
     var diag = $('#selDiag option:selected').text();
     $('#diagName').text(diag.toUpperCase());

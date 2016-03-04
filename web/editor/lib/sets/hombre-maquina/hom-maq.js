@@ -166,6 +166,7 @@ function changeMetH() {
             $("#hm" + proH[i][j]).text(pre[i][j]);
         }
     }
+    refCabecera();
 }
 
 function cleanResum() {

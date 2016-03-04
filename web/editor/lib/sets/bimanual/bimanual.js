@@ -137,6 +137,7 @@ function changeMetB() {
     ope[1] = $("#td" + tCil[1]).text();
     $("#td" + tCil[0]).text(ope[1]);
     $("#td" + tCil[1]).text(ope[0]);
+    refCabecera();
 }
 
 function resetBimanual() {

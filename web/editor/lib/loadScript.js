@@ -23,7 +23,6 @@ loadQuery();
  * 
  * Option 2:
  * Use http://code.google.com/p/js-uri/
- * http://localhost/diagramo/web
  **/
 var appURL = "http://" + window.location.host + "/diagramo/web";
 var figureSetsURL = appURL + "/editor/lib/sets";

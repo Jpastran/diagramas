@@ -30,7 +30,7 @@ figureSets["sinoptico"] = {
 };
 
 var nSP = [0, 0, 0];
-var nSA = [1, 1, 1];
+var nSA = [0, 0, 0];
 
 var preS = [77, 81, 85, 91, 97];
 var proS = [78, 82, 86, 92, 98];
@@ -103,22 +103,27 @@ function changeMetS() {
         $("#td" + preS[j]).text(pro[j]);
         $("#td" + proS[j]).text(pre[j]);
     }
+    refCabecera();
 }
 
 function resetSinoptico() {
     nSP = [0, 0, 0];
-    nSA = [1, 1, 1];
+    nSA = [0, 0, 0];
 }
 
 function sumSinop(pos) {
     nSP = [nSA[0], nSA[1], nSA[2]];
     nSA[pos]++;
     resumSinop();
-    return nSP[pos];
+    return nSA[pos];
 }
 
-function obtSinop() {
-    return nSP;
+function obtSinop(bool) {
+    if (bool) {
+        return [nSA[0], nSA[1], nSA[2]];
+    } else {
+        return nSP;
+    }
 }
 
 function desSinop(num) {

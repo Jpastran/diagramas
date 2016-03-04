@@ -219,7 +219,7 @@ $page = 'editor';
                         <select id="mis">
                             <option value="-1">-Seleccione-</option>
                             <option value="0">Operacion</option>
-                            <option value="1">Trasporte</option>
+                            <option value="1">Transporte</option>
                             <option value="2">Demora</option>
                             <option value="3">Sostenimiento</option>
                         </select>
@@ -229,7 +229,7 @@ $page = 'editor';
                         <select id="mds">
                             <option value="-1">-Seleccione-</option>
                             <option value="0">Operacion</option>
-                            <option value="1">Trasporte</option>
+                            <option value="1">Transporte</option>
                             <option value="2">Demora</option>
                             <option value="3">Sostenimiento</option>
                         </select>
@@ -313,7 +313,7 @@ $page = 'editor';
                                     <tr>
                                         <td rowspan=3>Actividad:</td>
                                         <td colspan=5 rowspan=3></td>
-                                        <td>Trasporte <img src="lib/sets/analitico/arrow.png"/></td>
+                                        <td>Transporte <img src="lib/sets/analitico/arrow.png"/></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -489,7 +489,7 @@ $page = 'editor';
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Trasporte</td>
+                                        <td>Transporte</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -614,7 +614,7 @@ $page = 'editor';
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Trasporte</td>
+                                        <td>Transporte</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>

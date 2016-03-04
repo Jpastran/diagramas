@@ -8,8 +8,8 @@ $(document).ready(function() {
 function noEditable() {
     var tds = $("table td");
     for (var i = 0; i < tds.length; i++) {
-        $(tds[i]).removeAttr('contenteditable', 'true');
-        $(tds[i]).removeAttr('class', 'edit');
+        $(tds[i]).removeAttr('contenteditable');
+        $(tds[i]).removeClass('edit');
     }
     var inpSel = $("table input, table select");
     for (var i = 0; i < inpSel.length; i++) {
@@ -20,6 +20,7 @@ function noEditable() {
         if (i != 1)
             $(biman[i]).children().last().remove();
     }
+    $("#td175 a").attr("href","#");
 }
 
 function idGen() {

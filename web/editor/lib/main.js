@@ -3250,10 +3250,8 @@ function addBackground(canvasElement) {
         // draw grid if it's visible
         if (gridVisible) {
             var columns = Math.floor(canvasElement.width / GRIDWIDTH) + 1;
-            //console.info("Columns: " + columns );
 
             var rows = Math.floor(canvasElement.height / GRIDWIDTH) + 1;
-            //console.info("Rows: " + rows );
 
             for (var i = 0; i < rows; i++) {
                 for (var j = 0; j < columns; j++) {
@@ -4450,7 +4448,7 @@ var iniY = 40;
 var distLine = 150;
 
 /**Distancia menos de linea especiales*/
-var disLinMin = 100;
+var disLinMin = 130;
 
 /**Distancia del segmento de las figuras
  * ref @see FigureDefaults.segmentSize*/
@@ -4500,6 +4498,7 @@ var finSS = false;
 
 /**Gatillo de opciones de trayecto*/
 var opciones = false;
+var optNull = true;
 
 /**Guarda todos los cambios para en 
  * las variables y permite el deshacer*/
@@ -4586,7 +4585,7 @@ function figureBuild(figureFunction, x, y) {
 function cleanStates() {
     coor[1] += disFig;
     if (selTray) {
-       trayecto[lineas[3]] = coor;
+        trayecto[lineas[3]] = coor;
     }
     resetToNoneState();
     mousePressed = false;
@@ -4663,6 +4662,11 @@ function ordenarJagged(pos) {
         turns[1].y = coor[1];
         turns[2].y = coor[1];
         turns[3].y = coor[1];
+    } else if (!optNull) {
+        turns[1].y = turns[0].y + disCon;
+        turns[2].x = turns[1].x;
+        turns[2].y = pos[1] - tamFig / 2;
+        turns[3].y = turns[2].y;
     }
 }
 
@@ -4798,7 +4802,7 @@ function especial(accion) {
                             if (numR > 0 && numR < 10) {
                                 selAP = true;
                                 conectorBuildFull(true, coorIn, coorOut, true);
-                                ordenarDelta('h', -disLinMin, 3);
+                                ordenarDelta('h', -disCon * 3, 3);
                                 ordenarDelta('v', -disCon / 2, 2);
                                 ordenarDelta('v', disCon / 2, 4);
                                 figureBuild(window.figure_LineDouble, coor[0], coor[1] - tamFig / 4);
@@ -4851,25 +4855,27 @@ function especial(accion) {
                 break;
             case 'trayGen':
                 var options = parseInt(document.getElementById('trayNum').value);
-                if (options >= 2 && options <= 8) {
+                if (options >= 2 && options <= 6) {
                     selAP = true;
                     figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
                     coor[1] -= tamFig / 2;
                     savePos.push(coor);
+                    trayecto = [];
                     for (var i = 0; i < options; i++) {
                         trayecto[i] = [(coor[0] - ((options * 50) - (disLinMin / 2))) + (disLinMin * i), coor[1] + disCon];
                     }
                     opciones = true;
                     for (var i = 0; i < trayecto.length; i++) {
                         figureBuild(window.figure_MultiPoint, trayecto[i][0], trayecto[i][1]);
-                        var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
-                        conectorBuildFull(!centro, coor, trayecto[i], false);
-                        if (!centro)
-                            ordenarJagged();
+                        //var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
+                        conectorBuildFull(true, coor, trayecto[i], false);
+                        //if (!centro)//Funcional con disLinMin = 100
+                        ordenarJagged();
                         trayecto[i][1] -= tamFig / 2;
                     }
                     coor = trayecto[options - 1];
+                    savePos.push([coor[0], coor[1]]);
                     document.getElementById('trayGen').style.display = (trayGen = 'none');
                     document.getElementById('traySig').style.display = (traySig = 'block');
                     lineas[3] = options - 1;//Trayecto actual
@@ -4879,14 +4885,20 @@ function especial(accion) {
                     especialSelect(true);
                     selTray = true;
                 } else {
-                    errorDiv('Opciones solo puden ser numeros enteros de 2 a 8');
+                    errorDiv('Opciones solo puden ser numeros enteros de 2 a 6');
                     clean = false;
                 }
                 break;
             case 'trayFin':
                 clean = false;
-                if (!opciones) {
+                if (!opciones || optNull) {
                     if (lineas[3] > 0) {
+                        var pos = savePos.pop();
+                        if (pos[0] == trayecto[lineas[3]][0] && pos[1] == trayecto[lineas[3]][1]) {
+                            optNull = false;
+                        } else if (lineas[3] - 1 != 0) {
+                            savePos.push([trayecto[lineas[3] - 1][0], trayecto[lineas[3] - 1][1] + disFig]);
+                        }
                         lineas[3]--;
                         coor = trayecto[lineas[3]];
                         clean = true;
@@ -4916,16 +4928,21 @@ function especial(accion) {
                         selTray = false;
                     }
                 } else {
-                    errorDiv('La opcion debe tener al menos un proceso');
+                    errorDiv('Solo se permite una opcion vacia');
                 }
                 break;
             case 'trayUnir':
                 var pos = savePos.pop();
+                var lineV = -1;
+                var posV = [pos[0], pos[1]];
                 for (var i = 0; i < trayecto.length; i++) {
                     if (pos[1] < trayecto[i][1]) {
                         pos[1] = trayecto[i][1];
                     }
                     trayecto[i][1] -= disFigCon;//Reducir punto final para conector
+                    if (trayecto[i][1] - disCon == posV[1]) { //Busca linea sin proceso
+                        lineV = i;
+                    }
                 }
                 figureBuild(window.figure_MultiPoint, pos[0], pos[1]);
                 var checks = document.getElementsByName("opcion");
@@ -4934,8 +4951,10 @@ function especial(accion) {
                         selAP = true;
                         conectorBuildFull(true, trayecto[checks[i].value], pos, false);
                         var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
-                        if (turns.length != 4) {
+                        if (turns.length != 4 && lineV != i) {
                             ordenarDelta('v', (tamFig / 2) - 2, turns.length == 6 ? 4 : 3);
+                        } else if (lineV == i) {
+                            ordenarJagged(pos);
                         }
                     }
                 }

@@ -189,7 +189,7 @@ $page = 'editor';
                         <img src="lib/sets/trayectos.png" class="especial" />
                         <div class="label" id="trayGen" style=" display: block">
                             Generar
-                            <input type="number" id="trayNum" min="2" step="1" max="8" style="width: 120px;">
+                            <input type="number" id="trayNum" min="2" step="1" max="6" style="width: 120px;">
                             <input type="button" value="Generar" onclick="especial('trayGen')"/>
                         </div>	
                         <div class="label" id="traySig" style=" display: none">

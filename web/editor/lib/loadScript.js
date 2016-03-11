@@ -2,13 +2,16 @@
 
 /**
  * Permite la carga oculta de los scripts que utiliza los diagramas
- * Libera carga del editor.php  
+ * Libera carga del editor.php e inicializa las variables
  * Modificar con cuidado
  */
 $(window).load(function() {
     buildPanel();
     tabs(tab2, ctab2);
     editable();
+    $("#upload_target").on("submit", function(e) {
+        insertAjax(e);
+    });
 });
 
 loadLibs();

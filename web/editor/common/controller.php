@@ -832,31 +832,34 @@ function insertImage() {
 
     $imgSource = $_REQUEST['image-group'];
 
-
     switch ($imgSource) {
 
         case 'URL':
             $imageURL = $_REQUEST['imageURL'];
-            $fileName = basename($imageURL);
-            $ext = pathinfo($fileName, PATHINFO_EXTENSION);
-            $imageFile = get($imageURL);
-            $imagePath = getUploadedImageFolder() . '/' . $fileName;
-            if ($imageFile !== false && strlen($imageFile) > 0  
-                    && ($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif" || $ext == "bmp")) { //file is image
+            
+            if (!filter_var($imageURL, FILTER_VALIDATE_URL) === false) {
+                
+                $fileName = basename($imageURL);
+                $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+                $imageFile = get($imageURL);
+                $imagePath = getUploadedImageFolder() . '/' . $fileName;
+                if ($imageFile !== false && strlen($imageFile) > 0  
+                        && ($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif" || $ext == "bmp")) { //file is image
 
-                $fh = fopen($imagePath, 'w');
-                $size = fwrite($fh, $imageFile);
-                fclose($fh);
+                    $fh = fopen($imagePath, 'w');
+                    $size = fwrite($fh, $imageFile);
+                    fclose($fh);
 
+                } else {
+
+                    echo json_encode(array (0 => "f", 1 =>"Error uploading image from URL."
+                        . " Max allowed size is 5MB."));
+                    exit();
+                }
             } else {
-                // can't upload image from URL
-
-                // call insert image function and send error message
-                print '<script type="text/javascript">'
-                    . 'window.top.window.insertImage("", "Error uploading image from URL. Check typed URL. Max allowed size is 5MB." )'
-                    . '</script>';
-
-                exit();
+                echo json_encode(array (0 => "f", 1 =>"Error uploading image from URL."
+                        . " Check typed URL."));
+                    exit();
             }
             break;
 
@@ -869,24 +872,16 @@ function insertImage() {
 
                 $imagePath = getUploadedImageFolder() . '/' . $fileName;
                 if (!move_uploaded_file($imageFile, $imagePath)) {
-                    // can't move uploaded file
 
-                    // call insert image function and send error message
-                    print '<script type="text/javascript">'
-                        . 'window.top.window.insertImage("", "Error uploading image. Check chosen file." )'
-                        . '</script>';
-
+                    echo  json_encode(array (0 => "f", 1 =>"Error uploading image."
+                        . " Check chosen file."));
                     exit();
                 }
 
             } else {
-                // file isn't uploaded
-
-                // call insert image function and send error message
-                print '<script type="text/javascript">'
-                    . 'window.top.window.insertImage("", "Error uploading image. Check chosen file. " )'
-                    . '</script>';
-
+                
+                echo json_encode(array (0 => "f", 1 =>"Error uploading image."
+                    . " Check chosen file."));
                 exit();
             }
             break;
@@ -894,13 +889,9 @@ function insertImage() {
         case 'Reuse':
             $fileName = $_REQUEST['reuseImageFile'];
             break;
-
     }
 
-    // call insert image function and send saved image path to it
-    print '<script type="text/javascript">'
-            . 'window.top.window.insertImage("' . $fileName . '")'
-            . '</script>';
+    echo  json_encode(array (0 => "s", 1 => $fileName));
 }
 
 

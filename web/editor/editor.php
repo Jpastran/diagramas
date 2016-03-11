@@ -129,7 +129,8 @@ $page = 'editor';
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
         </div>
-
+        
+        <!--Cabecera de Impresion-->
         <div id="headDiv" style="display: none">
             <div id="logoCuc"><img src="assets/images/logo_CUC.png"></div>
             <div id="textHead">
@@ -795,7 +796,7 @@ $page = 'editor';
         <!--Insert Image dialog content-->
         <div id="insert-image-dialog">
             <h2>Insert Image</h2>
-            <form action="./common/controller.php" method="POST" target="upload_target" enctype="multipart/form-data">
+            <form method="POST" id="upload_target" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="insertImage"/>
                 <div class="insert-image-line">
                     <input type="radio" name="image-group" value="URL" checked>
@@ -820,9 +821,6 @@ $page = 'editor';
                 </div>
             </form>
         </div>
-
-        <!--Insert Image hidden iframe-->
-        <iframe id="upload_target" name="upload_target" style="width:0;height:0;border:0px;"></iframe>
 
         <div id="imgCanvas" style="display: none"></div>
 

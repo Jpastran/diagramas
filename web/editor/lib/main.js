@@ -627,6 +627,30 @@ function showInsertImageDialog() {
     errorDiv.innerHTML = '';
 }
 
+function insertAjax(e) {
+    e.preventDefault();
+    var formData = new FormData(document.getElementById("upload_target"));
+    $.ajax({
+        data: formData,
+        url: 'common/controller.php',
+        type: 'POST',
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function(array) {
+        var resp = JSON.parse(array);
+        if (resp[0] == "s") {
+            $.modal.close();
+            insertedImageFileName = resp[1];
+            action('insertImage');
+        } else {
+            var errorDiv = document.getElementById(uploadImageErrorDivId);
+            errorDiv.innerHTML = resp[1];
+            $.modal.setPosition();
+        }
+    }
+    );
+}
 /** Show filenames of uploaded images in "Insert image" dialog
  * Get filenames from server and insert them into dialog
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>

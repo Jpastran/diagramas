@@ -76,7 +76,7 @@ function resumAnali() {
     var sel = metSelA(true);
     var noSel = metSelA(false);
     for (var i = 0; i < nAA.length; i++) {
-        $("#td" + sel[i]).text(nAA[i] - 1);
+        $("#td" + sel[i]).text(nAA[i]);
         cont += nAA[i];
         var numNo = parseFloat($("#td" + noSel[i]).text());
         if (isNaN(numNo)) {
@@ -86,7 +86,7 @@ function resumAnali() {
             ctNo += numNo;
         }
     }
-    $("#td" + sel[sel.length - 3]).text(cont - 6);
+    $("#td" + sel[sel.length - 3]).text(cont);
     $("#td" + noSel[noSel.length - 3]).text(ctNo);
     var stak = STACK.figures;
     var dist = 0;

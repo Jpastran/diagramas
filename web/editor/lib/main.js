@@ -4469,10 +4469,10 @@ var iniX = 400;
 var iniY = 40;
 
 /**Distancia entre lineas*/
-var distLine = 150;
+var distLine = 170;
 
 /**Distancia menos de linea especiales*/
-var disLinMin = 130;
+var disLinMin = 150;
 
 /**Distancia del segmento de las figuras
  * ref @see FigureDefaults.segmentSize*/
@@ -4542,9 +4542,17 @@ function lineaPrincipal() {
     }
 }
 
+function closeText() {
+    if (state == STATE_TEXT_EDITING) {
+        currentTextEditor.destroy();
+        currentTextEditor = null;
+    }
+}
+
 function canvasBuild(figureFunction) {
     createFigureFunction = figureFunction;
     lineaPrincipal();
+    closeText();
     if (figureFunction == window.figure_LineIn) {
         figureBuild(createFigureFunction, coor[0] - tamFig, coor[1] - tamFig * 0.75);
         conectorBuild();
@@ -4687,10 +4695,15 @@ function ordenarJagged(pos) {
         turns[2].y = coor[1];
         turns[3].y = coor[1];
     } else if (!optNull) {
-        turns[1].y = turns[0].y + disCon;
-        turns[2].x = turns[1].x;
-        turns[2].y = pos[1] - tamFig / 2;
-        turns[3].y = turns[2].y;
+        if (turns.length == 6) {
+            turns[2].x = turns[0].x;
+            turns[3].x = turns[0].x;
+        } else {
+            turns[1].y = turns[0].y + disCon;
+            turns[2].x = turns[1].x;
+            turns[2].y = pos[1] - tamFig / 2;
+            turns[3].y = turns[2].y;
+        }
     }
 }
 
@@ -4879,27 +4892,32 @@ function especial(accion) {
                 break;
             case 'trayGen':
                 var options = parseInt(document.getElementById('trayNum').value);
-                if (options >= 2 && options <= 6) {
+                if (options >= 2 && options <= 5) {
                     selAP = true;
                     figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
                     conectorBuild();
                     coor[1] -= tamFig / 2;
                     savePos.push(coor);
-                    trayecto = [];
                     for (var i = 0; i < options; i++) {
-                        trayecto[i] = [(coor[0] - ((options * 50) - (disLinMin / 2))) + (disLinMin * i), coor[1] + disCon];
+                        //Genera el tamaño en el lienzo que ocupara el trayecto.
+                        var tamT = options * disLinMin / 2;
+                        //Genera  la distancia entre dos lineas
+                        var disM = disLinMin / 2;
+                        //Genera la posicion de cada linea
+                        var multD = disLinMin * i;
+                        trayecto[i] = [(coor[0] - (tamT - disM)) + multD, coor[1] + disCon];
                     }
                     opciones = true;
                     for (var i = 0; i < trayecto.length; i++) {
                         figureBuild(window.figure_MultiPoint, trayecto[i][0], trayecto[i][1]);
-                        //var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
-                        conectorBuildFull(true, coor, trayecto[i], false);
-                        //if (!centro)//Funcional con disLinMin = 100
-                        ordenarJagged();
+                        var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
+                        conectorBuildFull(!centro, coor, trayecto[i], false);
+                        if (!centro)
+                            ordenarJagged();
                         trayecto[i][1] -= tamFig / 2;
                     }
                     coor = trayecto[options - 1];
-                    savePos.push([coor[0], coor[1]]);
+                    savePos.push([coor[0], coor[1] + disFig]);
                     document.getElementById('trayGen').style.display = (trayGen = 'none');
                     document.getElementById('traySig').style.display = (traySig = 'block');
                     lineas[3] = options - 1;//Trayecto actual
@@ -4909,20 +4927,25 @@ function especial(accion) {
                     especialSelect(true);
                     selTray = true;
                 } else {
-                    errorDiv('Opciones solo puden ser numeros enteros de 2 a 6');
+                    errorDiv('Opciones solo puden ser numeros enteros de 2 a 5');
                     clean = false;
                 }
                 break;
             case 'trayFin':
                 clean = false;
                 if (!opciones || optNull) {
-                    if (lineas[3] > 0) {
+                    if (optNull) {
                         var pos = savePos.pop();
                         if (pos[0] == trayecto[lineas[3]][0] && pos[1] == trayecto[lineas[3]][1]) {
                             optNull = false;
-                        } else if (lineas[3] - 1 != 0) {
+                            if (lineas[3] == 0){
+                                opciones = false;
+                            }
+                        } else if (lineas[3] != 0) {
                             savePos.push([trayecto[lineas[3] - 1][0], trayecto[lineas[3] - 1][1] + disFig]);
                         }
+                    }
+                    if (lineas[3] > 0) {
                         lineas[3]--;
                         coor = trayecto[lineas[3]];
                         clean = true;
@@ -4990,6 +5013,8 @@ function especial(accion) {
                 document.getElementById('trayGen').style.display = (trayGen = 'block');
                 document.getElementById('btnFin').value = (btnFin = 'Siguiente');
                 especialSelect(false);
+                optNull = true;
+                trayecto = [];
                 coor = pos;
                 coor[1] -= tamFig / 2;
                 break;
@@ -5085,12 +5110,12 @@ function valFigName(str) {
 
 function cambiarVista(id) {
     if (id == "analitico") {
-        displayDivs('block', 'block', 'block', 'none', 'none', 'none');
+        displayDivs('block', 'none', 'block', 'none', 'none', 'none');
         cambiaCtab(tab1, ctab1);
         tabs(tab1, ctab1);
         resetAnalitico();
     } else if (id == "sinoptico") {
-        displayDivs('block', 'block', 'block', 'none', 'none', 'none');
+        displayDivs('block', 'none', 'block', 'none', 'none', 'none');
         cambiaCtab(tab1, ctab3);
         tabs(tab1, ctab3);
         resetSinoptico();

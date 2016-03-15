@@ -42,7 +42,7 @@ function resumSinop() {
     var sel = metSelS(true);
     var noSel = metSelS(false);
     for (var i = 0; i < nSA.length; i++) {
-        $("#td" + sel[i]).text(nSA[i] - 1);
+        $("#td" + sel[i]).text(nSA[i]);
         cont += nSA[i];
         var numNo = parseFloat($("#td" + noSel[i]).text());
         if (isNaN(numNo)) {
@@ -52,7 +52,7 @@ function resumSinop() {
             ctNo += numNo;
         }
     }
-    $("#td" + sel[sel.length - 2]).text(cont - 3);
+    $("#td" + sel[sel.length - 2]).text(cont);
     $("#td" + noSel[noSel.length - 2]).text(ctNo);
     var stak = STACK.figures;
     var time = 0;

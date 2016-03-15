@@ -67,6 +67,7 @@ $page = 'editor';
         <div style="display: none"><? require_once dirname(__FILE__) . '/header.php'; ?></div>
         <div id="actions" >           
             <div style="float: left">
+                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
                 <!-- 
                  <a style="text-decoration: none;" href="#" onclick="return save();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
                  <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
@@ -79,14 +80,17 @@ $page = 'editor';
                 -->
                 <a href="./common/controller.php?action=newDiagramExe" title="Nuevo"><img src="assets/images/icon_new.jpg" border="0" height="16"></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+
                 <a href="javascript:refCabecera();"  title="Refrescar Cabecera"><img  src="assets/images/rotate.png" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+
                 <a href="javascript:printDiagram();"  title="Imprimir"><img  src="assets/images/icon_print.png" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+
                 <a href="javascript:action('undo');" title="Deshacer (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>           
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
-            <div id="aTools" style="float: left">
+            <div id="aTools" style="float: left; display: none;">
                 <a href="javascript:action('connector-straight');"  title="Conector lineal"><img src="assets/images/icon_connector_straight.gif" border="0"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
@@ -129,7 +133,7 @@ $page = 'editor';
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
         </div>
-        
+
         <!--Cabecera de Impresion-->
         <div id="headDiv" style="display: none">
             <div id="logoCuc"><img src="assets/images/logo_CUC.png"></div>
@@ -190,7 +194,7 @@ $page = 'editor';
                         <img src="lib/sets/trayectos.png" class="especial" />
                         <div class="label" id="trayGen" style=" display: block">
                             Generar
-                            <input type="number" id="trayNum" min="2" step="1" max="6" style="width: 120px;">
+                            <input type="number" id="trayNum" min="2" step="1" max="5" style="width: 120px;">
                             <input type="button" value="Generar" onclick="especial('trayGen')"/>
                         </div>	
                         <div class="label" id="traySig" style=" display: none">

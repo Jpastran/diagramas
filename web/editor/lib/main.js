@@ -4955,6 +4955,8 @@ function especial(accion) {
                                             reptSumar(STACK.figures[i].name);
                                             sumRepet.push(STACK.figures[i]);
                                         }
+                                        //Gestiona repeticion dentro de repeticion
+                                        //Como gatillo si es igual el primero del ciclo
                                         for (var k = 0; k < reptAdm.length; k++) {
                                             if (reptAdm[k][0] == STACK.figures[i].id) {
                                                 for (var m = 0; m < reptAdm[k][2]; m++) {

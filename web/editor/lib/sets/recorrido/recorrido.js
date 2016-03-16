@@ -24,13 +24,14 @@ figureSets["recorrido"] = {
         {figureFunction: "inspecion", image: "square.png"},
         {figureFunction: "almacenaje", image: "triangle_inver.png"},
         {figureFunction: "demora", image: "semi_circle_right.png"},
-        {figureFunction: "trasporte", image: "arrow.png"},
-        {figureFunction: "combinado", image: "combine.png"}
+        {figureFunction: "trasporteR", image: "arrow.png"},
+        {figureFunction: "combinado", image: "combine.png"},
+        {figureFunction: "trasporteL", image: "arrow_left.png"}
     ]
 };
 
-var nRP = [];
-var nRA = [1, 1, 1, 1, 1, 1];
+var nRP = [0, 0, 0, 0, 0, 0];
+var nRA = [0, 0, 0, 0, 0, 0];
 
 var preR = [118, 122, 126, 130, 134, 138, 142, 146, 150];
 var proR = [119, 123, 127, 131, 135, 139, 143, 147, 151];
@@ -42,7 +43,7 @@ function resumRecorr() {
     var sel = metSelR(true);
     var noSel = metSelR(false);
     for (var i = 0; i < nRA.length; i++) {
-        $("#td" + sel[i]).text(nRA[i] - 1);
+        $("#td" + sel[i]).text(nRA[i]);
         cont += nRA[i];
         var numNo = parseFloat($("#td" + noSel[i]).text());
         if (isNaN(numNo)) {
@@ -52,7 +53,7 @@ function resumRecorr() {
             ctNo += numNo;
         }
     }
-    $("#td" + sel[sel.length - 3]).text(cont - 6);
+    $("#td" + sel[sel.length - 3]).text(cont);
     $("#td" + noSel[noSel.length - 3]).text(ctNo);
     var stak = STACK.figures;
     var dist = 0;
@@ -110,15 +111,15 @@ function changeMetR() {
 }
 
 function resetRecorrido() {
-    nRP = [];
-    nRA = [1, 1, 1, 1, 1, 1];
+    nRP = [0, 0, 0, 0, 0, 0];
+    nRA = [0, 0, 0, 0, 0, 0];
 }
 
 function sumRecorr(pos) {
     nRP = [nRA[0], nRA[1], nRA[2], nRA[3], nRA[4], nRA[5]];
     nRA[pos]++;
     resumRecorr();
-    return nRP[pos];
+    return nRA[pos];
 }
 
 function obtRecorr() {
@@ -158,7 +159,7 @@ function figure_operacion(x, y) {
     return f;
 }
 
-function figure_trasporte(x, y) {
+function figure_trasporteR(x, y) {
     var p = new Polyline();
     p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 4));
     p.addPoint(new Point(x, y + FigureDefaults.segmentShortSize));
@@ -184,6 +185,44 @@ function figure_trasporte(x, y) {
     f.addPrimitive(p);
 
     var t2 = new Text('T-' + sumRecorr(1), x + FigureDefaults.segmentSize / 3, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
+    f.addPrimitive(t2);
+
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize / 2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2), ConnectionPoint.TYPE_FIGURE);
+
+    f.finalise();
+    return f;
+}
+
+function figure_trasporteL(x, y) {
+    var p = new Polyline();
+    p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 2));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 4));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 4));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentShortSize));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentShortSize));
+    p.addPoint(new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize));
+    p.addPoint(new Point(x, y + FigureDefaults.segmentSize / 2));
+
+    var f = new Figure("Arrow");
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
+
+    f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
+    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
+    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
+    f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('Tiempo', 'time', BuilderProperty.TYPE_SINGLE_TEXT));
+    f.properties.push(new BuilderProperty('Distancia', 'dist', BuilderProperty.TYPE_SINGLE_TEXT));
+    f.properties.push(new BuilderProperty('Descripcion', 'info', BuilderProperty.TYPE_TEXT));
+    f.addPrimitive(p);
+
+    var t2 = new Text('T-' + sumRecorr(1), x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize / 2, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
 
@@ -330,4 +369,8 @@ function figure_combinado(x, y) {
 
     f.finalise();
     return f;
+}
+
+function figure_puente(x, y) {
+    
 }

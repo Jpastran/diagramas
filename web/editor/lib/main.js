@@ -4462,17 +4462,20 @@ function touchCancel(event) {
  * Variables usadas por el diagrama
  **/
 
-/**Coordenada inicial en eje X*/
+/**Coordenada inicial en eje X
+ * ajustada a la formula 
+ * 100 + {distLine * 2}*/
 var iniX = 400;
 
-/**Coordenada inicial en eje Y*/
+/**Coordenada inicial en eje Y
+ * ajustada a @tamFig */
 var iniY = 40;
 
 /**Distancia entre lineas*/
-var distLine = 170;
+var distLine = 150;
 
 /**Distancia menos de linea especiales*/
-var disLinMin = 150;
+var disLinMin = 130;
 
 /**Distancia del segmento de las figuras
  * ref @see FigureDefaults.segmentSize*/
@@ -4647,9 +4650,9 @@ function growCanvas() {
                 );
         cmdCanvasFit.execute();
         History.addUndo(cmdCanvasFit);
-        coor[0] += 150;
+        coor[0] += distLine;
         for (var i = 0; i < savePos.length; i++) {
-            savePos[i][0] += 150;
+            savePos[i][0] += distLine;
         }
     }
 }
@@ -4758,6 +4761,8 @@ var btnFin = 'Siguiente';
 var selAP = false;
 var selTray = false;
 
+var reptAdm = [];
+
 function especial(accion) {
     var clean = true;
     if (primer) {
@@ -4854,8 +4859,21 @@ function especial(accion) {
                                             reptSumar(STACK.figures[i].name);
                                             sumRepet.push(STACK.figures[i]);
                                         }
+                                        for (var k = 0; k < reptAdm.length; k++) {
+                                            if (reptAdm[k][0] == STACK.figures[i].id) {
+                                                for (var m = 0; m < reptAdm[k][2]; m++) {
+                                                    for (var l = 0; l < STACK.figures.length; l++) {
+                                                        if (STACK.figures[l].id >= reptAdm[k][0] && STACK.figures[l].id < reptAdm[k][1]) {
+                                                            reptSumar(STACK.figures[l].name);
+                                                            sumRepet.push(STACK.figures[l]);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
+                                reptAdm.push([figFin.id, figIni.id, numR]);
                             } else {
                                 errorDiv("Numero de ciclos mayor a 0 y menor a 10");
                             }
@@ -4938,7 +4956,7 @@ function especial(accion) {
                         var pos = savePos.pop();
                         if (pos[0] == trayecto[lineas[3]][0] && pos[1] == trayecto[lineas[3]][1]) {
                             optNull = false;
-                            if (lineas[3] == 0){
+                            if (lineas[3] == 0) {
                                 opciones = false;
                             }
                         } else if (lineas[3] != 0) {
@@ -5289,6 +5307,8 @@ function paintUT(value) {
 
 function printDiagram() {
     refCabecera();
+    resetToNoneState();
+    draw();
     var id = currentSetId;
     var diag = $('#selDiag option:selected').text();
     $('#diagName').text(diag.toUpperCase());

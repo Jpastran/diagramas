@@ -4458,10 +4458,6 @@ function touchCancel(event) {
 //TODO Borrar los TODO que no digan un error.
 //TODO Verificar z-index de los conectores
 
-/**
- * Variables usadas por el diagrama
- **/
-
 /**Coordenada inicial en eje X
  * ajustada a la formula 
  * 100 + {distLine * 2}*/
@@ -4478,7 +4474,7 @@ var distLine = 150;
 var disLinMin = 130;
 
 /**Distancia del segmento de las figuras
- * ref @see FigureDefaults.segmentSize*/
+ * @see FigureDefaults.segmentSize*/
 var tamFig = 40;
 
 /**Distancia menos de linea especiales
@@ -4535,6 +4531,25 @@ var historial = [];
  * la repeticion para la cabecera*/
 var sumRepet = [];
 
+/**Gatillo de seleccion de numeracion
+ * usado en casos especiales para guardar
+ * en {historial}*/
+var selAP = false;
+
+/**Gatillo de actualizado de las coordenadas
+ * para el array de {trayecto} */
+var selTray = false;
+
+/**Guarda las repeticiones hechas con 
+ * anteriorida y verifica si se encuentra
+ * dentro de otra repeticion 
+ * @augments Esta contituido por vectores que 
+ * En [0] guarada Id de la Figura incial
+ * En [1] guarada Id de la Figura final
+ * En [2] guarda el numero de ciclos*/
+var reptAdm = [];
+
+/**Genera la primera linea del diagrama*/
 function lineaPrincipal() {
     if (!primer) {
         figureBuild(window.figure_LineInit, coor[0] - tamFig, coor[1]);
@@ -4545,6 +4560,7 @@ function lineaPrincipal() {
     }
 }
 
+/**Cierra el textarea presente en el lienzo*/
 function closeText() {
     if (state == STATE_TEXT_EDITING) {
         currentTextEditor.destroy();
@@ -4552,6 +4568,10 @@ function closeText() {
     }
 }
 
+/**Genera las figuras correspondientes y acomoda las figuras
+ * especificas para el diagrama. Conectandolas de manera automatica
+ * @param {Function} figureFunction funcion obtenida a partir de {figureSets}
+ * @see builder.js */
 function canvasBuild(figureFunction) {
     createFigureFunction = figureFunction;
     lineaPrincipal();
@@ -4575,6 +4595,8 @@ function canvasBuild(figureFunction) {
     cleanStates();
 }
 
+/**Construye los conectores entre figuras a partir de las
+ * coordenadas actuales de {coor} y los gatillos activos*/
 function conectorBuild() {
     connectorType = Connector.TYPE_JAGGED;
     if (finLS) {
@@ -4591,16 +4613,25 @@ function conectorBuild() {
         ordenarJagged(coor);
         savePos.push(pos);
         finSS = false;
+        especialSelect(false);
     } else {
         connectorType = Connector.TYPE_STRAIGHT;
         connectorPickFirst(coor[0], coor[1] - disFigCon);
         connectorPickSecond(coor[0], coor[1] - tamFig / 2);
-        opciones = false;
+        if (opciones) {
+            opciones = false;
+            especialSelect(false);
+        }
     }
     var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
     History.addUndo(cmdCreateCon);
 }
 
+/**Permite construir un conector completo ya sea lineal o cuadrado
+ * @param {String} jagg determina si es lineal o cuadrado
+ * @param {Array} xy1 primer juego de coordenadas
+ * @param {Array} xy2 segundo juego de coordenadas
+ * @param {Boolean} filled determina si tendra punta*/
 function conectorBuildFull(jagg, xy1, xy2, filled) {
     jagg ? connectorType = Connector.TYPE_JAGGED : connectorType = Connector.TYPE_STRAIGHT;
     connectorPickFirst(xy1[0], xy1[1]);
@@ -4611,12 +4642,22 @@ function conectorBuildFull(jagg, xy1, xy2, filled) {
     History.addUndo(cmdCreateCon);
 }
 
+/**Perminte construir una figura a partir de la funcion y las
+ * coordenadas del lienzo
+ * @param {Function} figureFunction el nombre de la funcion de la figura
+ * @param {Number} x posicion en el eje x
+ * @param {Number} y posicion en el eje y
+ * */
 function figureBuild(figureFunction, x, y) {
     var cmdCreateFig = new FigureCreateCommand(figureFunction, x, y);
     cmdCreateFig.execute();
     History.addUndo(cmdCreateFig);
 }
 
+/**Limpia y dibuja el lienzo de cualquier cambio realizado
+ * Agrega distancia al vector {coor} en el eje 
+ * Ejecuta la @function growCanvas para crecer el lienzo si es nesesario 
+ * Limpia el texto de error si esta presnte*/
 function cleanStates() {
     coor[1] += disFig;
     if (selTray) {
@@ -4631,6 +4672,9 @@ function cleanStates() {
     draw();
 }
 
+/**Verifica si el lienzo nesecita crecer segun las coordenadas de
+ * {coor} y actualiza el array de {lienzo}.
+ * */
 function growCanvas() {
     if (lienzo[1] <= coor[1]) {
         lienzo[1] += distLine;
@@ -4657,6 +4701,7 @@ function growCanvas() {
     }
 }
 
+/**Limpia figura que esta siendo arrastrada si no se coloca en el lienzo*/
 function dropFigure() {
     createFigureFunction = null;
     selectedFigureThumb = null;
@@ -4666,6 +4711,10 @@ function dropFigure() {
     }
 }
 
+/**Ordena los puntos de giro {turningPoints} de los conectores cuadrados
+ * @param {Array} pos coordenada de referencia para acomodar los puntos
+ * @see connections.js @param turningPoints
+ * */
 function ordenarJagged(pos) {
     var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
     if (finLS) {
@@ -4710,6 +4759,13 @@ function ordenarJagged(pos) {
     }
 }
 
+/**Perminte ordenar las lineas de un connector cuadrado a partir de delta
+ * @param {String} align direccion en que cambiara la linea {'v'} de 
+ * forma vertical y {'h'} manera horizontal.
+ * @param {type} name description
+ * @param {type} name description
+ * @see connections.js @param userChanges
+ * */
 function ordenarDelta(align, delta, index) {
     var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
     if (con != null) {
@@ -4730,8 +4786,14 @@ function ordenarDelta(align, delta, index) {
     }
 }
 
+/**Guarda el nombre de selector de 
+ * especiales actual*/
 var selectEspecial = 'entrada';
 
+/**Cambia los divs visibles a partir del selector de especiales
+ * y recarga las el listado de figuras presentes
+ * @param {String} nombre Determina el nombre del Id del div 
+ * @see editor.php*/
 function setEspecial(nombre) {
     var div = document.getElementById(nombre);
     if (div != null) {
@@ -4750,18 +4812,48 @@ function setEspecial(nombre) {
     }
 }
 
+/**Guarda el estado del boton {btnLE} */
 var disbtnLE = true;
-var disbtnLS = true;
-var disEspSel = false;
-var trayGen = 'block';
-var traySig = 'none';
-var trayUnir = 'none';
-var trayName = 'Opcion 1';
-var btnFin = 'Siguiente';
-var selAP = false;
-var selTray = false;
 
-var reptAdm = [];
+/**Guarda el estado del boton {btnLS} */
+var disbtnLS = true;
+
+/**Guarda el estado del selector {espSelect} */
+var disEspSel = false;
+
+/**Guarda el estado del div {trayGen} */
+var trayGen = 'block';
+
+/**Guarda el estado del div {traySig} */
+var traySig = 'none';
+
+/**Guarda el estado del div {trayUnir} */
+var trayUnir = 'none';
+
+/**Guarda el texto de la opcion actual
+ *  para el label {trayName} */
+var trayName = 'Opcion 1';
+
+/**Guarda el texto del boton {btnFin} */
+var btnFin = 'Siguiente';
+
+/**Ejecuta los metodos especiales del diagrama.
+ * @param {String} accion Determina el tipo accion especial a realizar.
+ * @argument {Function} newLE Crea una linea de entrada secundaria.
+ * @argument {Function} endLE Termina una linea de entrada secundaria.
+ * @argument {Function} newLS Crea una linea de salida secundaria.
+ * @argument {Function} endLS Termina una linea de salida secundaria.
+ * @argument {Function} repetir Genera un bucle de repeticion.
+ * a partir de una figura y un numero de ciclos.
+ * @argument {Function} repro Genera un reproceso a partir de la ultima
+ * figura hasta la figura selecionada.
+ * @argument {Function} trayGen Genera lineas de opciones de trayecto 
+ * segun el numero obtenido.
+ * @argument {Function} trayFin Mueve la posicion actual de las lineas. 
+ * @argument {Function} trayUnir Termina las opciones de trayecto y 
+ * une las lineas seleccionadas.
+ * @see editor.php para obtener los Id de cada caso.
+ * */
 
 function especial(accion) {
     var clean = true;
@@ -4797,12 +4889,12 @@ function especial(accion) {
                             document.getElementById('btnLE').disabled = (disbtnLE = true);
                         }
                     } else {
-                        errorDiv('Debe poseer al menos un proceso');
+                        errorDiv('la nueva entrada debe poseer al menos un proceso');
                         clean = false;
                     }
                 }
                 break;
-            case 'newLS':
+            case 'newLS'://TODO Validar para entrada
                 if (lineas[1] == 1) {
                     lineas[2]++;//Numero de salidas activas
                     selAP = true;
@@ -4822,13 +4914,17 @@ function especial(accion) {
                 break;
             case 'endLS':
                 if (lineas[2] != 0) {
-                    lineas[2]--;
-                    var pos = savePos.pop();
-                    coor = pos;
-                    coor[1] -= tamFig / 2;
-                    if (lineas[2] == 0) {
-                        document.getElementById('btnLS').disabled = (disbtnLS = true);
-                        especialSelect(false);
+                    if (!finSS) {
+                        lineas[2]--;
+                        var pos = savePos.pop();
+                        coor = pos;
+                        coor[1] -= tamFig / 2;
+                        if (lineas[2] == 0) {
+                            document.getElementById('btnLS').disabled = (disbtnLS = true);
+                        }
+                    } else {
+                        errorDiv("La salida debe poseer al menos un proceso");
+                        clean = false;
                     }
                 }
                 break;
@@ -4968,6 +5064,7 @@ function especial(accion) {
                         coor = trayecto[lineas[3]];
                         clean = true;
                         opciones = true;
+                        especialSelect(true);
                         trayName = 'Opcion ' + (lineas[4] - lineas[3])
                         document.getElementById('trayName').innerHTML = trayName;
                         if (lineas[3] == 0)
@@ -4990,6 +5087,7 @@ function especial(accion) {
                             div.appendChild(text);
                             div.appendChild(br);
                         }
+                        especialSelect(true);
                         selTray = false;
                     }
                 } else {
@@ -5046,6 +5144,8 @@ function especial(accion) {
     }
 }
 
+/**Suma los directamente las figuras a partir de tipo
+ * @param {String} name Nombre que tiene la figura */
 function reptSumar(name) {
     if (currentSetId == "analitico") {
         if (name == "Circle") {
@@ -5072,12 +5172,14 @@ function reptSumar(name) {
     }
 }
 
+/**Gestion la innabilidad del selector de especiales*/
 function especialSelect(bool) {
     var select = document.getElementById('espSelect');
     bool ? select.disabled = (disEspSel = true) :
             select.disabled = (disEspSel = false);
 }
 
+/**Gestiona el div de error*/
 function errorDiv(textError) {
     var div = document.getElementById('error');
     if (textError != '') {
@@ -5088,9 +5190,14 @@ function errorDiv(textError) {
     }
 }
 
+/**Guarda el numero de opciones del select*/
 var stackSelct = -1;
+
+/**Guarda el numero actual figuras en {STACK}*/
 var stackFigure = -1;
 
+/**Gestiona la carga de figuras selecionables para los selectores
+ * @param {String} selectId El id del selector que se va cargar*/
 function cargarFiguras(selectId) {
     var select = document.getElementById(selectId);
     if (select.length != stackSelct || stackFigure != STACK.figures.length) {
@@ -5118,6 +5225,9 @@ function cargarFiguras(selectId) {
     errorDiv('');
 }
 
+/** Valida el nombre de la figura
+ * @param {String} str Nombre de la figura
+ * @return {Boolean} Devuelve si es valida la figura*/
 function valFigName(str) {
     if (str == "LineInit" || str == "LineDouble" || str == "LineOut" || str == "LineIn") {
         return false;
@@ -5126,6 +5236,8 @@ function valFigName(str) {
     }
 }
 
+/**Gestiona el cambio del selector de diagramas
+ * @param {String} id El id del selector del diagramas*/
 function cambiarVista(id) {
     if (id == "analitico") {
         displayDivs('block', 'none', 'block', 'none', 'none', 'none');
@@ -5181,6 +5293,13 @@ function cambiarVista(id) {
     }
 }
 
+/**Gestiona la visibilidad de los divs de la pagina editor.php
+ * @param {String} right Cambia el panel derecho 
+ * @param {String} tools Cambia la barra supeiror 
+ * @param {String} esp Cambia el panel de especiales 
+ * @param {String} img Cambia el panel de imagen de recorrido 
+ * @param {String} bim Cambia el panel de bimanual
+ * @param {String} hmaq Cambia el panel de hombre-maquina*/
 function displayDivs(right, tools, esp, img, bim, hmaq) {
     document.getElementById('right').style.display = right;
     document.getElementById('aTools').style.display = tools;
@@ -5199,6 +5318,7 @@ function displayDivs(right, tools, esp, img, bim, hmaq) {
     }
 }
 
+/**Agrega al {historial} las variables actuales del sistema*/
 function addHistory() {
     var hist = [];
     if (currentSetId == 'analitico' || currentSetId == 'sinoptico') {
@@ -5239,6 +5359,7 @@ function addHistory() {
     historial.push(hist);
 }
 
+/**Devuelve el ultimo estado guardado en {historial}*/
 function backHistory() {
     var hist = historial.pop();
     if (currentSetId == 'analitico' || currentSetId == 'sinoptico') {
@@ -5280,6 +5401,7 @@ function backHistory() {
     }
 }
 
+/** Refresca los datos de la cabecera conforme a diagrama actual*/
 function refCabecera() {
     if (currentSetId == 'analitico') {
         resumAnali();
@@ -5294,17 +5416,26 @@ function refCabecera() {
     }
 }
 
+/** Guarda la unidad de tiempo de las figuras*/
 var valTiempo = 'seg';
+
+/**Guarda la unidad de distancia de las figuras*/
 var valDistan = 'm';
 
-function paintUD(value) {
-    valDistan = value;
-}
-
+/**Cambia el tipo unidad de tiempo de {valTiempo}*/
 function paintUT(value) {
     valTiempo = value;
 }
 
+/**Cambia el tipo unidad de distancia de {valDistan}*/
+function paintUD(value) {
+    valDistan = value;
+}
+
+/**Gestiona la impresion del diagrama
+ * @augments Requiere objetos DOM para poder imprimirlos 
+ * no se pueden creados con Jquery 
+ * @see printArea.js*/
 function printDiagram() {
     refCabecera();
     resetToNoneState();

@@ -68,7 +68,7 @@ function resumSinop() {
             time += repFig;
         }
     }
-    $("#td" + sel[sel.length - 1]).text(time);
+    $("#td" + sel[sel.length - 1]).text(valFloat(time));
     if (isNaN(parseFloat($("#td" + noSel[noSel.length - 1]).text()))) {
         $("#td" + noSel[noSel.length - 1]).text(0);
     }

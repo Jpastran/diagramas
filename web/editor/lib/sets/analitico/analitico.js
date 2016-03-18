@@ -111,11 +111,11 @@ function resumAnali() {
             time += repFigT;
         }
     }
-    $("#td" + sel[sel.length - 2]).text(dist);
+    $("#td" + sel[sel.length - 2]).text(valFloat(dist));
     if (isNaN(parseFloat($("#td" + noSel[noSel.length - 2]).text()))) {
         $("#td" + noSel[noSel.length - 2]).text(0);
     }
-    $("#td" + sel[sel.length - 1]).text(time);
+    $("#td" + sel[sel.length - 1]).text(valFloat(time));
     if (isNaN(parseFloat($("#td" + noSel[noSel.length - 1]).text()))) {
         $("#td" + noSel[noSel.length - 1]).text(0);
     }
@@ -127,6 +127,14 @@ function resumAnali() {
         if (isNaN(pro))
             pro = 0;
         $("#td" + ganA[k]).text(pre - pro);
+    }
+}
+
+function valFloat(n){
+    if (n % 1 !== 0){
+        return n.toFixed(2);
+    }else{
+        return n;
     }
 }
 

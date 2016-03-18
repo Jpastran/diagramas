@@ -3833,7 +3833,14 @@ function action(action) {
                 doUndoHM();
             } else if (currentSetId != "bimanual") {
                 Log.info("main.js->action()->Undo. Nr of actions in the STACK: " + History.COMMANDS.length);
-                History.undo();
+                if (contAH != 0){
+                    admHist.push(contAH);
+                    contAH = 0;
+                }
+                var backCont = admHist.pop();
+                for (var i = 0; i < backCont; i++) {
+                    History.undo();
+                }
                 redraw = true;
             }
             break;
@@ -4456,7 +4463,11 @@ function touchCancel(event) {
 //TODO Arreglar la seleccion multiple.
 //TODO Corregir nivel de los conectores.
 //TODO Borrar los TODO que no digan un error.
-//TODO Verificar z-index de los conectores
+//TODO Verificar z-index de los conectores.
+//TODO Crear el remplazo de figuras (Gestionar renumeracion).
+//TODO Gestionar guardado temporal.
+//TODO Crear el manual de usuario en linea.
+//TODO Traducir el builder.
 
 /**Coordenada inicial en eje X
  * ajustada a la formula 
@@ -4521,6 +4532,8 @@ var finSS = false;
 
 /**Gatillo de opciones de trayecto*/
 var opciones = false;
+
+/**Gatillo de linea vacia en trayecto*/
 var optNull = true;
 
 /**Guarda todos los cambios para en 
@@ -4548,6 +4561,13 @@ var selTray = false;
  * En [1] guarada Id de la Figura final
  * En [2] guarda el numero de ciclos*/
 var reptAdm = [];
+
+/**Guarda el numero acciones que se desharan*/
+var admHist = [];
+
+/**Guarda el numero de acciones
+ * hasta que se crea una nueva figura*/
+var contAH = 0;
 
 /**Genera la primera linea del diagrama*/
 function lineaPrincipal() {
@@ -4669,6 +4689,8 @@ function cleanStates() {
     CONNECTOR_MANAGER.connectionPointsResetColor();
     growCanvas();
     errorDiv('');
+    admHist.push(contAH);
+    contAH = 0;
     draw();
 }
 
@@ -4937,7 +4959,7 @@ function especial(accion) {
                     var numR = parseInt(document.getElementById('repNum').value);
                     if (coorIn[0] == coorOut[0]) {
                         if (coorIn[1] > coorOut[1]) {
-                            if (numR > 0 && numR < 10) {
+                            if (numR > 0 && numR < 50) {
                                 selAP = true;
                                 conectorBuildFull(true, coorIn, coorOut, true);
                                 ordenarDelta('h', -disCon * 3, 3);
@@ -4973,7 +4995,7 @@ function especial(accion) {
                                 }
                                 reptAdm.push([figFin.id, figIni.id, numR]);
                             } else {
-                                errorDiv("Numero de ciclos mayor a 0 y menor a 10");
+                                errorDiv("Numero de ciclos mayor a 0 y menor a 50");
                             }
                         } else {
                             errorDiv("La repetcion no puede ser inversa");
@@ -5041,7 +5063,7 @@ function especial(accion) {
                     trayName = 'Opcion ' + (lineas[4] - lineas[3]);
                     document.getElementById('trayName').innerHTML = trayName;
                     especialSelect(true);
-                    selTray = true;
+                    selTray = true;                    
                 } else {
                     errorDiv('Opciones solo puden ser numeros enteros de 2 a 5');
                     clean = false;
@@ -5354,7 +5376,12 @@ function addHistory() {
         selAP = false;
         var trayDiv = [];
         trayDiv.push(trayGen, traySig, trayUnir, trayName, btnFin, selTray);
-        hist = [xy, lines, saves, tray, rept, bools, numDiag, trayDiv];
+        var admRept = [];
+        for (var i = 0; i < reptAdm.length; i++) {
+            var pos = [reptAdm[i][0], reptAdm[i][1], reptAdm[i][2]];
+            admRept.push(pos);
+        }
+        hist = [xy, lines, saves, tray, rept, bools, numDiag, trayDiv, admRept];
     } else {
         hist = obtRecorr();
     }
@@ -5398,6 +5425,7 @@ function backHistory() {
         btnFin = tray[4];
         document.getElementById('btnFin').value = btnFin;
         selTray = tray[5]
+        reptAdm = hist[8];
     } else {
         desRecorr(hist);
     }
@@ -5427,11 +5455,13 @@ var valDistan = 'm';
 /**Cambia el tipo unidad de tiempo de {valTiempo}*/
 function paintUT(value) {
     valTiempo = value;
+    $(".time").text(value);
 }
 
 /**Cambia el tipo unidad de distancia de {valDistan}*/
 function paintUD(value) {
     valDistan = value;
+    $(".dist").text(value);
 }
 
 /**Gestiona la impresion del diagrama

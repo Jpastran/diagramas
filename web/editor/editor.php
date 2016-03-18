@@ -67,7 +67,7 @@ $page = 'editor';
         <div style="display: none"><? require_once dirname(__FILE__) . '/header.php'; ?></div>
         <div id="actions" >           
             <div style="float: left">
-                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
                 <!-- 
                  <a style="text-decoration: none;" href="#" onclick="return save();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
                  <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
@@ -178,7 +178,7 @@ $page = 'editor';
                         </div>						
                         <div class="label">
                             Retorno
-                            <select id="repOut" onclick="cargarFiguras('repOut')"></select>
+                            <select id="repOut" onmousedown="cargarFiguras('repOut')"></select>
                             <input type="button" value="Añadir" onclick="especial('repetir')"/>
                         </div>
                     </div>
@@ -186,7 +186,7 @@ $page = 'editor';
                         <img src="lib/sets/reproceso.png" class="especial" />			
                         <div class="label">
                             Reprocesa
-                            <select id="proOut" onclick="cargarFiguras('proOut')"></select>
+                            <select id="proOut" onmousedown="cargarFiguras('proOut')" ></select>
                             <input id="btnRepro" type="button" value="Agregar" onclick="especial('repro')"/>
                         </div>						
                     </div>
@@ -357,12 +357,7 @@ $page = 'editor';
                                         <td></td>
                                         <td></td>
                                     <tr>
-                                        <td>Distancia T.
-                                            <select id="distA" onchange="paintUD(this.options[this.selectedIndex].value)">
-                                                <option value="cm">cm</option>
-                                                <option value="m" selected>m</option>
-                                                <option value="km">km</option>
-                                            </select></td>
+                                        <td>Distancia T. <span class="dist">M</span></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -370,13 +365,7 @@ $page = 'editor';
                                     <tr>
                                         <td>Fecha: </td>
                                         <td colspan="5"></td>
-                                        <td>Tiempo T.
-                                            <select id="timeA" onchange="paintUT(this.options[this.selectedIndex].value)">
-                                                <option value="seg" selected>seg</option>
-                                                <option value="min">min</option>
-                                                <option value="hora">hora</option>
-                                            </select>
-                                        </td>
+                                        <td>Tiempo T. <span class="time">Seg</span></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -442,12 +431,7 @@ $page = 'editor';
                                     <tr>
                                         <td>Fecha: </td>
                                         <td colspan=3></td>
-                                        <td>Tiempo T. 
-                                            <select id="timeS" onchange="paintUT(this.options[this.selectedIndex].value)">
-                                                <option value="seg" selected>seg</option>
-                                                <option value="min">min</option>
-                                                <option value="hora">hora</option>
-                                            </select></td>
+                                        <td>Tiempo T. <span class="time">Seg</span></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -530,23 +514,13 @@ $page = 'editor';
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Distancia T. 
-                                            <select id="distR" onchange="paintUD(this.options[this.selectedIndex].value)">
-                                                <option value="cm">cm</option>
-                                                <option value="m" selected>m</option>
-                                                <option value="km">km</option>
-                                            </select></td>
+                                        <td>Distancia T. <span class="dist">M</span></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Tiempo T. 
-                                            <select id="timeR" onchange="paintUT(this.options[this.selectedIndex].value)">
-                                                <option value="seg" selected>seg</option>
-                                                <option value="min">min</option>
-                                                <option value="hora">hora</option>
-                                            </select></td>
+                                        <td>Tiempo T. <span class="time">Seg</span></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -776,11 +750,26 @@ $page = 'editor';
             </div>
             <!--Right panel-->
             <div id="right">
-                <center>
-                    <div id="minimap">
+                <div id="minimap"></div>
+                <div id="edit"></div>
+                <div id="medidas">
+                    <hr>
+                    <div class="line">
+                        <div class="label">Unid. de tiempo</div>
+                        <select id="timeMan" onchange="paintUT(this.options[this.selectedIndex].value)">
+                            <option value="seg">Segundo</option>
+                            <option value="min">Minuto</option>
+                            <option value="h">Hora</option>
+                        </select>
                     </div>
-                </center>
-                <div id="edit">
+                    <div class="line">
+                        <div class="label">Unid. de distancia</div>
+                        <select id="distMan" onchange="paintUD(this.options[this.selectedIndex].value)">
+                            <option value="cm">Centimetro</option>
+                            <option value="m" selected>Metro</option>
+                            <option value="km">Kilometro</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

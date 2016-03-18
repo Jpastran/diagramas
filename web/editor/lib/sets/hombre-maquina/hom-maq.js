@@ -139,10 +139,10 @@ function resumHM() {
                 } else {
                     var efic = ciclo == 0 ? 0 : (act / ciclo) * 100;
                     var noEfi = noClo == 0 ? 0 : (noAct / noClo) * 100;
-                    valH[j][i] = efic.toFixed(1);
-                    $("#hm" + met[j][i]).text(efic.toFixed(1));
-                    $("#hm" + noMet[j][i]).text(noEfi.toFixed(1));
-                    $("#hm" + ganH[j][i]).text((efic - noEfi).toFixed(1));
+                    valH[j][i] = efic;
+                    $("#hm" + met[j][i]).text(valFloat(efic));
+                    $("#hm" + noMet[j][i]).text(valFloat(noEfi));
+                    $("#hm" + ganH[j][i]).text(valFloat(efic - noEfi));
                 }
             }
         }

@@ -76,7 +76,7 @@ History.addUndo = function(command) {
 
         //increase the current pointer
         History.CURRENT_POINTER++;
-        
+        contAH++;
         addHistory();
     }
 };

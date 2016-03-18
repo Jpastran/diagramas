@@ -68,11 +68,11 @@ function resumRecorr() {
             time += figT;
         }
     }
-    $("#td" + sel[sel.length - 2]).text(dist);
+    $("#td" + sel[sel.length - 2]).text(valFloat(dist));
     if (isNaN(parseFloat($("#td" + noSel[noSel.length - 2]).text()))) {
         $("#td" + noSel[noSel.length - 2]).text(0);
     }
-    $("#td" + sel[sel.length - 1]).text(time);
+    $("#td" + sel[sel.length - 1]).text(valFloat(time));
     if (isNaN(parseFloat($("#td" + noSel[noSel.length - 1]).text()))) {
         $("#td" + noSel[noSel.length - 1]).text(0);
     }

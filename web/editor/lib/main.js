@@ -3831,15 +3831,30 @@ function action(action) {
         case 'undo':
             if (currentSetId == "hom-maq") {
                 doUndoHM();
+            } else if (currentSetId == "recorrido") {
+                History.undo();
             } else if (currentSetId != "bimanual") {
                 Log.info("main.js->action()->Undo. Nr of actions in the STACK: " + History.COMMANDS.length);
-                if (contAH != 0){
+                var caso = [];
+                if (contAH != 0) {
                     admHist.push(contAH);
                     contAH = 0;
+                    if (currentSetId == 'analitico') {
+                        caso = obtAnalit(true);
+                    } else {
+                        caso = obtSinop(true);
+                    }
                 }
                 var backCont = admHist.pop();
                 for (var i = 0; i < backCont; i++) {
                     History.undo();
+                }
+                if (caso.length != 0) {
+                    if (currentSetId == 'analitico') {
+                        desAnalit(caso);
+                    } else {
+                        desSinop(caso);
+                    }
                 }
                 redraw = true;
             }
@@ -5063,7 +5078,7 @@ function especial(accion) {
                     trayName = 'Opcion ' + (lineas[4] - lineas[3]);
                     document.getElementById('trayName').innerHTML = trayName;
                     especialSelect(true);
-                    selTray = true;                    
+                    selTray = true;
                 } else {
                     errorDiv('Opciones solo puden ser numeros enteros de 2 a 5');
                     clean = false;

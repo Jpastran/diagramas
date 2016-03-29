@@ -108,9 +108,9 @@ var CONTAINER_MANAGER = new ContainerFigureManager();
  * Cloud highlights 2 {ConnectionPoint}s whose are able to connect. */
 var currentCloud = [];
 
-/**The width of grid cell. 
+/**The width of grid cell.
  *Must be an odd number.
- *Must coincide with the size of the image used as canvas tile 
+ *Must coincide with the size of the image used as canvas tile
  **/
 var GRIDWIDTH = 30;
 
@@ -185,13 +185,13 @@ var INDENTATION = 0;
 function toSVG() {
     return '';
 
-    /* Note: Support for SVG is suspended 
-     * 
+    /* Note: Support for SVG is suspended
+     *
      var canvas = getCanvas();
      //@see http://www.w3schools.com/svg/svg_example.asp
      var v2 = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
-     v2 += "\n" + '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' 
-     + canvas.width +'" height="' + canvas.height 
+     v2 += "\n" + '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="'
+     + canvas.width +'" height="' + canvas.height
      + '" viewBox="0 0 ' + canvas.width + ' ' + canvas.height + '" version="1.1">';
      INDENTATION++;
      v2 += STACK.toSVG();
@@ -423,7 +423,7 @@ function updateShape(shapeId, property, newValue, skipCommand, previousValue) {
 
     /*Going down the object's hierarchy down to the property's parent
      *Example:
-     *  for props = ['primitives','1','str'] 
+     *  for props = ['primitives','1','str']
      *  figure
      *      |_primitives
      *          |_1 (it's a Text)
@@ -497,7 +497,7 @@ function updateShape(shapeId, property, newValue, skipCommand, previousValue) {
 }
 
 
-/**Setup the editor panel for a special shape. 
+/**Setup the editor panel for a special shape.
  *@param shape - can be either Connector or Figure. If null is provided the
  *editor panel will be disabled
  **/
@@ -1012,7 +1012,7 @@ function onKeyDown(ev) {
                  *      - if it is same group as copied, then duplicate it, in this case we can also duplicate permanent group
                  *        also because the duplicate will become selected, add it to the clipboard thus allowing another paste
                  *      - if it is another group, and if we have COPIED THE FIGURE, then apply its style to all group
-                 * 
+                 *
                  */
                 if (clipboardBuffer[0]) {// if something was copied
                     switch (state) {
@@ -1164,7 +1164,7 @@ function onMouseDown(ev) {
 
             /*Description:
              * We are in None state when no action was done....yet.  Here is what can happen:
-             * - if we clicked a Connector than that Connector should be selected  
+             * - if we clicked a Connector than that Connector should be selected
              *  (Connectors are more important than Figures :p)
              * - if we clicked a Group:
              *      - select the Group
@@ -1175,7 +1175,7 @@ function onMouseDown(ev) {
              * - if we did not clicked anything....
              *      - we will stay in STATE_NONE
              *      - allow to edit canvas
-             *      
+             *
              */
 
             var selectedObject = Util.getObjectByXY(x, y); // get object under cursor
@@ -1244,10 +1244,10 @@ function onMouseDown(ev) {
              *          - else (SHIFT not pressed)
              *              select that figure
              * - if we clicked a Container than it should be selected
-             * - if we click on nothing -> 
+             * - if we click on nothing ->
              *      - if SHIFT pressed then State none
-             *      - else just keep current state (maybe just missed what we needed)    
-             *      
+             *      - else just keep current state (maybe just missed what we needed)
+             *
              */
 
             //CONNECTOR
@@ -1531,8 +1531,8 @@ function onMouseDown(ev) {
              *Description:
              *If we have a connector selected and we press mouse here is what is happening:
              *- mouse down over a connection point? (trat first current connector)
-             *      - select connection point 
-             *      - set state to STATE_CONNECTOR_MOVE_POINT 
+             *      - select connection point
+             *      - set state to STATE_CONNECTOR_MOVE_POINT
              *      (and wait mouseMove to alter and mouseUp to finish the modification)
              *      - store original state of the connector (to be able to create the undo command later)
              *- mouse down over a handler?
@@ -1639,7 +1639,7 @@ function onMouseDown(ev) {
                     }
                 }
             }
-            break; //end case STATE_CONNECTOR_SELECTED 
+            break; //end case STATE_CONNECTOR_SELECTED
 
 
 
@@ -1820,8 +1820,8 @@ function onMouseUp(ev) {
 
             var figuresToAdd = [];
 
-            /* 
-             * If SHIFT pressed add the new selection to the already selected figures, 
+            /*
+             * If SHIFT pressed add the new selection to the already selected figures,
              * so here add to array already selected ones
              */
             if (SHIFT_PRESSED) {
@@ -1842,11 +1842,11 @@ function onMouseUp(ev) {
             }
 
             //add free figures (not belonging to any group) that overlaps with selection region
-            /*TODO: 
-             * From Janis to Alex: Why we are selecting only figures that 
-             *  doesn`t belong to any group, I think we must also add grouped 
+            /*TODO:
+             * From Janis to Alex: Why we are selecting only figures that
+             *  doesn`t belong to any group, I think we must also add grouped
              *  figures
-             * From Alex to Janis: We do not support groups in groups neither 
+             * From Alex to Janis: We do not support groups in groups neither
              *  figures that belong to more than one group
              */
             for (var i = 0; i < STACK.figures.length; i++) {
@@ -1863,7 +1863,7 @@ function onMouseUp(ev) {
                     var figureAddFlag = false;
 
 
-                    /**Idea: We want to select both figures completely encompassed by 
+                    /**Idea: We want to select both figures completely encompassed by
                      * selection (case 1) and those that are intersected by selection (case 2)*/
 
                     //1 - test if any figure point inside selection
@@ -1936,7 +1936,7 @@ function onMouseUp(ev) {
         case STATE_CONNECTOR_MOVE_POINT:
             /**
              *Description:
-             *Simply alter the connector until mouse will be released 
+             *Simply alter the connector until mouse will be released
              **/
 
             //reset all {ConnectionPoint}s' color
@@ -2082,7 +2082,7 @@ function onMouseMove(ev) {
              *          if SHIFT _NOT_ pressed
              *              then move figure
              *          else (SHIFT pressed)
-             *              enter STATE_SELECTING_MULTIPLE state 
+             *              enter STATE_SELECTING_MULTIPLE state
              * - if mouse is not pressed then change the cursor type to :
              *      - "move" if over a figure or connector
              *      - "handle" if over current figure's handle
@@ -2091,20 +2091,20 @@ function onMouseMove(ev) {
 
             if (mousePressed) { // mouse is (at least was) pressed
                 if (lastMove != null) { //we are in dragging mode
-                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then 
-                     *as we move the mouse....it can move faster/slower than the figure and we 
+                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then
+                     *as we move the mouse....it can move faster/slower than the figure and we
                      *will lose the Handle selection.
                      **/
                     var handle = HandleManager.handleGetSelected();
 
-                    if (handle != null) { //We are over a Handle of selected Figure               
+                    if (handle != null) { //We are over a Handle of selected Figure
                         canvas.style.cursor = handle.getCursor();
                         handle.action(lastMove, x, y);
                         redraw = true;
                         Log.info('onMouseMove() - STATE_FIGURE_SELECTED + drag - mouse cursor = ' + canvas.style.cursor);
                     }
                     else { /*no handle is selected*/
-                        if (!SHIFT_PRESSED) {//just translate the figure                            
+                        if (!SHIFT_PRESSED) {//just translate the figure
                             canvas.style.cursor = 'move';
                             var translateMatrix = generateMoveMatrix(STACK.figureGetById(selectedFigureId), x, y);
                             Log.info("onMouseMove() + STATE_FIGURE_SELECTED : translation matrix" + translateMatrix);
@@ -2114,12 +2114,12 @@ function onMouseMove(ev) {
 
 
                             /*Algorithm described:
-                             if figure belong to an existing container: 
+                             if figure belong to an existing container:
                              if we moved it outside of current container (even partially?!)
                              unglue it from container
                              
                              if figure dropped inside a container
-                             add it to the (new) container        
+                             add it to the (new) container
                              */
                             var figure = STACK.figureGetById(selectedFigureId);
                             var figBounds = figure.getBounds();
@@ -2130,7 +2130,7 @@ function onMouseMove(ev) {
                                 var container = STACK.containerGetById(containerId);
                                 var contBounds = container.getBounds();
 
-                                //Test if figure' bounds are inside container's bounds?                                
+                                //Test if figure' bounds are inside container's bounds?
                                 if (Util.areBoundsInBounds(figBounds, contBounds)) {
                                     //do nothing we are still in same container
                                 }
@@ -2175,7 +2175,7 @@ function onMouseMove(ev) {
             else { //no mouse press (only change cursor)
                 var handle = HandleManager.handleGet(x, y); //TODO: we should be able to replace it with .getSelectedHandle()
 
-                if (handle != null) { //We are over a Handle of selected Figure               
+                if (handle != null) { //We are over a Handle of selected Figure
                     canvas.style.cursor = handle.getCursor();
                     Log.info('onMouseMove() - STATE_FIGURE_SELECTED + over a Handler = change cursor to: ' + canvas.style.cursor);
                 }
@@ -2234,25 +2234,25 @@ function onMouseMove(ev) {
             break;
 
         case STATE_CONTAINER_SELECTED:
-            //throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";           
+            //throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";
 
             //BRUTE COPY FROM FIGURE
             if (mousePressed) { // mouse is (at least was) pressed
                 if (lastMove != null) { //we are in dragging mode
-                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then 
-                     *as we move the mouse....it can move faster/slower than the figure and we 
+                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then
+                     *as we move the mouse....it can move faster/slower than the figure and we
                      *will lose the Handle selection.
                      **/
                     var handle = HandleManager.handleGetSelected();
 
-                    if (handle != null) { //We are over a Handle of selected Container               
+                    if (handle != null) { //We are over a Handle of selected Container
                         canvas.style.cursor = handle.getCursor();
                         handle.action(lastMove, x, y);
                         redraw = true;
                         Log.info('onMouseMove() - STATE_CONTAINER_SELECTED + drag - mouse cursor = ' + canvas.style.cursor);
                     }
                     else { /*no handle is selected*/
-//                        if (!SHIFT_PRESSED){//just translate the figure                            
+//                        if (!SHIFT_PRESSED){//just translate the figure
                         canvas.style.cursor = 'move';
                         var translateMatrix = generateMoveMatrix(STACK.containerGetById(selectedContainerId), x, y);
                         Log.info("onMouseMove() + STATE_CONTAINER_SELECTED : translation matrix" + translateMatrix);
@@ -2276,7 +2276,7 @@ function onMouseMove(ev) {
             else { //no mouse press (only change cursor)
                 var handle = HandleManager.handleGet(x, y); //TODO: we should be able to replace it with .getSelectedHandle()
 
-                if (handle != null) { //We are over a Handle of selected Figure               
+                if (handle != null) { //We are over a Handle of selected Figure
                     canvas.style.cursor = handle.getCursor();
                     Log.info('onMouseMove() - STATE_CONTAINER_SELECTED + over a Handler = change cursor to: ' + canvas.style.cursor);
                 }
@@ -2310,10 +2310,10 @@ function onMouseMove(ev) {
              *          if SHIFT _NOT_ pressed:
              *              then move whole group
              *          else (SHIFT pressed)
-             *              enter STATE_SELECTING_MULTIPLE state         
+             *              enter STATE_SELECTING_MULTIPLE state
              * - if mouse is not pressed then change the cursor type to :
              *      - drag group?
-             *      - cursor ? 
+             *      - cursor ?
              *          - "move" if over a figure or connector or group
              *          - "handle" if over current group's handle
              *          - "default" if over "nothing"
@@ -2322,8 +2322,8 @@ function onMouseMove(ev) {
             if (mousePressed) {
                 if (lastMove != null) {
                     //Log.debug('onMouseMove() - STATE_GROUP_SELECTED + mouse pressed');
-                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then 
-                     *as we move the mouse....it can move faster/slower than the figure and we 
+                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then
+                     *as we move the mouse....it can move faster/slower than the figure and we
                      *will lose the Handle selection.
                      **/
                     var handle = HandleManager.handleGetSelected();
@@ -2480,7 +2480,7 @@ function onMouseMove(ev) {
 
         case STATE_CONNECTOR_MOVE_POINT:
             /**
-             *Description: 
+             *Description:
              *Adjust on real time - WYSIWYG
              *-compute the solution
              *-update connector shape
@@ -2639,8 +2639,8 @@ function onDblClick(ev) {
 
 
 /**Pick the first connector we can get at (x,y) position
- *@param {Number} x - the x position 
- *@param {Number} y - the y position 
+ *@param {Number} x - the x position
+ *@param {Number} y - the y position
  *@param {Event} ev - the event triggered
  *@author Alex, Artyom
  **/
@@ -2683,9 +2683,9 @@ function connectorPickFirst(x, y, ev) {
         var point = new Point(x, y);
         var candidate = CONNECTOR_MANAGER.getClosestPointsOfConnection(
                 true, // automatic start
-                true, // automatic end 
+                true, // automatic end
                 fOverId, //start figure's id
-                point, //start point 
+                point, //start point
                 fOverId, //end figure's id
                 point    //end point
                 );
@@ -2709,8 +2709,8 @@ function connectorPickFirst(x, y, ev) {
 
 
 /**Pick the second {ConnectorPoint}  we can get at (x,y) position
- *@param {Number} x - the x position 
- *@param {Number} y - the y position 
+ *@param {Number} x - the x position
+ *@param {Number} y - the y position
  *@param {Event} ev - the event triggered
  **/
 function connectorPickSecond(x, y, ev) {
@@ -2725,7 +2725,7 @@ function connectorPickSecond(x, y, ev) {
     //get Figure's id if over it
     var fOverId = STACK.figureGetByXY(x, y);
 
-    //TODO: remove 
+    //TODO: remove
     //play with algorithm
     {
         //We will try to find the startFigure, endFigure, startPoint, endPoint, etc
@@ -2845,9 +2845,9 @@ function connectorPickSecond(x, y, ev) {
 
 /**
  *Alter the {Connector}  in real time
- *@param {Number} connectionPointId - the id of the current dragged {ConnectionPoint} 
- *@param {Number} x - the x position 
- *@param {Number} y - the y position 
+ *@param {Number} connectionPointId - the id of the current dragged {ConnectionPoint}
+ *@param {Number} x - the x position
+ *@param {Number} y - the y position
  *@param {Event} ev - the event triggered
  **/
 function connectorMovePoint(connectionPointId, x, y, ev) {
@@ -2947,7 +2947,7 @@ function connectorMovePoint(connectionPointId, x, y, ev) {
         DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
 
 
-        //UPDATE CONNECTOR 
+        //UPDATE CONNECTOR
         var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
         var secondConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
         //adjust connector
@@ -3105,7 +3105,7 @@ function generateMoveMatrix(fig, x, y) {
         if (dx != 0) { //dragged to right
 
             /*Idea:
-             *As you move the shape to right it might snap to next snap line  
+             *As you move the shape to right it might snap to next snap line
              *regarding figure's start bounds (startNextGridX)
              *or snap to the snap line regarding figure's end bounds (endNextGridX)
              *We just need to see to which snap line will actually snap (the one that is closer)
@@ -3227,7 +3227,7 @@ function getCanvasXY(ev) {
     var tempPageX = null;
     var tempPageY = null;
 
-    if (ev.touches) { //iPad 
+    if (ev.touches) { //iPad
         if (ev.touches.length > 0) {
             tempPageX = ev.touches[0].pageX;
             tempPageY = ev.touches[0].pageY;
@@ -3235,7 +3235,7 @@ function getCanvasXY(ev) {
     }
     else { //normal Desktop
         tempPageX = ev.pageX; //Retrieves the x-coordinate of the mouse pointer relative to the top-left corner of the document.
-        tempPageY = ev.pageY; //Retrieves the y-coordinate of the mouse pointer relative to the top-left corner of the document.          
+        tempPageY = ev.pageY; //Retrieves the y-coordinate of the mouse pointer relative to the top-left corner of the document.
         Log.debug("ev.pageX:" + ev.pageX + " ev.pageY:" + ev.pageY);
     }
 
@@ -3467,7 +3467,7 @@ function save() {
 //                alert(svgDiagram);
     //Log.info('SVG : ' + svgDiagram);
 
-    //save the URLs of figures as a CSV 
+    //save the URLs of figures as a CSV
     var lMap = linkMap();
 
     //see: http://api.jquery.com/jQuery.post/
@@ -3698,7 +3698,7 @@ function saveAs() {
 //   $serializedDiagram = JSON.stringify($diagram,  Util.operaReplacer);
     var svgDiagram = toSVG();
 
-    //save the URLs of figures as a CSV 
+    //save the URLs of figures as a CSV
     var lMap = linkMap();
 
     //alert($serializedDiagram);
@@ -3807,6 +3807,8 @@ function init(diagramId) {
     }
 
 
+    especialSelect(false);
+    setEspecial("entrada");
 
     // close layer when click-out
 
@@ -4019,7 +4021,7 @@ function action(action) {
             }
             break;
 
-        case 'up': //decrease Y                                   
+        case 'up': //decrease Y
             switch (state) {
                 case STATE_FIGURE_SELECTED:
                     var cmdFigUp = new FigureTranslateCommand(selectedFigureId, Matrix.UP);
@@ -4370,7 +4372,7 @@ function documentOnMouseMove(evt) {
                             //TODO: a way around to hide this dragging DIV
                             document.getElementById('draggingThumb').style.display = 'none';
 
-                            //TODO: the horror 
+                            //TODO: the horror
                             //body.removeChild(document.getElementById('draggingThumb'));
 
                         }
@@ -4485,7 +4487,7 @@ function touchCancel(event) {
 //TODO Traducir el builder.
 
 /**Coordenada inicial en eje X
- * ajustada a la formula 
+ * ajustada a la formula
  * 100 + {distLine * 2}*/
 var iniX = 400;
 
@@ -4507,12 +4509,12 @@ var tamFig = 40;
  * interpretado como {disFig-tamFig}*/
 var disCon = 30;
 
-/**Distancia de las figura de centro a 
- * centro para la creacion dado por 
+/**Distancia de las figura de centro a
+ * centro para la creacion dado por
  * {tamFig}/2 + {disCon} + {tamFig}/2 */
 var disFig = 70;
 
-/**Distancia del centro de la figura 
+/**Distancia del centro de la figura
  * hasta el conector tambien como
  * {tamFig}/2-{disFig}*/
 var disFigCon = 50;
@@ -4532,7 +4534,7 @@ var lineas = [0, 0, 0, 0, 0];
 /**Guarda coordenada del lienzo*/
 var savePos = [];
 
-/**Guarda las coordenadas de las 
+/**Guarda las coordenadas de las
  * lineas de opciones de trayecto*/
 var trayecto = [];
 
@@ -4551,7 +4553,7 @@ var opciones = false;
 /**Gatillo de linea vacia en trayecto*/
 var optNull = true;
 
-/**Guarda todos los cambios para en 
+/**Guarda todos los cambios para en
  * las variables y permite el deshacer*/
 var historial = [];
 
@@ -4568,10 +4570,10 @@ var selAP = false;
  * para el array de {trayecto} */
 var selTray = false;
 
-/**Guarda las repeticiones hechas con 
+/**Guarda las repeticiones hechas con
  * anteriorida y verifica si se encuentra
- * dentro de otra repeticion 
- * @augments Esta contituido por vectores que 
+ * dentro de otra repeticion
+ * @augments Esta contituido por vectores que
  * En [0] guarada Id de la Figura incial
  * En [1] guarada Id de la Figura final
  * En [2] guarda el numero de ciclos*/
@@ -4592,6 +4594,7 @@ function lineaPrincipal() {
         lineas[0]++;//Numero de lineas de entrada
         lineas[1]++;//Linea de entrada actual y principal = 1
         primer = true;
+        resetToNoneState();
     }
 }
 
@@ -4611,21 +4614,18 @@ function canvasBuild(figureFunction) {
     createFigureFunction = figureFunction;
     lineaPrincipal();
     closeText();
-    if (figureFunction == window.figure_LineIn) {
-        figureBuild(createFigureFunction, coor[0] - tamFig, coor[1] - tamFig * 0.75);
-        conectorBuild();
-        coor[1] -= tamFig;
-    } else if (figureFunction == window.figure_LineOut) {
-        figureBuild(createFigureFunction, coor[0] + tamFig, coor[1] - tamFig * 0.75);
-        conectorBuild();
-        coor[1] -= tamFig;
-    } else if (figureFunction == window.figure_LineDouble) {
-        figureBuild(createFigureFunction, coor[0], coor[1] - tamFig / 4);
-        conectorBuild();
-        coor[1] -= tamFig / 2;
+    if (state == STATE_FIGURE_SELECTED && selectedFigureId != ordenFig[ordenFig.length - 1]) {
+        insertFigure(createFigureFunction);
     } else {
         figureBuild(createFigureFunction, coor[0], coor[1]);
         conectorBuild();
+    }
+    if (figureFunction == window.figure_LineIn) {
+        coor[1] -= tamFig;
+    } else if (figureFunction == window.figure_LineOut) {
+        coor[1] -= tamFig;
+    } else if (figureFunction == window.figure_LineDouble) {
+        coor[1] -= tamFig / 2;
     }
     cleanStates();
 }
@@ -4660,10 +4660,11 @@ function conectorBuild() {
     }
     var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
     History.addUndo(cmdCreateCon);
+    ordenCon.push(addOrdenCon(selectedConnectorId));
 }
 
 /**Permite construir un conector completo ya sea lineal o cuadrado
- * @param {String} jagg determina si es lineal o cuadrado
+ * @param {Boolean} jagg determina si es lineal o cuadrado
  * @param {Array} xy1 primer juego de coordenadas
  * @param {Array} xy2 segundo juego de coordenadas
  * @param {Boolean} filled determina si tendra punta*/
@@ -4675,6 +4676,7 @@ function conectorBuildFull(jagg, xy1, xy2, filled) {
         CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).endStyle = "Filled";
     var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
     History.addUndo(cmdCreateCon);
+    ordenCon.push(addOrdenCon(selectedConnectorId));
 }
 
 /**Perminte construir una figura a partir de la funcion y las
@@ -4684,14 +4686,24 @@ function conectorBuildFull(jagg, xy1, xy2, filled) {
  * @param {Number} y posicion en el eje y
  * */
 function figureBuild(figureFunction, x, y) {
+    if (figureFunction == window.figure_LineIn) {
+        x -= tamFig;
+        y -= tamFig * 0.75;
+    } else if (figureFunction == window.figure_LineOut) {
+        x += tamFig;
+        y -= tamFig * 0.75;
+    } else if (figureFunction == window.figure_LineDouble) {
+        y -= tamFig / 4;
+    }
     var cmdCreateFig = new FigureCreateCommand(figureFunction, x, y);
     cmdCreateFig.execute();
     History.addUndo(cmdCreateFig);
+    ordenFig.push(selectedFigureId);
 }
 
 /**Limpia y dibuja el lienzo de cualquier cambio realizado
- * Agrega distancia al vector {coor} en el eje 
- * Ejecuta la @function growCanvas para crecer el lienzo si es nesesario 
+ * Agrega distancia al vector {coor} en el eje
+ * Ejecuta la @function growCanvas para crecer el lienzo si es nesesario
  * Limpia el texto de error si esta presnte*/
 function cleanStates() {
     coor[1] += disFig;
@@ -4797,7 +4809,7 @@ function ordenarJagged(pos) {
 }
 
 /**Perminte ordenar las lineas de un connector cuadrado a partir de delta
- * @param {String} align direccion en que cambiara la linea {'v'} de 
+ * @param {String} align direccion en que cambiara la linea {'v'} de
  * forma vertical y {'h'} manera horizontal.
  * @param {type} name description
  * @param {type} name description
@@ -4823,13 +4835,13 @@ function ordenarDelta(align, delta, index) {
     }
 }
 
-/**Guarda el nombre de selector de 
+/**Guarda el nombre de selector de
  * especiales actual*/
 var selectEspecial = 'entrada';
 
 /**Cambia los divs visibles a partir del selector de especiales
  * y recarga las el listado de figuras presentes
- * @param {String} nombre Determina el nombre del Id del div 
+ * @param {String} nombre Determina el nombre del Id del div
  * @see editor.php*/
 function setEspecial(nombre) {
     var div = document.getElementById(nombre);
@@ -4884,10 +4896,10 @@ var btnFin = 'Siguiente';
  * a partir de una figura y un numero de ciclos.
  * @argument {Function} repro Genera un reproceso a partir de la ultima
  * figura hasta la figura selecionada.
- * @argument {Function} trayGen Genera lineas de opciones de trayecto 
+ * @argument {Function} trayGen Genera lineas de opciones de trayecto
  * segun el numero obtenido.
- * @argument {Function} trayFin Mueve la posicion actual de las lineas. 
- * @argument {Function} trayUnir Termina las opciones de trayecto y 
+ * @argument {Function} trayFin Mueve la posicion actual de las lineas.
+ * @argument {Function} trayUnir Termina las opciones de trayecto y
  * une las lineas seleccionadas.
  * @see editor.php para obtener los Id de cada caso.
  * */
@@ -4922,6 +4934,7 @@ function especial(accion) {
                         coor = savePos.pop();
                         lineas[1]--;
                         coor[1] -= tamFig / 2;
+                        ordenFig.push(-1);
                         if (lineas[1] == 1) {
                             document.getElementById('btnLE').disabled = (disbtnLE = true);
                         }
@@ -4956,6 +4969,7 @@ function especial(accion) {
                         var pos = savePos.pop();
                         coor = pos;
                         coor[1] -= tamFig / 2;
+                        ordenFig.push(-1);
                         if (lineas[2] == 0) {
                             document.getElementById('btnLS').disabled = (disbtnLS = true);
                         }
@@ -4982,7 +4996,7 @@ function especial(accion) {
                                 ordenarDelta('v', disCon / 2, 4);
                                 figureBuild(window.figure_LineDouble, coor[0], coor[1] - tamFig / 4);
                                 conectorBuild();
-                                coor[1] -= tamFig / 2;
+                                coor[1] -= tamFig * 0.75;
                                 clean = true;
                                 var figIni = STACK.figureGetById(selectedFigureId);
                                 figIni.primitives[1].str = "Repite " + numR + " veces";
@@ -5333,10 +5347,10 @@ function cambiarVista(id) {
 }
 
 /**Gestiona la visibilidad de los divs de la pagina editor.php
- * @param {String} right Cambia el panel derecho 
- * @param {String} tools Cambia la barra supeiror 
- * @param {String} esp Cambia el panel de especiales 
- * @param {String} img Cambia el panel de imagen de recorrido 
+ * @param {String} right Cambia el panel derecho
+ * @param {String} tools Cambia la barra supeiror
+ * @param {String} esp Cambia el panel de especiales
+ * @param {String} img Cambia el panel de imagen de recorrido
  * @param {String} bim Cambia el panel de bimanual
  * @param {String} hmaq Cambia el panel de hombre-maquina*/
 function displayDivs(right, tools, esp, img, bim, hmaq) {
@@ -5480,13 +5494,12 @@ function paintUD(value) {
 }
 
 /**Gestiona la impresion del diagrama
- * @augments Requiere objetos DOM para poder imprimirlos 
- * no se pueden creados con Jquery 
+ * @augments Requiere objetos DOM para poder imprimirlos
+ * no se pueden creados con Jquery
  * @see printArea.js*/
-function printDiagram() {
+function printDiagram(media) {
+    $("#media").html(media);
     refCabecera();
-    resetToNoneState();
-    draw();
     var id = currentSetId;
     var diag = $('#selDiag option:selected').text();
     $('#diagName').text(diag.toUpperCase());
@@ -5503,9 +5516,209 @@ function printDiagram() {
         str += "#ctab7,#ctab8";
     }
     if (id != "bimanual" && id != "hom-maq") {
-        var img = getCanvas().toDataURL("image/png");
+        var img = renderedCanvas();
         $("#imgCanvas").html("").append($('<img src="' + img + '"/>'));
         str += ",#imgCanvas"
     }
     $(str).printArea();
+    $("#media").html('');
 }
+
+var ordenFig = [];
+var ordenCon = [];
+var ordenLin = [];
+
+function insertFigure(figure_funcion) {
+    selAP = true;
+    var fig = STACK.figureGetById(selectedFigureId);
+
+    var moveY = disFig;
+    if (figure_funcion == window.figure_LineIn || figure_funcion == window.figure_LineOut) {
+        moveY -= tamFig;
+    } else if (figure_funcion == window.figure_LineDouble || figure_funcion == window.figure_MultiPoint) {
+        moveY -= tamFig / 2;
+    }
+    var moveMatrix = [
+        [1, 0, 0],
+        [0, 1, moveY],
+        [0, 0, 1]
+    ];
+    var inicio = false;
+    var final = false;
+    var line = 0;
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (inicio) {
+            if (ordenFig[i] == -1) {
+                line--;
+                if (final) {
+                    coor[1] -= disFig;
+                    break;
+                }
+            }
+            if (line == 0 && ordenFig[i] != -1) {
+                var moveFigure = new FigureTranslateCommand(ordenFig[i], moveMatrix);
+                History.addUndo(moveFigure);
+                moveFigure.execute();
+            }
+            if (ordenFig[i] != -1) {
+                if (STACK.figureGetById(ordenFig[i]).name == "MultiPoint") {
+                    line++;
+                }
+            }
+        } else if (ordenFig[i] == fig.id) {
+            inicio = true;
+            if (fig.name == "MultiPoint") {
+                line++;
+            }
+        } else if (ordenFig[i] != -1 && !final) {
+            if (STACK.figureGetById(ordenFig[i]).name == "MultiPoint") {
+                if (STACK.figureGetById(ordenFig[i + 1]).name == "LineInit") {
+                    final = true;
+                }
+            }
+        }
+    }
+
+    var coorX = 0;
+    var coorY = 0;
+    var mult = false;
+    if (fig.name == "LineIn" || fig.name == "LineOut" || fig.name == "LineDouble") {
+        coorY -= tamFig / 4;
+        if (fig.name == "LineIn") {
+            coorX += tamFig;
+        } else if (fig.name == "LineOut") {
+            coorX -= tamFig;
+        }
+    } else if (fig.name == "MultiPoint") {
+        coorY -= tamFig / 2;
+        mult = true;
+    }
+    var x = fig.rotationCoords[0].x + coorX;
+    var y = fig.rotationCoords[0].y + disFig + coorY;
+
+    figureBuild(figure_funcion, x, y);
+
+    for (var i = 0; i < ordenCon.length; i++) {
+        if (ordenCon[i][1] == fig.id) {
+            selectedConnectorId = ordenCon[i][0];
+            break;
+        }
+    }
+    if (selectedConnectorId != -1) {
+        var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(selectedConnectorId);
+        var undoCmd = new ConnectorAlterCommand(selectedConnectorId);
+        History.addUndo(undoCmd);
+        connectorMovePoint(cps[0].id, x, y + (tamFig / 2) + (moveY - disFig));
+    }
+
+    var xy1 = [x, y - disFigCon];
+    var xy2 = [x, y - tamFig / 2];
+    conectorBuildFull(false, xy1, xy2, false);
+
+
+    changeOrden(fig.id, selectedFigureId, selectedConnectorId, mult);
+    renumFig(STACK.figureGetById(selectedFigureId));
+    //TODO Revisar especiales.
+    //TODO Gestionar lineas.
+}
+
+function addOrdenCon(idCon) {
+    var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(idCon);
+    var figIni = obtenPosXY(cps[0]);
+    var figFin = obtenPosXY(cps[1]);
+    var orden = [idCon, figIni, figFin];
+    return orden;
+}
+
+function obtenPosXY(cps) {
+    var xy = [
+        [0, -tamFig / 2],
+        [0, tamFig / 2],
+        [0, 0],
+        [-tamFig, 0],
+        [-tamFig, -tamFig * 0.75],
+        [tamFig, -tamFig * 0.75],
+        [0, -tamFig / 4]
+    ];
+    var fig = -1;
+    for (var i = 0; i < xy.length; i++) {
+        fig = STACK.figureGetByXY(cps.point.x + xy[i][0], cps.point.y + xy[i][1]);
+        if (fig != -1) {
+            break;
+        }
+    }
+    return fig;
+}
+
+
+function changeOrden(pri, sig, con, mult) {
+    for (var i = 0; i < ordenCon.length; i++) {
+        if (ordenCon[i][1] == pri) {
+            ordenCon.splice(i, 0, addOrdenCon(con));
+            ordenCon[i + 1][1] = sig;
+            ordenCon.pop();
+            break;
+        }
+    }
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (mult) {
+            pri = -1;
+        }
+        if (ordenFig[i] == pri) {
+            ordenFig.splice(i + 1, 0, sig);
+            ordenFig.pop();
+            break;
+        }
+
+    }
+}
+
+function renumFig(base) {
+    var tipo = base.name;
+    var cont = 1;
+    var prop = genFigureProp(tipo);
+    if (prop.length != 0) {
+        for (var i = 0; i < ordenFig.length; i++) {
+            if (ordenFig[i] != -1) {
+                var fig = STACK.figureGetById(ordenFig[i]);
+                if (fig.name == tipo) {
+                    updateShape(ordenFig[i], prop[0], prop[1] + cont);
+                    cont++;
+                }
+            }
+        }
+    }
+}
+
+function genFigureProp(tipo) {
+    var props = [];
+    if (tipo == "Circle") {
+        props = ['primitives.1.str', 'O-'];
+    } else if (tipo == "Arrow") {
+        props = ['primitives.1.str', 'T-'];
+    } else if (tipo == "SemiCircleRight") {
+        props = ['primitives.2.str', 'D-'];
+    } else if (tipo == "Square") {
+        props = ['primitives.1.str', 'I-'];
+    } else if (tipo == "TriangleInvert") {
+        props = ['primitives.1.str', 'A-'];
+    } else if (tipo == "Combine") {
+        props = ['primitives.2.str', 'C-'];
+    }
+    return props;
+}
+
+function replaceFigure() {
+
+}
+
+function deleteFigure() {
+
+}
+
+var conMod = [];
+
+function redrawLine() {
+
+}
+

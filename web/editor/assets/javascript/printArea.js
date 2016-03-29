@@ -36,11 +36,12 @@
                      popWd      : 800,
                      popX       : 200,
                      popY       : 100,
-                     popTitle   : '',
+                     popTitle   : 'Vista previa',
                      popClose   : false,
                      extraCss   : ('./assets/css/print.css'),
                      extraHead  : ('<script type="text/javascript" src="./assets/javascript/jquery-1.11.0.min.js"></script>,\n\
-                                    <script type="text/javascript" src="./assets/javascript/print.js"></script>'),
+                                    <script type="text/javascript" src="./assets/javascript/print.js"></script>'
+                                    ),
                      retainAttr : ["id","class"] };
 
     var settings = {};//global settings
@@ -60,8 +61,10 @@
         var PrintAreaWindow = PrintArea.getPrintWindow();
 
         PrintArea.write( PrintAreaWindow.doc, $printSource );
-
-        setTimeout( function () { PrintArea.print( PrintAreaWindow ); }, 1000 );
+        
+        if ($("#media").html() != "pdf"){
+            setTimeout( function () { PrintArea.print( PrintAreaWindow ); }, 1000 );
+        }
     };
 
     var PrintArea = {

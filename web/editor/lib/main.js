@@ -4620,9 +4620,7 @@ function canvasBuild(figureFunction) {
         figureBuild(createFigureFunction, coor[0], coor[1]);
         conectorBuild();
     }
-    if (figureFunction == window.figure_LineIn) {
-        coor[1] -= tamFig;
-    } else if (figureFunction == window.figure_LineOut) {
+    if (figureFunction == window.figure_LineIn || figureFunction == window.figure_LineOut) {
         coor[1] -= tamFig;
     } else if (figureFunction == window.figure_LineDouble) {
         coor[1] -= tamFig / 2;
@@ -4761,12 +4759,15 @@ function dropFigure() {
 }
 
 /**Ordena los puntos de giro {turningPoints} de los conectores cuadrados
- * @param {Array} pos coordenada de referencia para acomodar los puntos
+ * @param {Array} pos coordenada de referencia final para acomodar los puntos
  * @see connections.js @param turningPoints
  * */
-function ordenarJagged(pos) {
+function ordenarJagged(pos, optY, loop) {
     var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
+    var coorY = optY == undefined ? coorY = coor[1] : coorY = optY;
+    var caso = "";
     if (finLS) {
+        caso = "finLS";
         if (turns.length == 4) {
             turns[1] = turns[0];
             turns[2] = turns[3];
@@ -4788,14 +4789,17 @@ function ordenarJagged(pos) {
             }
         }
     } else if (finSS) {
+        caso = "finSS";
         turns[1] = turns[0];
         turns[2].y = turns[1].y;
         turns[3] = turns[2];
     } else if (opciones) {
-        turns[1].y = coor[1];
-        turns[2].y = coor[1];
-        turns[3].y = coor[1];
+        caso = "opciones";
+        turns[1].y = coorY;
+        turns[2].y = coorY;
+        turns[3].y = coorY;
     } else if (!optNull) {
+        caso = "optNull";
         if (turns.length == 6) {
             turns[2].x = turns[0].x;
             turns[3].x = turns[0].x;
@@ -4806,6 +4810,9 @@ function ordenarJagged(pos) {
             turns[3].y = turns[2].y;
         }
     }
+    if (!loop) {
+        redrawCon.push([selectedConnectorId, caso]);
+    }
 }
 
 /**Perminte ordenar las lineas de un connector cuadrado a partir de delta
@@ -4815,7 +4822,7 @@ function ordenarJagged(pos) {
  * @param {type} name description
  * @see connections.js @param userChanges
  * */
-function ordenarDelta(align, delta, index) {
+function ordenarDelta(align, delta, index, loop) {
     var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
     if (con != null) {
         var translationMatrix = align == 'v' ? Matrix.translationMatrix(0, delta) : Matrix.translationMatrix(delta, 0);
@@ -4832,6 +4839,9 @@ function ordenarDelta(align, delta, index) {
             index: index
         });
         con.updateMiddleText();
+    }
+    if (!loop) {
+        redrawDel.push([selectedConnectorId, align, delta, index]);
     }
 }
 
@@ -5062,6 +5072,7 @@ function especial(accion) {
                 if (options >= 2 && options <= 5) {
                     selAP = true;
                     figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
+                    ordenFig.push(-1);
                     conectorBuild();
                     coor[1] -= tamFig / 2;
                     savePos.push(coor);
@@ -5077,6 +5088,7 @@ function especial(accion) {
                     opciones = true;
                     for (var i = 0; i < trayecto.length; i++) {
                         figureBuild(window.figure_MultiPoint, trayecto[i][0], trayecto[i][1]);
+                        ordenFig.push(-1);
                         var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
                         conectorBuildFull(!centro, coor, trayecto[i], false);
                         if (!centro)
@@ -5161,6 +5173,7 @@ function especial(accion) {
                     }
                 }
                 figureBuild(window.figure_MultiPoint, pos[0], pos[1]);
+                ordenFig.push(-1);
                 var checks = document.getElementsByName("opcion");
                 for (var i = 0; i < checks.length; i++) {
                     if (checks[i].checked == true) {
@@ -5585,13 +5598,19 @@ function insertFigure(figure_funcion) {
                 mulFig = true;
                 if (STACK.figureGetById(ordenFig[i + 1]).name != "LineInit") {
                     mulCon = true;
+                    if (final) {
+                        final = false;
+                    }
                 }
             }
-        } else if (ordenFig[i] != -1 && !final) {
+        } else if (ordenFig[i] != -1) {
             if (STACK.figureGetById(ordenFig[i]).name == "MultiPoint") {
                 if (STACK.figureGetById(ordenFig[i + 1]).name == "LineInit") {
                     final = true;
                 } else {
+                    if (final) {
+                        final = false;
+                    }
                     resta = true;
                 }
             }
@@ -5638,8 +5657,8 @@ function insertFigure(figure_funcion) {
 
     changeOrden(fig.id, selectedFigureId, selectedConnectorId, mulFig, mulCon);
     renumFig(STACK.figureGetById(selectedFigureId));
-    //TODO Revisar especiales.
-    //TODO Gestionar lineas.
+    redrawLine();
+    //TODO Revisar Opciones.
 }
 
 function addOrdenCon(idCon) {
@@ -5683,7 +5702,7 @@ function changeOrden(pri, sig, con, mulFig, mulCon) {
         }
     }
     for (var i = 0; i < ordenFig.length; i++) {
-        if (mulFig) {
+        if (mulFig && ordenFig[i] == pri) {
             pri = -1;
         }
         if (ordenFig[i] == pri) {
@@ -5691,7 +5710,6 @@ function changeOrden(pri, sig, con, mulFig, mulCon) {
             ordenFig.pop();
             break;
         }
-
     }
 }
 
@@ -5738,9 +5756,48 @@ function deleteFigure() {
 
 }
 
-var conMod = [];
+var redrawCon = [];
+var redrawDel = [];
 
 function redrawLine() {
-
+    for (var i = 0; i < redrawCon.length; i++) {
+        selectedConnectorId = redrawCon[i][0];
+        var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(selectedConnectorId);
+        var caso = redrawCon[i][1];
+        if (caso == "opciones") {
+            var coorY = cps[0].point.y;
+        }
+        var pos = [cps[1].point.x, cps[1].point.y];
+        ordJagSwitch(caso, true);
+        ordenarJagged(pos, coorY, true);
+        ordJagSwitch(caso, false);
+    }
+    selectedConnectorId = -1;
+    for (var i = 0; i < redrawDel.length; i++) {
+        selectedConnectorId = redrawDel[i][0];
+        var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
+        if (con.userChanges.length == 0) {
+            ordenarDelta(redrawDel[i][1], redrawDel[i][2], redrawDel[i][3], true);
+            ordenarDelta(redrawDel[i + 1][1], redrawDel[i + 1][2], redrawDel[i + 1][3], true);
+            ordenarDelta(redrawDel[i + 2][1], redrawDel[i + 2][2], redrawDel[i + 2][3], true);
+            i += 2;
+        }
+    }
 }
 
+function ordJagSwitch(caso, bool) {
+    switch (caso) {
+        case "finLS":
+            finLS = bool;
+            break;
+        case "finSS":
+            finSS = bool;
+            break;
+        case "opciones":
+            opciones = bool;
+            break;
+        case "optNull":
+            optNull = !bool;
+            break;
+    }
+}

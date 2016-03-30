@@ -5526,7 +5526,6 @@ function printDiagram(media) {
 
 var ordenFig = [];
 var ordenCon = [];
-var ordenLin = [];
 
 function insertFigure(figure_funcion) {
     selAP = true;
@@ -5546,13 +5545,23 @@ function insertFigure(figure_funcion) {
     var inicio = false;
     var final = false;
     var line = 0;
+    var sale = false;
+    var resta = false;
+    var mulFig = false;
+    var mulCon = false;
     for (var i = 0; i < ordenFig.length; i++) {
         if (inicio) {
             if (ordenFig[i] == -1) {
-                line--;
-                if (final) {
+                if (sale) {
+                    sale = false;
+                } else if (final) {
                     coor[1] -= disFig;
                     break;
+                } else {
+                    line--;
+                    if (resta) {
+                        coor[1] -= disFig;
+                    }
                 }
             }
             if (line == 0 && ordenFig[i] != -1) {
@@ -5562,18 +5571,28 @@ function insertFigure(figure_funcion) {
             }
             if (ordenFig[i] != -1) {
                 if (STACK.figureGetById(ordenFig[i]).name == "MultiPoint") {
-                    line++;
+                    if (STACK.figureGetById(ordenFig[i + 1]).name == "LineInit") {
+                        line++;
+                    } else {
+                        sale = true;
+                    }
                 }
             }
         } else if (ordenFig[i] == fig.id) {
             inicio = true;
             if (fig.name == "MultiPoint") {
                 line++;
+                mulFig = true;
+                if (STACK.figureGetById(ordenFig[i + 1]).name != "LineInit") {
+                    mulCon = true;
+                }
             }
         } else if (ordenFig[i] != -1 && !final) {
             if (STACK.figureGetById(ordenFig[i]).name == "MultiPoint") {
                 if (STACK.figureGetById(ordenFig[i + 1]).name == "LineInit") {
                     final = true;
+                } else {
+                    resta = true;
                 }
             }
         }
@@ -5581,7 +5600,6 @@ function insertFigure(figure_funcion) {
 
     var coorX = 0;
     var coorY = 0;
-    var mult = false;
     if (fig.name == "LineIn" || fig.name == "LineOut" || fig.name == "LineDouble") {
         coorY -= tamFig / 4;
         if (fig.name == "LineIn") {
@@ -5591,7 +5609,8 @@ function insertFigure(figure_funcion) {
         }
     } else if (fig.name == "MultiPoint") {
         coorY -= tamFig / 2;
-        mult = true;
+    } else if (fig.name == "LineInit") {
+        coorX += tamFig;
     }
     var x = fig.rotationCoords[0].x + coorX;
     var y = fig.rotationCoords[0].y + disFig + coorY;
@@ -5601,7 +5620,9 @@ function insertFigure(figure_funcion) {
     for (var i = 0; i < ordenCon.length; i++) {
         if (ordenCon[i][1] == fig.id) {
             selectedConnectorId = ordenCon[i][0];
-            break;
+            if (!mulCon) {
+                break;
+            }
         }
     }
     if (selectedConnectorId != -1) {
@@ -5615,8 +5636,7 @@ function insertFigure(figure_funcion) {
     var xy2 = [x, y - tamFig / 2];
     conectorBuildFull(false, xy1, xy2, false);
 
-
-    changeOrden(fig.id, selectedFigureId, selectedConnectorId, mult);
+    changeOrden(fig.id, selectedFigureId, selectedConnectorId, mulFig, mulCon);
     renumFig(STACK.figureGetById(selectedFigureId));
     //TODO Revisar especiales.
     //TODO Gestionar lineas.
@@ -5635,10 +5655,8 @@ function obtenPosXY(cps) {
         [0, -tamFig / 2],
         [0, tamFig / 2],
         [0, 0],
-        [-tamFig, 0],
-        [-tamFig, -tamFig * 0.75],
-        [tamFig, -tamFig * 0.75],
-        [0, -tamFig / 4]
+        [tamFig, 0],
+        [-tamFig, -tamFig * 0.75]
     ];
     var fig = -1;
     for (var i = 0; i < xy.length; i++) {
@@ -5651,17 +5669,21 @@ function obtenPosXY(cps) {
 }
 
 
-function changeOrden(pri, sig, con, mult) {
+function changeOrden(pri, sig, con, mulFig, mulCon) {
     for (var i = 0; i < ordenCon.length; i++) {
         if (ordenCon[i][1] == pri) {
-            ordenCon.splice(i, 0, addOrdenCon(con));
-            ordenCon[i + 1][1] = sig;
-            ordenCon.pop();
-            break;
+            if (!mulCon) {
+                ordenCon.splice(i, 0, addOrdenCon(con));
+                ordenCon[i + 1][1] = sig;
+                ordenCon.pop();
+                break;
+            } else {
+                mulCon = false;
+            }
         }
     }
     for (var i = 0; i < ordenFig.length; i++) {
-        if (mult) {
+        if (mulFig) {
             pri = -1;
         }
         if (ordenFig[i] == pri) {

@@ -5072,7 +5072,6 @@ function especial(accion) {
                 if (options >= 2 && options <= 5) {
                     selAP = true;
                     figureBuild(window.figure_MultiPoint, coor[0], coor[1] - tamFig / 2);
-                    ordenFig.push(-1);
                     conectorBuild();
                     coor[1] -= tamFig / 2;
                     savePos.push(coor);
@@ -5088,7 +5087,6 @@ function especial(accion) {
                     opciones = true;
                     for (var i = 0; i < trayecto.length; i++) {
                         figureBuild(window.figure_MultiPoint, trayecto[i][0], trayecto[i][1]);
-                        ordenFig.push(-1);
                         var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
                         conectorBuildFull(!centro, coor, trayecto[i], false);
                         if (!centro)
@@ -5126,6 +5124,7 @@ function especial(accion) {
                     }
                     if (lineas[3] > 0) {
                         lineas[3]--;
+                        ordenFig.push(-1);
                         coor = trayecto[lineas[3]];
                         clean = true;
                         opciones = true;
@@ -5173,7 +5172,6 @@ function especial(accion) {
                     }
                 }
                 figureBuild(window.figure_MultiPoint, pos[0], pos[1]);
-                ordenFig.push(-1);
                 var checks = document.getElementsByName("opcion");
                 for (var i = 0; i < checks.length; i++) {
                     if (checks[i].checked == true) {
@@ -5388,7 +5386,6 @@ function displayDivs(right, tools, esp, img, bim, hmaq) {
 function addHistory() {
     var hist = [];
     if (currentSetId == 'analitico' || currentSetId == 'sinoptico') {
-        var xy = [coor[0], coor[1]];
         var lines = [];
         for (var i = 0; i < lineas.length; i++) {
             lines.push(lineas[i]);
@@ -5407,8 +5404,34 @@ function addHistory() {
         for (var i = 0; i < sumRepet.length; i++) {
             rept.push(sumRepet[i]);
         }
+        var admRept = [];
+        for (var i = 0; i < reptAdm.length; i++) {
+            var pos = [reptAdm[i][0], reptAdm[i][1], reptAdm[i][2]];
+            admRept.push(pos);
+        }
+        var figOrd = [];
+        for (var i = 0; i < ordenFig.length; i++) {
+            figOrd.push(ordenFig[i]);
+        }
+        var conOrd = [];
+        for (var i = 0; i < ordenCon.length; i++) {
+            var pos = [ordenCon[i][0], ordenCon[i][1], ordenCon[i][2]];
+            conOrd.push(pos);
+        }
+        var drawCon = [];
+        for (var i = 0; i < redrawCon.length; i++) {
+            var pos = [redrawCon[i][0], redrawCon[i][1]];
+            drawCon.push(pos);
+        }
+        var drawDel = [];
+        for (var i = 0; i < redrawDel.length; i++) {
+            var pos = [redrawDel[i][0], redrawDel[i][1], redrawDel[i][2], redrawDel[i][3]];
+            drawDel.push(pos);
+        }
         var bools = [];
         bools.push(primer, finLS, finSS, opciones, disbtnLE, disbtnLS, disEspSel);
+        var trayDiv = [];
+        trayDiv.push(trayGen, traySig, trayUnir, trayName, btnFin, selTray);
         var numDiag = [];
         if (currentSetId == 'analitico') {
             numDiag = obtAnalit(selAP);
@@ -5416,14 +5439,11 @@ function addHistory() {
             numDiag = obtSinop(selAP);
         }
         selAP = false;
-        var trayDiv = [];
-        trayDiv.push(trayGen, traySig, trayUnir, trayName, btnFin, selTray);
-        var admRept = [];
-        for (var i = 0; i < reptAdm.length; i++) {
-            var pos = [reptAdm[i][0], reptAdm[i][1], reptAdm[i][2]];
-            admRept.push(pos);
-        }
-        hist = [xy, lines, saves, tray, rept, bools, numDiag, trayDiv, admRept];
+        var xy = [coor[0], coor[1]];
+        var especial = [lines, saves, tray, rept, admRept];
+        var estado = [bools, trayDiv];
+        var orden = [figOrd, conOrd, drawCon, drawDel];
+        hist = [xy, especial, estado, numDiag, orden];
     } else {
         hist = obtRecorr();
     }
@@ -5435,39 +5455,38 @@ function backHistory() {
     var hist = historial.pop();
     if (currentSetId == 'analitico' || currentSetId == 'sinoptico') {
         coor = hist[0];
-        lineas = hist[1];
-        savePos = hist[2];
-        trayecto = hist[3];
-        sumRepet = hist[4];
-        var bool = hist[5];
+        var esp = hist[1];
+        lineas = esp[0];
+        savePos = esp[1];
+        trayecto = esp[2];
+        sumRepet = esp[3];
+        reptAdm = esp[4];
+        var estado = hist[2];
+        var bool = estado[0];
         primer = bool[0];
         finLS = bool[1];
         finSS = bool[2];
         opciones = bool[3];
-        disbtnLE = bool[4];
-        document.getElementById('btnLE').disabled = disbtnLE;
-        disbtnLS = bool[5];
-        document.getElementById('btnLS').disabled = disbtnLS;
-        disEspSel = bool[6];
-        document.getElementById('espSelect').disabled = disEspSel;
+        document.getElementById('btnLE').disabled = disbtnLE = bool[4];
+        document.getElementById('btnLS').disabled = disbtnLS = bool[5];
+        document.getElementById('espSelect').disabled = disEspSel = bool[6];
+        var tray = estado[1];
+        document.getElementById('trayGen').style.display = trayGen = tray[0];
+        document.getElementById('traySig').style.display = traySig = tray[1];
+        document.getElementById('trayUnir').style.display = trayUnir = tray[2];
+        document.getElementById('trayName').innerHTML = trayName = tray[3];
+        document.getElementById('btnFin').value = btnFin = tray[4];
+        selTray = tray[5];
         if (currentSetId == 'analitico') {
-            desAnalit(hist[6]);
+            desAnalit(hist[3]);
         } else {
-            desSinop(hist[6]);
+            desSinop(hist[3]);
         }
-        var tray = hist[7];
-        trayGen = tray[0];
-        document.getElementById('trayGen').style.display = trayGen;
-        traySig = tray[1];
-        document.getElementById('traySig').style.display = traySig;
-        trayUnir = tray[2];
-        document.getElementById('trayUnir').style.display = trayUnir;
-        trayName = tray[3];
-        document.getElementById('trayName').innerHTML = trayName;
-        btnFin = tray[4];
-        document.getElementById('btnFin').value = btnFin;
-        selTray = tray[5]
-        reptAdm = hist[8];
+        var orden = hist[4];
+        ordenFig = orden[0];
+        ordenCon = orden[1];
+        redrawCon = orden[2];
+        redrawDel = orden[3];
     } else {
         desRecorr(hist);
     }
@@ -5800,4 +5819,24 @@ function ordJagSwitch(caso, bool) {
             optNull = !bool;
             break;
     }
+}
+
+function genTest() {
+    canvasBuild(window.figure_Square);
+    document.getElementById("trayNum").value = 3;
+    especial('trayGen');
+    canvasBuild(window.figure_Square);
+    especial('trayFin');
+    canvasBuild(window.figure_Square);
+    especial('trayFin');
+    canvasBuild(window.figure_Square);
+    especial('trayFin');
+    var checks = document.getElementsByName("opcion");
+    for (var i = 0; i < checks.length; i++) {
+        checks[i].checked = true;
+    }
+    especial('trayUnir');
+    canvasBuild(window.figure_Square);
+    console.log(ordenFig);
+    DIAGRAMO.switchDebug(true);
 }

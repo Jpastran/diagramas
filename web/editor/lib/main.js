@@ -5090,7 +5090,7 @@ function especial(accion) {
                     opciones = true;
                     for (var i = 0; i < trayecto.length; i++) {
                         figureBuild(window.figure_MultiPoint, trayecto[i][0], trayecto[i][1]);
-                        ordenFig.push("TIL");
+                        ordenFig.push("TM");
                         var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
                         conectorBuildFull(!centro, coor, trayecto[i], false);
                         if (!centro)
@@ -5098,6 +5098,7 @@ function especial(accion) {
                         trayecto[i][1] -= tamFig / 2;
                     }
                     coor = trayecto[options - 1];
+                    ordenFig.push("TLI");
                     savePos.push([coor[0], coor[1] + disFig]);
                     document.getElementById('trayGen').style.display = (trayGen = 'none');
                     document.getElementById('traySig').style.display = (traySig = 'block');
@@ -5128,7 +5129,8 @@ function especial(accion) {
                     }
                     if (lineas[3] > 0) {
                         lineas[3]--;
-                        ordenFig.push("TFL");
+                        ordenFig.push("TLF");
+                        ordenFig.push("TLI");
                         coor = trayecto[lineas[3]];
                         clean = true;
                         opciones = true;
@@ -5138,7 +5140,7 @@ function especial(accion) {
                         if (lineas[3] == 0)
                             document.getElementById('btnFin').value = (btnFin = 'Terminar');
                     } else if (lineas[3] == 0) {
-                        ordenFig.push("TFL");
+                        ordenFig.push("TLF");
                         document.getElementById('traySig').style.display = (traySig = 'none');
                         document.getElementById('trayUnir').style.display = (trayUnir = 'block');
                         var div = document.getElementById('trayChk');
@@ -5164,6 +5166,7 @@ function especial(accion) {
                 }
                 break;
             case 'trayUnir':
+                ordenFig.push("TF");
                 var pos = savePos.pop();
                 var lineV = -1;
                 var posV = [pos[0], pos[1]];
@@ -5177,7 +5180,6 @@ function especial(accion) {
                     }
                 }
                 figureBuild(window.figure_MultiPoint, pos[0], pos[1]);
-                ordenFig.push("TF");
                 var checks = document.getElementsByName("opcion");
                 for (var i = 0; i < checks.length; i++) {
                     if (checks[i].checked == true) {
@@ -5570,6 +5572,7 @@ var ordenCon = [];
 var entra = false;
 var sale = false;
 var tray = false;
+var trayLin = false;
 var initIn = false;
 var initMul = false;
 
@@ -5606,12 +5609,16 @@ function insertFigure(figure_funcion) {
             }
         } else if (ordenFig[i] == fig.id) {
             inicia = true;
-            if (entra || sale) {
+            if (entra || sale || trayLin) {
                 initIn = true;
             }
-            if (fig.name == "MultiPoint") {               
+            if (fig.name == "MultiPoint") {
                 mulFig = true;
-                if (ordenFig[i + 1] != "EI") {
+                if (ordenFig[i + 1] == "TI") {
+                    alert("No es se puede ingresar figura en inicio de opciones");
+                    coor[1] -= disFig;
+                    return;
+                } else if (ordenFig[i + 1] != "EI") {
                     initMul = true;
                     mulCon = true;
                 }
@@ -5661,7 +5668,7 @@ function insertFigure(figure_funcion) {
 
     changeOrden(fig.id, selectedFigureId, selectedConnectorId, mulFig, mulCon);
     renumFig(STACK.figureGetById(selectedFigureId));
-    redrawLine();
+    //redrawLine();
     resetValOrden();
     console.log(ordenFig);
 }
@@ -5679,6 +5686,10 @@ function valOrden(orden) {
         tray = true;
     } else if (orden == "TF") {
         tray = false;
+    } else if (orden == "TLI") {
+        trayLin = true;
+    } else if (orden == "TLF") {
+        trayLin = false;
     }
 }
 
@@ -5686,17 +5697,75 @@ function valMoverFig() {
     if (entra) {
         return false;
     } else if (sale) {
-        if (initIn || initMul){
+        if (initIn || initMul) {
             return false;
-        }    
+        }
+    } else if (tray) {
+        if (trayLin) {
+            if (initIn) {
+
+            }
+        }
     }
     return true;
+}
+
+function moverTray(idTI, posCol) {
+    var contTray = 0;
+    var contLine = -1;
+    var oper = [];
+    var tray = false;
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (ordenFig[i] == "TI") {
+            if (idTI == ordenFig[i - 1]) {
+                tray = true;
+            }
+        } else if (ordenFig[i] == "TF") {
+            break;
+        }
+        if (tray) {
+            if (ordenFig[i] == "TM") {
+                contLine--;
+            } else if (ordenFig[i] == "TLI") {
+                contTray++;
+            } else if (ordenFig[i] == "TLF") {
+                oper.push(contLine);
+                contLine = 0;
+            } else {
+                contLine++;
+            }
+        }
+    }
+    var max = 0;
+    var igual = true;
+    var line = 0;
+    for (var i = 0; i < oper.length; i++) {
+        if (oper[i] > max) {
+            max = oper[i];
+            line = i;
+        }
+        if (oper[0] != oper[i]) {
+            igual = false;
+        }
+    }
+    if (igual) {
+        console.log("igual");
+        return true;
+    } else if (posCol == line) {
+        console.log(posCol, max, line)
+        console.log("line");
+        return true;
+    } else {
+        console.log("no mueve");
+        return false;
+    }
 }
 
 function resetValOrden() {
     entra = false;
     sale = false;
     tray = false;
+    trayLin = false;
     initIn = false;
     initMul = false;
 }
@@ -5853,6 +5922,7 @@ function genOpcion(num) {
     especial('trayFin');
     canvasBuild(window.figure_Square);
     especial('trayFin');
+    canvasBuild(window.figure_Square);
     canvasBuild(window.figure_Square);
     especial('trayFin');
     var checks = document.getElementsByName("opcion");

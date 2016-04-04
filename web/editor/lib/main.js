@@ -5575,6 +5575,8 @@ var tray = false;
 var trayLin = false;
 var initIn = false;
 var initMul = false;
+var idTray = -1;
+var idLineTray = -1;
 
 function insertFigure(figure_funcion) {
     selAP = true;
@@ -5597,7 +5599,7 @@ function insertFigure(figure_funcion) {
     for (var i = 0; i < ordenFig.length; i++) {
         if (inicia) {
             if (isNaN(ordenFig[i])) {
-                if (initIn) {
+                if (initIn && !tray) {
                     coor[1] -= disFig;
                     break;
                 }
@@ -5609,7 +5611,7 @@ function insertFigure(figure_funcion) {
             }
         } else if (ordenFig[i] == fig.id) {
             inicia = true;
-            if (entra || sale || trayLin) {
+            if (entra || sale || tray) {
                 initIn = true;
             }
             if (fig.name == "MultiPoint") {
@@ -5625,6 +5627,11 @@ function insertFigure(figure_funcion) {
             }
         } else if (isNaN(ordenFig[i])) {
             valOrden(ordenFig[i]);
+            if (tray && ordenFig[i] == "TI") {
+                idTray = ordenFig[i - 1];
+            } else if (trayLin && idLineTray == -1) {
+                idLineTray = fig.id;
+            }
         }
     }
 
@@ -5670,8 +5677,10 @@ function insertFigure(figure_funcion) {
     renumFig(STACK.figureGetById(selectedFigureId));
     //redrawLine();
     resetValOrden();
-    console.log(ordenFig);
 }
+
+var valTLF = false;
+var valMovTF = false;
 
 function valOrden(orden) {
     if (orden == "EI") {
@@ -5686,10 +5695,17 @@ function valOrden(orden) {
         tray = true;
     } else if (orden == "TF") {
         tray = false;
-    } else if (orden == "TLI") {
+    } else if (orden == "TLI" && !valTLF) {
         trayLin = true;
-    } else if (orden == "TLF") {
+    } else if (orden == "TLF" && !valTLF) {
         trayLin = false;
+        if (initIn) {
+            valTLF = true;
+            valMovTF = moverTray();
+            if (!valMovTF) {
+                coor[1] -= disFig;
+            }
+        }
     }
 }
 
@@ -5700,30 +5716,29 @@ function valMoverFig() {
         if (initIn || initMul) {
             return false;
         }
-    } else if (tray) {
-        if (trayLin) {
-            if (initIn) {
-
-            }
-        }
+    } else if (tray && valTLF) {
+        return false;
+    } else if (!tray && valTLF) {
+        return valMovTF;
     }
     return true;
 }
 
-function moverTray(idTI, posCol) {
-    var contTray = 0;
+function moverTray() {
+    var contTray = -1;
     var contLine = -1;
     var oper = [];
-    var tray = false;
+    var iniTray = false;
+    var posCol = -1;
     for (var i = 0; i < ordenFig.length; i++) {
         if (ordenFig[i] == "TI") {
-            if (idTI == ordenFig[i - 1]) {
-                tray = true;
+            if (idTray == ordenFig[i - 1]) {
+                iniTray = true;
             }
-        } else if (ordenFig[i] == "TF") {
+        } else if (ordenFig[i] == "TF" && iniTray) {
             break;
         }
-        if (tray) {
+        if (iniTray) {
             if (ordenFig[i] == "TM") {
                 contLine--;
             } else if (ordenFig[i] == "TLI") {
@@ -5733,6 +5748,9 @@ function moverTray(idTI, posCol) {
                 contLine = 0;
             } else {
                 contLine++;
+                if (idLineTray == ordenFig[i]) {
+                    posCol = contTray;
+                }
             }
         }
     }
@@ -5748,15 +5766,9 @@ function moverTray(idTI, posCol) {
             igual = false;
         }
     }
-    if (igual) {
-        console.log("igual");
-        return true;
-    } else if (posCol == line) {
-        console.log(posCol, max, line)
-        console.log("line");
+    if (igual || posCol == line) {
         return true;
     } else {
-        console.log("no mueve");
         return false;
     }
 }
@@ -5768,6 +5780,10 @@ function resetValOrden() {
     trayLin = false;
     initIn = false;
     initMul = false;
+    idLineTray = -1;
+    idTray = -1;
+    valTLF = false;
+    valMovTF = false;
 }
 
 function addOrdenCon(idCon) {

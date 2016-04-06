@@ -4759,7 +4759,9 @@ function dropFigure() {
 }
 
 /**Ordena los puntos de giro {turningPoints} de los conectores cuadrados
- * @param {Array} pos coordenada de referencia final para acomodar los puntos
+ * @param {Numeric} pos coordenada de referencia final para acomodar los puntos.
+ * @param {Numeric} optY coordenada de referencia usada por el condicional de opciones.
+ * @param {Bolean} loop validador de reuso para la @function redrawLine().
  * @see connections.js @param turningPoints
  * */
 function ordenarJagged(pos, optY, loop) {
@@ -4818,8 +4820,9 @@ function ordenarJagged(pos, optY, loop) {
 /**Perminte ordenar las lineas de un connector cuadrado a partir de delta
  * @param {String} align direccion en que cambiara la linea {'v'} de
  * forma vertical y {'h'} manera horizontal.
- * @param {type} name description
- * @param {type} name description
+ * @param {Int} delta distancia que se movera el conector.
+ * @param {Int} index posicion en el array de turing point a mover.
+ * @param {Bolean} loop validador de reuso para la @function redrawLine().
  * @see connections.js @param userChanges
  * */
 function ordenarDelta(align, delta, index, loop) {
@@ -5088,7 +5091,7 @@ function especial(accion) {
                         trayecto[i] = [(coor[0] - (tamT - disM)) + multD, coor[1] + disCon];
                     }
                     opciones = true;
-                    for (var i = 0; i < trayecto.length; i++) {
+                    for (var i = trayecto.length - 1; i >= 0; i--) {
                         figureBuild(window.figure_MultiPoint, trayecto[i][0], trayecto[i][1]);
                         ordenFig.push("TM");
                         var centro = ((options / 2) + 0.5) == (i + 1);//Resultado boleano
@@ -5538,7 +5541,8 @@ function paintUD(value) {
 
 /**Gestiona la impresion del diagrama
  * @augments Requiere objetos DOM para poder imprimirlos
- * no se pueden creados con Jquery
+ * no se pueden creados con Jquery.
+ * @param {String} media gestiona el tipo del proposito del pop-up.
  * @see printArea.js*/
 function printDiagram(media) {
     $("#media").html(media);
@@ -5602,9 +5606,11 @@ function insertFigure(figure_funcion) {
                 if (initIn && !tray) {
                     coor[1] -= disFig;
                     break;
+                } else if (initMul && ordenFig[i + 1] == "TF") {
+                    initMul = false;
                 }
                 valOrden(ordenFig[i]);
-            } else if (valMoverFig()) {
+            } else if (valMoverFig(ordenFig[i])) {
                 var moveFigure = new FigureTranslateCommand(ordenFig[i], moveMatrix);
                 History.addUndo(moveFigure);
                 moveFigure.execute();
@@ -5623,6 +5629,12 @@ function insertFigure(figure_funcion) {
                 } else if (ordenFig[i + 1] != "EI") {
                     initMul = true;
                     mulCon = true;
+                    if (tray) {
+                        mulCon = false;
+                        idLineTray = fig.id;
+                    } else if (ordenFig[i - 1] == "TF") {
+                        mulCon = false;
+                    }
                 }
             }
         } else if (isNaN(ordenFig[i])) {
@@ -5675,8 +5687,19 @@ function insertFigure(figure_funcion) {
 
     changeOrden(fig.id, selectedFigureId, selectedConnectorId, mulFig, mulCon);
     renumFig(STACK.figureGetById(selectedFigureId));
-    //redrawLine();
+    redrawLine();
     resetValOrden();
+    //TODO validar reproceo
+    //TODO recontruir repeticion 
+    //TODO agergar texto al conenctor de reproceso y de opciones
+}
+
+function replaceFigure() {
+
+}
+
+function deleteFigure() {
+
 }
 
 var valTLF = false;
@@ -5695,11 +5718,18 @@ function valOrden(orden) {
         tray = true;
     } else if (orden == "TF") {
         tray = false;
+        if (!initIn && initMul) {
+            valTLF = true;
+            valMovTF = moverTray();
+            if (!valMovTF) {
+                coor[1] -= disFig;
+            }
+        }
     } else if (orden == "TLI" && !valTLF) {
         trayLin = true;
     } else if (orden == "TLF" && !valTLF) {
         trayLin = false;
-        if (initIn) {
+        if (initIn && !initMul) {
             valTLF = true;
             valMovTF = moverTray();
             if (!valMovTF) {
@@ -5709,7 +5739,7 @@ function valOrden(orden) {
     }
 }
 
-function valMoverFig() {
+function valMoverFig(id) {
     if (entra) {
         return false;
     } else if (sale) {
@@ -5720,6 +5750,14 @@ function valMoverFig() {
         return false;
     } else if (!tray && valTLF) {
         return valMovTF;
+    } else if (tray) {
+        if (initMul && !trayLin) {
+            return false;
+        } else if (initMul && trayLin) {
+            return moverTrayTM(id);
+        }
+    } else if ((id + 1) == "TM") {
+        return false;
     }
     return true;
 }
@@ -5773,6 +5811,35 @@ function moverTray() {
     }
 }
 
+function moverTrayTM(fig) {
+    var contTM = 0;
+    var contTL = -1;
+    var iniTray = false;
+    var posCol = -1;
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (ordenFig[i] == "TI") {
+            if (idTray == ordenFig[i - 1]) {
+                iniTray = true;
+            }
+        }
+        if (iniTray) {
+            if (ordenFig[i] == "TM") {
+                contTM++;
+            } else if (idLineTray == ordenFig[i]) {
+                posCol = contTM;
+            } else if (ordenFig[i] == "TLI") {
+                contTL++;
+            } else if (fig == ordenFig[i]) {
+                if (contTL == posCol) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+}
+
 function resetValOrden() {
     entra = false;
     sale = false;
@@ -5815,15 +5882,14 @@ function obtenPosXY(cps) {
 
 function changeOrden(pri, sig, con, mulFig, mulCon) {
     for (var i = 0; i < ordenCon.length; i++) {
+        if (mulCon && ordenCon[i][1] == pri) {
+            i++;
+        }
         if (ordenCon[i][1] == pri) {
-            if (!mulCon) {
-                ordenCon.splice(i, 0, addOrdenCon(con));
-                ordenCon[i + 1][1] = sig;
-                ordenCon.pop();
-                break;
-            } else {
-                mulCon = false;
-            }
+            ordenCon.splice(i, 0, addOrdenCon(con));
+            ordenCon[i + 1][1] = sig;
+            ordenCon.pop();
+            break;
         }
     }
     for (var i = 0; i < ordenFig.length; i++) {
@@ -5832,12 +5898,38 @@ function changeOrden(pri, sig, con, mulFig, mulCon) {
                 pri = "EF";
             } else if (ordenFig[i + 1] == "SI") {
                 pri = "SF";
+            } else if (ordenFig[i + 1] == "TM") {
+                i = obtenerTLI(pri);
+                pri = "TLI";
             }
         }
         if (ordenFig[i] == pri) {
             ordenFig.splice(i + 1, 0, sig);
             ordenFig.pop();
             break;
+        }
+    }
+}
+
+function obtenerTLI(mulId) {
+    var line = 0;
+    var entro = false;
+    var contTLI = -1;
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (entro) {
+            if (ordenFig[i] == "TM") {
+                line++;
+            } else if (ordenFig[i] == mulId) {
+                contTLI = line;
+            } else if (ordenFig[i] == "TLI") {
+                if (contTLI > 0) {
+                    contTLI--;
+                } else {
+                    return i;
+                }
+            }
+        } else if (ordenFig[i] == idTray) {
+            entro = true;
         }
     }
 }
@@ -5875,14 +5967,6 @@ function genFigureProp(tipo) {
         props = ['primitives.2.str', 'C-'];
     }
     return props;
-}
-
-function replaceFigure() {
-
-}
-
-function deleteFigure() {
-
 }
 
 var redrawCon = [];
@@ -5934,13 +6018,10 @@ function genOpcion(num) {
     canvasBuild(window.figure_Square);
     document.getElementById("trayNum").value = num;
     especial('trayGen');
-    canvasBuild(window.figure_Square);
-    especial('trayFin');
-    canvasBuild(window.figure_Square);
-    especial('trayFin');
-    canvasBuild(window.figure_Square);
-    canvasBuild(window.figure_Square);
-    especial('trayFin');
+    for (var i = 0; i < num; i++) {
+        canvasBuild(window.figure_Square);
+        especial('trayFin');
+    }
     var checks = document.getElementsByName("opcion");
     for (var i = 0; i < checks.length; i++) {
         checks[i].checked = true;

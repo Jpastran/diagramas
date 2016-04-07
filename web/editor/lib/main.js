@@ -5015,28 +5015,7 @@ function especial(accion) {
                                 clean = true;
                                 var figIni = STACK.figureGetById(selectedFigureId);
                                 figIni.primitives[1].str = "Repite " + numR + " veces";
-                                for (var j = 0; j < numR; j++) {
-                                    for (var i = 0; i < STACK.figures.length; i++) {
-                                        if (STACK.figures[i].id >= figFin.id && STACK.figures[i].id < figIni.id) {
-                                            reptSumar(STACK.figures[i].name);
-                                            sumRepet.push(STACK.figures[i]);
-                                        }
-                                        //Gestiona repeticion dentro de repeticion
-                                        //Como gatillo si es igual el primero del ciclo
-                                        for (var k = 0; k < reptAdm.length; k++) {
-                                            if (reptAdm[k][0] == STACK.figures[i].id) {
-                                                for (var m = 0; m < reptAdm[k][2]; m++) {
-                                                    for (var l = 0; l < STACK.figures.length; l++) {
-                                                        if (STACK.figures[l].id >= reptAdm[k][0] && STACK.figures[l].id < reptAdm[k][1]) {
-                                                            reptSumar(STACK.figures[l].name);
-                                                            sumRepet.push(STACK.figures[l]);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                genRepetir(numR, figFin.id, figIni.id);
                                 reptAdm.push([figFin.id, figIni.id, numR]);
                             } else {
                                 errorDiv("Numero de ciclos mayor a 0 y menor a 50");
@@ -5060,6 +5039,10 @@ function especial(accion) {
                     if (coorIn[0] == coorOut[0]) {
                         selAP = true;
                         conectorBuildFull(true, coorIn, coorOut, true);
+                        var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId)
+                        con.middleText.str = "Text";
+                        con.updateMiddleText();
+                        ordenCon.pop();
                         ordenarDelta('v', -disCon / 2, 2);
                         ordenarDelta('v', disCon / 2, 4);
                         ordenarDelta('h', tamFig / 2, 3);
@@ -5099,6 +5082,9 @@ function especial(accion) {
                         if (!centro)
                             ordenarJagged();
                         trayecto[i][1] -= tamFig / 2;
+                        var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId)
+                        con.middleText.str = "Text";
+                        con.updateMiddleText();
                     }
                     coor = trayecto[options - 1];
                     ordenFig.push("TLI");
@@ -5222,9 +5208,61 @@ function especial(accion) {
     }
 }
 
+/**Genera los procescos de repeticion.
+ * @param {Number} numR numero de repeticiones a realizar 
+ * @param {Number} figFin id de la figura desde donde inicia. 
+ * @param {Number} figIni id de la figura desde donde termina. */
+function genRepetir(numR, figFin, figIni) {
+    var inicia = false;
+    for (var j = 0; j < numR; j++) {
+        for (var i = 0; i < ordenFig.length; i++) {
+            if (ordenFig[i] == figFin) {
+                inicia = true;
+                if (ordenFig[i - 1] != "RI") {
+                    ordenFig.splice(i, 0, "RI");
+                    i++;
+                }
+            } else if (ordenFig[i] == figIni) {
+                if (ordenFig[i + 1] != "RF") {
+                    ordenFig.push("RF");
+                }
+                break;
+            }
+            if (inicia) {
+                reptSumar(ordenFig[i]);
+                //Gestiona repeticion dentro de repeticion
+                //Como gatillo si es igual el primero del ciclo
+                for (var k = 0; k < reptAdm.length; k++) {
+                    if (reptAdm[k][0] == ordenFig[i]) {
+                        var iniciaR = false;
+                        for (var m = 0; m < reptAdm[k][2]; m++) {
+                            for (var l = 0; l < ordenFig.length; l++) {
+                                if (ordenFig[l] == reptAdm[k][0]) {
+                                    iniciaR = true;
+                                } else if (ordenFig[l] == reptAdm[k][1]) {
+                                    break;
+                                }
+                                if (iniciaR) {
+                                    reptSumar(ordenFig[l]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 /**Suma los directamente las figuras a partir de tipo
- * @param {String} name Nombre que tiene la figura */
-function reptSumar(name) {
+ * @param {Number} id identificador que tiene la figura en {STACK} */
+function reptSumar(id) {
+    var name = "";
+    var fig = STACK.figureGetById(id);
+    if (fig != null) {
+        sumRepet.push(fig);
+        name = fig.name;
+    }
     if (currentSetId == "analitico") {
         if (name == "Circle") {
             sumAnali(0);

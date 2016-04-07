@@ -234,7 +234,7 @@ $page = 'editor';
                         </select>
                         <br>Descripcion mano derecha
                         <textarea id="mdd"></textarea>
-                        <br>Simbolo mano izquierda
+                        <br>Simbolo mano derecha
                         <select id="mds">
                             <option value="-1">-Seleccione-</option>
                             <option value="0">Operacion</option>

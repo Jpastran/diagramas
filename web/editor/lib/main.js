@@ -5015,7 +5015,8 @@ function especial(accion) {
                                 clean = true;
                                 var figIni = STACK.figureGetById(selectedFigureId);
                                 figIni.primitives[1].str = "Repite " + numR + " veces";
-                                genRepetir(numR, figFin.id, figIni.id);
+                                addOrdenRept(figFin.id, figIni.id);
+                                buildRepetir(numR, figFin.id, figIni.id);
                                 reptAdm.push([figFin.id, figIni.id, numR]);
                             } else {
                                 errorDiv("Numero de ciclos mayor a 0 y menor a 50");
@@ -5210,45 +5211,62 @@ function especial(accion) {
 
 /**Genera los procescos de repeticion.
  * @param {Number} numR numero de repeticiones a realizar 
- * @param {Number} figFin id de la figura desde donde inicia. 
- * @param {Number} figIni id de la figura desde donde termina. */
-function genRepetir(numR, figFin, figIni) {
+ * @param {Number} figIni id de la figura desde donde inicia. 
+ * @param {Number} figFin id de la figura desde donde termina. */
+function buildRepetir(numR, figIni, figFin) {
+    var repRI = [];
+    var repRF = [];
+    var inicia = false;
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (ordenFig[i] == figIni) {
+            inicia = true;
+        } else if (ordenFig[i] == figFin) {
+            break;
+        }
+        if (inicia) {
+            if (ordenFig[i] == "RI") {
+                repRI.push(ordenFig[i + 1]);
+            } else if (ordenFig[i] == "RF") {
+                repRF.push(ordenFig[i - 1]);
+            }
+        }
+    }
+    addCicloRept(numR, figIni, figFin);
+    for (var h = 0; h < numR; h++) {
+        for (var i = 0; i < repRI.length; i++) {
+            for (var j = 0; j < reptAdm.length; j++) {
+                if (reptAdm[j][0] == repRI[i] && reptAdm[j][1] == repRF[i]) {
+                    addCicloRept(reptAdm[j][2], reptAdm[j][0], reptAdm[j][1]);
+                }
+            }
+        }
+    }
+}
+
+function addOrdenRept(figIni, figFin) {
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (ordenFig[i] == figIni) {
+            ordenFig.splice(i, 0, "RI");
+            i++;
+        } else if (ordenFig[i] == figFin) {
+            ordenFig.push("RF");
+            break;
+        }
+    }
+}
+
+function addCicloRept(numR, figIni, figFin) {
     var inicia = false;
     for (var j = 0; j < numR; j++) {
         for (var i = 0; i < ordenFig.length; i++) {
-            if (ordenFig[i] == figFin) {
+            if (ordenFig[i] == figIni) {
                 inicia = true;
-                if (ordenFig[i - 1] != "RI") {
-                    ordenFig.splice(i, 0, "RI");
-                    i++;
-                }
-            } else if (ordenFig[i] == figIni) {
-                if (ordenFig[i + 1] != "RF") {
-                    ordenFig.push("RF");
-                }
+            } else if (ordenFig[i] == figFin) {
+                inicia = false;
                 break;
             }
             if (inicia) {
                 reptSumar(ordenFig[i]);
-                //Gestiona repeticion dentro de repeticion
-                //Como gatillo si es igual el primero del ciclo
-                for (var k = 0; k < reptAdm.length; k++) {
-                    if (reptAdm[k][0] == ordenFig[i]) {
-                        var iniciaR = false;
-                        for (var m = 0; m < reptAdm[k][2]; m++) {
-                            for (var l = 0; l < ordenFig.length; l++) {
-                                if (ordenFig[l] == reptAdm[k][0]) {
-                                    iniciaR = true;
-                                } else if (ordenFig[l] == reptAdm[k][1]) {
-                                    break;
-                                }
-                                if (iniciaR) {
-                                    reptSumar(ordenFig[l]);
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }
@@ -5262,28 +5280,28 @@ function reptSumar(id) {
     if (fig != null) {
         sumRepet.push(fig);
         name = fig.name;
-    }
-    if (currentSetId == "analitico") {
-        if (name == "Circle") {
-            sumAnali(0);
-        } else if (name == "Arrow") {
-            sumAnali(1);
-        } else if (name == "SemiCircleRight") {
-            sumAnali(2);
-        } else if (name == "Square") {
-            sumAnali(3);
-        } else if (name == "TriangleInvert") {
-            sumAnali(4);
-        } else if (name == "Combine") {
-            sumAnali(5);
-        }
-    } else if (currentSetId == "sinoptico") {
-        if (name == "Circle") {
-            sumSinop(0);
-        } else if (name == "Square") {
-            sumSinop(1);
-        } else if (name == "Combine") {
-            sumSinop(2);
+        if (currentSetId == "analitico") {
+            if (name == "Circle") {
+                sumAnali(0);
+            } else if (name == "Arrow") {
+                sumAnali(1);
+            } else if (name == "SemiCircleRight") {
+                sumAnali(2);
+            } else if (name == "Square") {
+                sumAnali(3);
+            } else if (name == "TriangleInvert") {
+                sumAnali(4);
+            } else if (name == "Combine") {
+                sumAnali(5);
+            }
+        } else if (currentSetId == "sinoptico") {
+            if (name == "Circle") {
+                sumSinop(0);
+            } else if (name == "Square") {
+                sumSinop(1);
+            } else if (name == "Combine") {
+                sumSinop(2);
+            }
         }
     }
 }
@@ -5901,8 +5919,8 @@ function addOrdenCon(idCon) {
 
 function obtenPosXY(cps) {
     var xy = [
-        [0, -tamFig / 2],
-        [0, tamFig / 2],
+        [0, tamFig / 2],  
+        [0, -tamFig / 2],            
         [0, 0],
         [tamFig, 0],
         [-tamFig, -tamFig * 0.75]
@@ -5913,7 +5931,7 @@ function obtenPosXY(cps) {
         if (fig != -1) {
             break;
         }
-    }
+    }   
     return fig;
 }
 
@@ -5976,6 +5994,10 @@ function renumFig(base) {
     var tipo = base.name;
     var cont = 1;
     var prop = genFigureProp(tipo);
+    var figRep = [];
+    var contRep = -1;
+    var rept = false;
+    var mulSum = 1;
     if (prop.length != 0) {
         for (var i = 0; i < ordenFig.length; i++) {
             if (!isNaN(ordenFig[i])) {
@@ -5983,7 +6005,35 @@ function renumFig(base) {
                 if (fig.name == tipo) {
                     updateShape(ordenFig[i], prop[0], prop[1] + cont);
                     cont++;
+                    if (rept) {
+                        figRep[contRep]++;
+                    }
                 }
+            } else if (ordenFig[i] == "RF") {
+                //Ajustar multiplicacion doble interna
+                //Usar sumRepet como mediador
+                var tax = mulSum == 1 ? 0 : mulSum;
+                if (tax != 0){
+                    cont--;
+                }
+                for (var j = 0; j < reptAdm.length; j++) {
+                    if (ordenFig[i - 1] == reptAdm[j][1]) {
+                        console.log(mulSum, cont, tax);
+                        mulSum += reptAdm[j][2] * figRep.pop() * mulSum;
+                        console.log(mulSum, cont, tax);
+                    }
+                }
+                cont += mulSum - tax - 1;
+                console.log(mulSum, cont, tax);
+                contRep--;
+                if (contRep == -1) {
+                    rept = false;
+                    mulSum = 1;
+                }
+            } else if (ordenFig[i] == "RI") {
+                rept = true;
+                figRep.push(0);
+                contRep++;
             }
         }
     }
@@ -6081,5 +6131,20 @@ function genSalida() {
     especial('newLS');
     canvasBuild(window.figure_Square);
     especial('endLS');
+    canvasBuild(window.figure_Square);
+}
+
+function genRepetir() {
+    canvasBuild(window.figure_Square);
+    canvasBuild(window.figure_Square);
+    canvasBuild(window.figure_Square);
+    cargarFiguras('repOut');
+    document.getElementById('repOut').value = 3;
+    document.getElementById('repNum').value = 2;
+    especial('repetir');
+    canvasBuild(window.figure_Square);
+    document.getElementById('repOut').value = 1;
+    especial('repetir');
+    canvasBuild(window.figure_Square);
     canvasBuild(window.figure_Square);
 }

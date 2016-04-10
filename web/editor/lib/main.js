@@ -5249,7 +5249,7 @@ function addOrdenRept(figIni, figFin) {
             ordenFig.splice(i, 0, "RI");
             i++;
         } else if (ordenFig[i] == figFin) {
-            ordenFig.push("RF");
+            ordenFig.splice(i, 0, "RF");
             break;
         }
     }
@@ -5656,6 +5656,8 @@ function insertFigure(figure_funcion) {
     var inicia = false;
     var mulFig = false;
     var mulCon = false;
+    var rept = false;
+    var contR = 0;
     for (var i = 0; i < ordenFig.length; i++) {
         if (inicia) {
             if (isNaN(ordenFig[i])) {
@@ -5679,8 +5681,9 @@ function insertFigure(figure_funcion) {
             if (fig.name == "MultiPoint") {
                 mulFig = true;
                 if (ordenFig[i + 1] == "TI") {
-                    alert("No es se puede ingresar figura en inicio de opciones");
+                    alert("No se puede ingresar figura en inicio de opciones");
                     coor[1] -= disFig;
+                    resetValOrden();
                     return;
                 } else if (ordenFig[i + 1] != "EI") {
                     initMul = true;
@@ -5693,12 +5696,24 @@ function insertFigure(figure_funcion) {
                     }
                 }
             }
+            if (rept) {
+                alert("No se puede ingresar figura en dentro de una repeticion");
+                coor[1] -= disFig;
+                resetValOrden();
+                return;
+            }
         } else if (isNaN(ordenFig[i])) {
             valOrden(ordenFig[i]);
             if (tray && ordenFig[i] == "TI") {
                 idTray = ordenFig[i - 1];
             } else if (trayLin && idLineTray == -1) {
                 idLineTray = fig.id;
+            } else if (ordenFig[i] == "RI") {
+                rept = true;
+                contR++;
+            } else if (ordenFig[i] == "RF") {
+                contR--;
+                contR == 0 ? rept = false : rept = true;
             }
         }
     }
@@ -5745,9 +5760,6 @@ function insertFigure(figure_funcion) {
     renumFig(STACK.figureGetById(selectedFigureId));
     redrawLine();
     resetValOrden();
-    //TODO validar reproceo
-    //TODO recontruir repeticion 
-    //TODO agergar texto al conenctor de reproceso y de opciones
 }
 
 function replaceFigure() {
@@ -5919,8 +5931,8 @@ function addOrdenCon(idCon) {
 
 function obtenPosXY(cps) {
     var xy = [
-        [0, tamFig / 2],  
-        [0, -tamFig / 2],            
+        [0, tamFig / 2],
+        [0, -tamFig / 2],
         [0, 0],
         [tamFig, 0],
         [-tamFig, -tamFig * 0.75]
@@ -5931,7 +5943,7 @@ function obtenPosXY(cps) {
         if (fig != -1) {
             break;
         }
-    }   
+    }
     return fig;
 }
 
@@ -5994,46 +6006,31 @@ function renumFig(base) {
     var tipo = base.name;
     var cont = 1;
     var prop = genFigureProp(tipo);
-    var figRep = [];
-    var contRep = -1;
     var rept = false;
-    var mulSum = 1;
+    var add = 0;
     if (prop.length != 0) {
         for (var i = 0; i < ordenFig.length; i++) {
             if (!isNaN(ordenFig[i])) {
                 var fig = STACK.figureGetById(ordenFig[i]);
                 if (fig.name == tipo) {
+                    if (rept) {
+                        var text = "";
+                        if (fig.name == "Combine" || fig.name == "SemiCircleRight") {
+                            text = fig.primitives[2].str;
+                        } else {
+                            text = fig.primitives[1].str;
+                        }
+                        var cont = parseInt(text.substring(2)) + add;
+                        rept = false;
+                    }
                     updateShape(ordenFig[i], prop[0], prop[1] + cont);
                     cont++;
-                    if (rept) {
-                        figRep[contRep]++;
+                    if (base.id == ordenFig[i]) {
+                        add = 1;
                     }
                 }
             } else if (ordenFig[i] == "RF") {
-                //Ajustar multiplicacion doble interna
-                //Usar sumRepet como mediador
-                var tax = mulSum == 1 ? 0 : mulSum;
-                if (tax != 0){
-                    cont--;
-                }
-                for (var j = 0; j < reptAdm.length; j++) {
-                    if (ordenFig[i - 1] == reptAdm[j][1]) {
-                        console.log(mulSum, cont, tax);
-                        mulSum += reptAdm[j][2] * figRep.pop() * mulSum;
-                        console.log(mulSum, cont, tax);
-                    }
-                }
-                cont += mulSum - tax - 1;
-                console.log(mulSum, cont, tax);
-                contRep--;
-                if (contRep == -1) {
-                    rept = false;
-                    mulSum = 1;
-                }
-            } else if (ordenFig[i] == "RI") {
                 rept = true;
-                figRep.push(0);
-                contRep++;
             }
         }
     }

@@ -83,10 +83,10 @@ $page = 'editor';
 
                 <a href="javascript:refCabecera();"  title="Refrescar Cabecera"><img  src="assets/images/rotate.png" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                <!--
+                
                 <a href="javascript:printDiagram('pdf')" title="Guardar como PDF"><img src="assets/images/icon_save_pdf.png" border="0" width="16" height="16"/></a>          
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                -->
+                
                 <a href="javascript:printDiagram('');"  title="Imprimir"><img  src="assets/images/icon_print.png" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 

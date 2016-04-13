@@ -23,9 +23,9 @@ function noEditable() {
             $(biman[i]).children().last().remove();
     }
     $("#td175 a").attr("href", "#");
-//    if (media.html() == "pdf") {
-//        genPdfJs();
-//    }
+    if (media.html() == "pdf") {
+        genPDF();
+    }
 }
 
 function idGen() {
@@ -40,6 +40,59 @@ function decodeId(hex) {
     return date;
 }
 
+function genPDF() {
+    html2canvas(document.body, {
+        onrendered: function(canvas) {
+            var oldgetContext = canvas.getContext;
+            
+            // get a context, set it to smoothed if it was a 2d context, and return it.
+            function getSmoothContext(contextType) {
+                var resCtx = oldgetContext.apply(this, arguments);
+                if (contextType == '2d') {
+                    setToFalse(resCtx, 'imageSmoothingEnabled');
+                    setToFalse(resCtx, 'mozImageSmoothingEnabled');
+                    setToFalse(resCtx, 'oImageSmoothingEnabled');
+                    setToFalse(resCtx, 'webkitImageSmoothingEnabled');
+                }
+                return resCtx;
+            }
+            
+            function setToFalse(obj, prop) {
+                if (obj[prop] !== undefined)
+                    obj[prop] = false;
+            }
+
+            // inject new smoothed getContext
+            canvas.getContext = getSmoothContext;
+            
+            var imgData = canvas.toDataURL();
+            var filename = "diagrama";
+            /*
+             Here are the numbers (paper width and height) that I found to work. 
+             It still creates a little overlap part between the pages, but good enough for me.
+             if you can find an official number from jsPDF, use them.
+             */
+            var imgWidth = 210;
+            var pageHeight = 295;
+            var imgHeight = canvas.height * imgWidth / canvas.width;
+            var heightLeft = imgHeight;
+
+            var doc = new jsPDF('p', 'mm');
+            var position = 0;
+
+            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                doc.addPage();
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+            doc.save(filename + '.pdf');
+        }
+    })
+}
 
 //function generarPDF() {
 //    var imgs = $("img");

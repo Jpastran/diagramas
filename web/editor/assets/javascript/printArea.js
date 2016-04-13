@@ -40,6 +40,8 @@
                      popClose   : false,
                      extraCss   : ('./assets/css/print.css'),
                      extraHead  : ('<script type="text/javascript" src="./assets/javascript/jquery-1.11.0.min.js"></script>,\n\
+                                    <script type="text/javascript" src="./assets/javascript/jspdf.js"></script>,\n\
+                                    <script type="text/javascript" src="./assets/javascript/html2canvas.js"></script>,\n\
                                     <script type="text/javascript" src="./assets/javascript/print.js"></script>'
                                     ),
                      retainAttr : ["id","class"] };

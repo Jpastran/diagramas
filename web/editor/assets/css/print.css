@@ -31,7 +31,7 @@ body {
 }
 
 table { 
-    border: 2px solid #ddd;
+    border: 2px solid #bbb;
     width: 100%;
     border-spacing: 0;
     border-collapse: collapse;
@@ -40,7 +40,7 @@ table img {
     vertical-align: -10px;
 }
 td, th{
-    border: 2px solid #ddd;
+    border: 2px solid #ccc;
     min-width: 30px;
     max-width: 150px;
     line-height: 1.42857143;
@@ -61,4 +61,12 @@ tr {
 .inac{
     background: #fff;
     width: 50px;
+}
+
+#imgCanvas{
+    margin: auto;
+    width: 95%;
+}
+#imgCanvas img{
+    width: 100%;
 }

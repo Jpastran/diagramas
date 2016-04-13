@@ -5601,6 +5601,7 @@ function paintUD(value) {
  * @param {String} media gestiona el tipo del proposito del pop-up.
  * @see printArea.js*/
 function printDiagram(media) {
+    resetToNoneState();
     $("#media").html(media);
     refCabecera();
     var id = currentSetId;
@@ -5760,10 +5761,6 @@ function insertFigure(figure_funcion) {
     renumFig(STACK.figureGetById(selectedFigureId));
     redrawLine();
     resetValOrden();
-}
-
-function replaceFigure() {
-
 }
 
 function deleteFigure() {

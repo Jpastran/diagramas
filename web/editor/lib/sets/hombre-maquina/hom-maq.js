@@ -288,13 +288,14 @@ function addEscala(divId) {
         if (!isNaN(time)) {
             var colTd = obtenCol($(divId).attr('id'));
             if (valContCol(colTd)) {
-                var tr = $(obtenFila(contCol[colTd]));
-                var td1 = $('<td rowspan="' + time + '">' + time + '</td>');
-                var td2 = $('<td rowspan="' + time + '">' + $(div[4]).val() + '</td>');
-                var td3 = $('<td rowspan="' + time + '" class="' + tiempoClase($(div[6]).val()) + '">');
+                var rows = Math.round(time);
+                var tr = $(obtenFila(contCol[colTd], rows));
+                var td1 = $('<td rowspan="' + rows + '">' + time + '</td>');
+                var td2 = $('<td rowspan="' + rows + '">' + $(div[4]).val() + '</td>');
+                var td3 = $('<td rowspan="' + rows + '" class="' + tiempoClase($(div[6]).val()) + '">');
                 tr.append(td1, td2, td3);
                 addUndo(td1, td2, td3);
-                contCol[colTd] += time;
+                contCol[colTd] += rows;
                 sumResum(colTd, time, $(div[6]).val());
                 limpiarDiv(div);
             } else {
@@ -323,13 +324,25 @@ function valContCol(colTd) {
     }
 }
 
-function obtenFila(cont) {
+function obtenFila(cont, time) {
     var body = $('#maquinaT').find('tbody');
+    var trAdd = false;
     while (body.find('tr').length < cont) {
         body.append($('<tr>'));
+        trAdd = true;
     }
     var fila = body.find('tr');
     var tr = fila[cont - 1];
+    var ext = time - (fila.length - cont);
+    if (trAdd) {
+        for (var i = 0; i < time - 1; i++) {
+            body.append($('<tr>'));
+        }
+    } else if (ext > 0) {
+        for (var i = 0; i < ext - 1; i++) {
+            body.append($('<tr>'));
+        }
+    }
     return tr;
 }
 

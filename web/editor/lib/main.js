@@ -870,21 +870,24 @@ function onKeyDown(ev) {
             break;
 
         case KEY.DELETE: //Delete
-            break;
-            //delete any Figure or Group
-            //            alert('Delete pressed' + this);
+
+            // alert('Delete pressed' + this);
             switch (state) {
 
                 case STATE_FIGURE_SELECTED: //delete a figure ONLY when the figure is selected
                     if (selectedFigureId != -1) {
-                        var cmdDelFig = new FigureDeleteCommand(selectedFigureId);
-                        cmdDelFig.execute();
-                        History.addUndo(cmdDelFig);
+                        if (currentSetId == "recorrido") {
+                            var cmdDelFig = new FigureDeleteCommand(selectedFigureId);
+                            cmdDelFig.execute();
+                            History.addUndo(cmdDelFig);
+                        } else {
+                            deleteFigure();
+                        }
                     }
                     break;
 
                 case STATE_GROUP_SELECTED:
-                    if (selectedGroupId != -1) {
+                    if (selectedGroupId != -1 && currentSetId == "recorrido") {
                         var cmdDelGrp = new GroupDeleteCommand(selectedGroupId);
                         cmdDelGrp.execute();
                         History.addUndo(cmdDelGrp);
@@ -894,7 +897,7 @@ function onKeyDown(ev) {
 
                 case STATE_CONNECTOR_SELECTED:
                     Log.group("Delete connector");
-                    if (selectedConnectorId != -1) {
+                    if (selectedConnectorId != -1 && currentSetId == "recorrido") {
                         var cmdDelCon = new ConnectorDeleteCommand(selectedConnectorId);
                         cmdDelCon.execute();
                         History.addUndo(cmdDelCon);
@@ -904,7 +907,7 @@ function onKeyDown(ev) {
 
                 case STATE_CONTAINER_SELECTED:
                     Log.group("Delete container");
-                    if (selectedContainerId != -1) {
+                    if (selectedContainerId != -1 && currentSetId == "recorrido") {
                         var cmdDelContainer = new ContainerDeleteCommand(selectedContainerId);
                         cmdDelContainer.execute();
                         History.addUndo(cmdDelContainer);
@@ -1270,7 +1273,7 @@ function onMouseDown(ev) {
                         redraw = true;
                         break;
                     case 'Group':
-                        if (SHIFT_PRESSED) {
+                        if (SHIFT_PRESSED && currentSetId == "recorrido") {
                             var figuresToAdd = [];
                             /* TODO: for what reason we have this condition in STATE_FIGURE_SELECTED?
                              * Seems like escaping of bigger problem */
@@ -1297,7 +1300,7 @@ function onMouseDown(ev) {
                         redraw = true;
                         break;
                     case 'Figure': //lonely figure
-                        if (SHIFT_PRESSED) {
+                        if (SHIFT_PRESSED && currentSetId == "recorrido") {
                             var figuresToAdd = [];
                             /* TODO: for what reason we have this condition in STATE_FIGURE_SELECTED?
                              * Seems like escaping of bigger problem */
@@ -1410,7 +1413,7 @@ function onMouseDown(ev) {
                         break;
                     case 'Group':
                         if (selectedObject.id != selectedGroupId) {
-                            if (SHIFT_PRESSED) {
+                            if (SHIFT_PRESSED && currentSetId == "recorrido") {
                                 var figuresToAdd = [];
 
                                 //add figures from current group
@@ -1448,7 +1451,7 @@ function onMouseDown(ev) {
                         }
                         break;
                     case 'Figure': //lonely figure
-                        if (SHIFT_PRESSED) {
+                        if (SHIFT_PRESSED && currentSetId == "recorrido") {
                             var figuresToAdd = [];
                             var groupFigures = STACK.figureGetByGroupId(selectedGroupId);
                             for (var i = 0; i < groupFigures.length; i++) {
@@ -1897,7 +1900,7 @@ function onMouseUp(ev) {
             }
 
             //See what to do with collected figures
-            if (figuresToAdd.length >= 2) { //if we selected at least 2 figures then we can create a group
+            if (figuresToAdd.length >= 2 && currentSetId == "recorrido") { //if we selected at least 2 figures then we can create a group
                 selectedGroupId = STACK.groupCreate(figuresToAdd);
                 state = STATE_GROUP_SELECTED;
                 setUpEditPanel(null); //because of shift in this case we also need to reset the edit panel
@@ -5210,8 +5213,8 @@ function especial(accion) {
 }
 
 /**Genera los procescos de repeticion.
- * @param {Number} numR numero de repeticiones a realizar 
- * @param {Number} figIni id de la figura desde donde inicia. 
+ * @param {Number} numR numero de repeticiones a realizar
+ * @param {Number} figIni id de la figura desde donde inicia.
  * @param {Number} figFin id de la figura desde donde termina. */
 function buildRepetir(numR, figIni, figFin) {
     var repRI = [];
@@ -5266,7 +5269,7 @@ function addCicloRept(numR, figIni, figFin) {
                 break;
             }
             if (inicia) {
-                reptSumar(ordenFig[i]);
+                sumDirect(ordenFig[i], false);
             }
         }
     }
@@ -5274,33 +5277,34 @@ function addCicloRept(numR, figIni, figFin) {
 
 /**Suma los directamente las figuras a partir de tipo
  * @param {Number} id identificador que tiene la figura en {STACK} */
-function reptSumar(id) {
+function sumDirect(id, rest) {
     var name = "";
     var fig = STACK.figureGetById(id);
     if (fig != null) {
-        sumRepet.push(fig);
+        if (!rest)
+            sumRepet.push(fig);
         name = fig.name;
         if (currentSetId == "analitico") {
             if (name == "Circle") {
-                sumAnali(0);
+                sumAnali(0, rest);
             } else if (name == "Arrow") {
-                sumAnali(1);
+                sumAnali(1, rest);
             } else if (name == "SemiCircleRight") {
-                sumAnali(2);
+                sumAnali(2, rest);
             } else if (name == "Square") {
-                sumAnali(3);
+                sumAnali(3, rest);
             } else if (name == "TriangleInvert") {
-                sumAnali(4);
+                sumAnali(4, rest);
             } else if (name == "Combine") {
-                sumAnali(5);
+                sumAnali(5, rest);
             }
         } else if (currentSetId == "sinoptico") {
             if (name == "Circle") {
-                sumSinop(0);
+                sumSinop(0, rest);
             } else if (name == "Square") {
-                sumSinop(1);
+                sumSinop(1, rest);
             } else if (name == "Combine") {
-                sumSinop(2);
+                sumSinop(2, rest);
             }
         }
     }
@@ -5757,14 +5761,10 @@ function insertFigure(figure_funcion) {
     var xy2 = [x, y - tamFig / 2];
     conectorBuildFull(false, xy1, xy2, false);
 
-    changeOrden(fig.id, selectedFigureId, selectedConnectorId, mulFig, mulCon);
+    ordenInsertar(fig.id, selectedFigureId, selectedConnectorId, mulFig, mulCon);
     renumFig(STACK.figureGetById(selectedFigureId));
     redrawLine();
     resetValOrden();
-}
-
-function deleteFigure() {
-
 }
 
 var valTLF = false;
@@ -5806,9 +5806,11 @@ function valOrden(orden) {
 
 function valMoverFig(id) {
     if (entra) {
-        return false;
+        if (!initIn) {
+            return false;
+        }
     } else if (sale) {
-        if (initIn || initMul) {
+        if (initMul) {
             return false;
         }
     } else if (tray && valTLF) {
@@ -5916,6 +5918,7 @@ function resetValOrden() {
     idTray = -1;
     valTLF = false;
     valMovTF = false;
+    elimEF = false;
 }
 
 function addOrdenCon(idCon) {
@@ -5928,10 +5931,11 @@ function addOrdenCon(idCon) {
 
 function obtenPosXY(cps) {
     var xy = [
+        [0, 0],
         [0, tamFig / 2],
         [0, -tamFig / 2],
-        [0, 0],
         [tamFig, 0],
+        [-tamFig, 0],
         [-tamFig, -tamFig * 0.75]
     ];
     var fig = -1;
@@ -5945,7 +5949,7 @@ function obtenPosXY(cps) {
 }
 
 
-function changeOrden(pri, sig, con, mulFig, mulCon) {
+function ordenInsertar(pri, sig, con, mulFig, mulCon) {
     for (var i = 0; i < ordenCon.length; i++) {
         if (mulCon && ordenCon[i][1] == pri) {
             i++;
@@ -5997,6 +6001,183 @@ function obtenerTLI(mulId) {
             entro = true;
         }
     }
+}
+
+function deleteFigure() {
+    var figDel = STACK.figureGetById(selectedFigureId);
+    if (figDel.name == "LineInit") {
+        errorDiv("No se puede eliminar un inicio de linea");
+        return;
+    } else if (figDel.name == "MultiPoint") {
+        errorDiv("No se puede eliminar un punto de union");
+        return;
+    } else if (selectedFigureId == ordenFig[ordenFig.length - 1]) {
+        sumDirect(figDel.id, true);
+
+        var cmdDelFig = new FigureDeleteCommand(ordenFig[ordenFig.length - 1]);
+        cmdDelFig.execute();
+        History.addUndo(cmdDelFig);
+
+        var cmdDelCon = new ConnectorDeleteCommand(ordenCon[ordenCon.length - 1][0]);
+        cmdDelCon.execute();
+        History.addUndo(cmdDelCon);
+
+        ordenFig.pop();
+        ordenCon.pop();
+
+        cleanStates();
+        coor[1] -= disFig * 2;
+
+    } else if (valEliminar()) {
+        sumDirect(figDel.id, true);
+        var figId = selectedFigureId;
+        for (var i = 0; i < ordenCon.length; i++) {
+            if (ordenCon[i][1] == selectedFigureId) {
+                if (elimEF) {
+                    selectedConnectorId = ordenCon[i - 1][0];
+                } else {
+                    selectedConnectorId = ordenCon[i][0];
+                }
+                break;
+            }
+        }
+
+        var cmdDelFig = new FigureDeleteCommand(selectedFigureId);
+        cmdDelFig.execute();
+        History.addUndo(cmdDelFig);
+
+        var cmdDelCon = new ConnectorDeleteCommand(selectedConnectorId);
+        cmdDelCon.execute();
+        History.addUndo(cmdDelCon);
+
+        var orden = ordenEliminar(figId);
+        selectedConnectorId = orden[0];
+        selectedFigureId = elimEF ? orden[1] : orden[2];
+
+        var fig = STACK.figureGetById(selectedFigureId);
+        var x = fig.rotationCoords[1].x;
+        var y = fig.rotationCoords[1].y;
+
+        if (fig.name == "LineOut") {
+            x -= tamFig;
+            y += 1;
+        } else if (fig.name == "LineIn") {
+            x += tamFig;
+            y += 1;
+        } else if (fig.name == "MultiPoint") {
+            y += tamFig / 5;
+        }
+
+        var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(orden[0]);
+        var undoCmd = new ConnectorAlterCommand(orden[0]);
+        History.addUndo(undoCmd);
+        if (elimEF) {
+            connectorMovePoint(cps[0].id, x, y + tamFig);
+        } else {
+            connectorMovePoint(cps[1].id, x, y);
+        }
+
+        var fig = STACK.figureGetById(orden[1]);
+        var moveY = -disFig;
+        if (figDel.name == "LineIn" || figDel.name == "LineOut") {
+            moveY += tamFig;
+        } else if (figDel.name == "LineDouble") {
+            moveY += tamFig / 2;
+        }
+        var moveMatrix = [
+            [1, 0, 0],
+            [0, 1, moveY],
+            [0, 0, 1]
+        ];
+        var inicia = false;
+        for (var i = 0; i < ordenFig.length; i++) {
+            if (inicia) {
+                if (isNaN(ordenFig[i])) {
+                    if (initIn) {
+                        break;
+                    }
+                    valOrden(ordenFig[i]);
+                } else if (valMoverFig(ordenFig[i])) {
+                    var moveFigure = new FigureTranslateCommand(ordenFig[i], moveMatrix);
+                    History.addUndo(moveFigure);
+                    moveFigure.execute();
+                }
+            } else if (ordenFig[i] == fig.id) {
+                inicia = true;
+            } else if (isNaN(ordenFig[i])) {
+                valOrden(ordenFig[i]);
+            }
+        }
+        renumFig(figDel);
+        redrawLine();
+        resetValOrden();
+        cleanStates();
+        coor[1] += moveY - disFig;
+    }
+}
+
+function ordenEliminar(figId) {
+    var sigFig = -1;
+    var orden = null;
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (ordenFig[i] == figId) {
+            if (elimEF) {
+                sigFig = ordenFig[i - 1];
+            } else {
+                sigFig = ordenFig[i + 1];
+            }
+            ordenFig.splice(i, 1);
+            break;
+        }
+    }
+    for (var i = 0; i < ordenCon.length; i++) {
+        if (ordenCon[i][1] == figId) {
+            if (elimEF) {
+                ordenCon[i][1] = sigFig;
+                orden = ordenCon[i];
+                ordenCon.splice(i - 1, 1);
+            } else {
+                ordenCon[i - 1][2] = sigFig;
+                orden = ordenCon[i - 1];
+                ordenCon.splice(i, 1);
+            }
+            break;
+        }
+    }
+    return orden;
+}
+
+var elimEF = false;
+var elimT2 = false;
+
+function valEliminar() {
+    var inicia = false;
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (inicia) {
+            if (entra || sale || tray) {
+                initIn = true;
+                coor[1] += disFig;
+            }
+            if (ordenFig[i] == "EF") {
+                if (ordenFig[i - 3] != "EI") {
+                    elimEF = true;
+                } else {
+                    errorDiv("No puede quedar una linea secundaria vacia");
+                    return false;
+                }
+            }
+            break;
+            //Validar el ultimo proceso para que no lo borre
+            //Corregir el deshacer la ultima pos en vez de borrar
+            //Implementar un borrar condicionado a ultima pos, final entrada y salida
+            //Crear un reset conforme a lo que se usan
+        } else if (ordenFig[i] == selectedFigureId) {
+            inicia = true;
+        } else if (isNaN(ordenFig[i])) {
+            valOrden(ordenFig[i]);
+        }
+    }
+    return true;
 }
 
 function renumFig(base) {
@@ -6114,7 +6295,10 @@ function genOpcion(num) {
 
 function genEntrada() {
     canvasBuild(window.figure_Square);
+    canvasBuild(window.figure_Square);
     especial('newLE');
+    canvasBuild(window.figure_Square);
+    canvasBuild(window.figure_Square);
     canvasBuild(window.figure_Square);
     especial('endLE');
     canvasBuild(window.figure_Square);
@@ -6123,6 +6307,7 @@ function genEntrada() {
 function genSalida() {
     canvasBuild(window.figure_Square);
     especial('newLS');
+    canvasBuild(window.figure_Square);
     canvasBuild(window.figure_Square);
     especial('endLS');
     canvasBuild(window.figure_Square);

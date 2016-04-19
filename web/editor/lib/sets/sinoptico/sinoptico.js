@@ -111,9 +111,13 @@ function resetSinoptico() {
     nSA = [0, 0, 0];
 }
 
-function sumSinop(pos) {
+function sumSinop(pos, rest) {
     nSP = [nSA[0], nSA[1], nSA[2]];
-    nSA[pos]++;
+    if (!rest) {
+        nSA[pos]++;
+    } else {
+        nSA[pos]--;
+    }
     resumSinop();
     return nSA[pos];
 }

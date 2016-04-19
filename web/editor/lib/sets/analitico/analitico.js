@@ -130,10 +130,10 @@ function resumAnali() {
     }
 }
 
-function valFloat(n){
-    if (n % 1 !== 0){
+function valFloat(n) {
+    if (n % 1 !== 0) {
         return n.toFixed(2);
-    }else{
+    } else {
         return n;
     }
 }
@@ -166,9 +166,13 @@ function resetAnalitico() {
     nAA = [0, 0, 0, 0, 0, 0];
 }
 
-function sumAnali(pos) {
+function sumAnali(pos, rest) {
     nAP = [nAA[0], nAA[1], nAA[2], nAA[3], nAA[4], nAA[5]];
-    nAA[pos]++;
+    if (!rest) {
+        nAA[pos]++;
+    } else {
+        nAA[pos]--;
+    }
     resumAnali();
     return nAA[pos];
 }

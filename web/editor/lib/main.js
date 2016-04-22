@@ -3820,6 +3820,8 @@ function init(diagramId) {
     window.addEventListener("mousedown", documentOnMouseDown, false);
     window.addEventListener("mousemove", documentOnMouseMove, false);
     window.addEventListener("mouseup", documentOnMouseUp, false);
+
+    genOpcion(3);
 }
 
 /**Flag to inform if to drew or not the diagram. Similar to "Dirty pattern" */
@@ -4808,7 +4810,7 @@ function ordenarJagged(pos, optY, loop) {
         if (turns.length == 6) {
             turns[2].x = turns[0].x;
             turns[3].x = turns[0].x;
-        } else {
+        } else if (turns.length != 2) {
             turns[1].y = turns[0].y + disCon;
             turns[2].x = turns[1].x;
             turns[2].y = pos[1] - tamFig / 2;
@@ -5794,11 +5796,18 @@ function valOrden(orden) {
         trayLin = true;
     } else if (orden == "TLF" && !valTLF) {
         trayLin = false;
-        if (initIn && !initMul) {
+        if (initIn) {
             valTLF = true;
-            valMovTF = moverTray();
-            if (!valMovTF) {
-                coor[1] -= disFig;
+            if (!initMul && !elimTLF && !elimTR) {
+                valMovTF = moverTray();
+                if (!valMovTF) {
+                    coor[1] -= disFig;
+                }
+            } else if (elimTLF || elimTR) {
+                valMovTF = moverTrayElim();
+                if (valMovTF) {
+                    coor[1] -= disFig;
+                }
             }
         }
     }
@@ -5823,8 +5832,6 @@ function valMoverFig(id) {
         } else if (initMul && trayLin) {
             return moverTrayTM(id);
         }
-    } else if ((id + 1) == "TM") {
-        return false;
     }
     return true;
 }
@@ -5923,6 +5930,10 @@ function resetValOrden() {
     elimEF = false;
     elimSI = false;
     elimSF = false;
+    elimTR = false;
+    elimTLF = false;
+    elimTLI = false;
+    elimTM = false;
 }
 
 function addOrdenCon(idCon) {
@@ -6036,14 +6047,14 @@ function deleteFigure() {
         sumDirect(figDel.id, true);
         var figId = selectedFigureId;
         for (var i = 0; i < ordenCon.length; i++) {
-            if (ordenCon[i][1] == selectedFigureId && !elimSF) {
+            if (ordenCon[i][1] == selectedFigureId && !elimSF && !elimTR && !elimTLF) {
                 if (elimEF) {
                     selectedConnectorId = ordenCon[i - 1][0];
                 } else {
                     selectedConnectorId = ordenCon[i][0];
                 }
                 break;
-            } else if (ordenCon[i][2] == selectedFigureId && elimSF) {
+            } else if (ordenCon[i][2] == selectedFigureId && (elimSF || elimTR || elimTLF)) {
                 selectedConnectorId = ordenCon[i][0];
             }
         }
@@ -6057,10 +6068,10 @@ function deleteFigure() {
         History.addUndo(cmdDelCon);
         console.log(ordenFig);
         var orden = ordenEliminar(figId);
+        console.log(orden, "Orden");
         if (orden != null) {
-            console.log(orden, "Orden");
             selectedConnectorId = orden[0];
-            selectedFigureId = elimEF ? orden[1] : orden[2];
+            selectedFigureId = elimEF || elimTR || elimTLF ? orden[1] : orden[2];
 
             var fig = STACK.figureGetById(selectedFigureId);
             var x = fig.rotationCoords[1].x;
@@ -6079,13 +6090,20 @@ function deleteFigure() {
             var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(orden[0]);
             var undoCmd = new ConnectorAlterCommand(orden[0]);
             History.addUndo(undoCmd);
-            if (elimEF) {
-                connectorMovePoint(cps[0].id, x, y + tamFig);
+            if (elimEF || elimTR || elimTLF) {
+                if (fig.name == "MultiPoint") {
+                    connectorMovePoint(cps[0].id, x, y);
+                } else {
+                    connectorMovePoint(cps[0].id, x, y + tamFig);
+                }
             } else {
                 connectorMovePoint(cps[1].id, x, y);
             }
 
             var fig = STACK.figureGetById(orden[1]);
+            if (fig.name == "MultiPoint") {
+                fig = STACK.figureGetById(orden[2]);
+            }
             var moveY = -disFig;
             if (figDel.name == "LineIn" || figDel.name == "LineOut") {
                 moveY += tamFig;
@@ -6102,7 +6120,7 @@ function deleteFigure() {
                 if (inicia) {
                     if (isNaN(ordenFig[i])) {
                         console.log(ordenFig[i], "Estado");
-                        if ((initIn && !elimSI) || (elimSI && ordenFig[i] == "SF")) {
+                        if ((initIn && !elimSI && !tray) || (elimSI && ordenFig[i] == "SF")) {
                             console.log(ordenFig[i], "Break");
                             break;
                         }
@@ -6118,19 +6136,41 @@ function deleteFigure() {
                 } else if (ordenFig[i] == fig.id) {
                     console.log(ordenFig[i], "Encontro");
                     inicia = true;
+                    if (entra || sale || tray) {
+                        coor[1] += disFig;
+                        initIn = true;
+                        if (elimTLI || elimSI && ordenFig[i + 1] == "SF") {
+                            i--;
+                        }
+                    } else if (idTray != -1) {
+                        if (ordenFig[i - 2] == "TF") {
+                            i--;
+                        }
+                    }
+                    if (elimTM) {
+                        coor[1] += disFig;
+                        break;
+                    }
                 } else if (isNaN(ordenFig[i])) {
                     valOrden(ordenFig[i]);
+                    if (tray && ordenFig[i] == "TI") {
+                        idTray = ordenFig[i - 1];
+                    }
                 }
             }
         }
         renumFig(figDel);
+        if (elimTM) {
+            cambioLV(orden[0]);
+        }
         redrawLine();
-        resetValOrden();
-        cleanStates();
         if (isNaN(moveY))
             var moveY = -disFig;
         coor[1] += moveY - disFig;
+        cleanStates();
     }
+    resetValOrden();
+
 }
 
 function ordenEliminar(figId) {
@@ -6138,7 +6178,7 @@ function ordenEliminar(figId) {
     var orden = null;
     for (var i = 0; i < ordenFig.length; i++) {
         if (ordenFig[i] == figId) {
-            if (elimEF) {
+            if (elimEF || elimTLF) {
                 sigFig = ordenFig[i - 1];
             } else {
                 sigFig = ordenFig[i + 1];
@@ -6148,14 +6188,25 @@ function ordenEliminar(figId) {
         }
     }
     for (var i = 0; i < ordenCon.length; i++) {
-        if (elimSF && ordenCon[i][2] == figId) {
+        if (ordenCon[i][2] == figId && (elimSF || elimTR || elimTLF)) {
+            if (elimTR) {
+                ordenCon[i + 1][1] = ordenCon[i][1];
+                orden = ordenCon[i + 1];
+            } else if (elimTM) {
+                sigFig = ordenCon[i][1];
+            }
             ordenCon.splice(i, 1);
-            break;
+            if (!elimTLF && !elimTM) {
+                break;
+            }
+            i--;
         } else if (ordenCon[i][1] == figId) {
-            if (elimEF) {
+            if (elimEF || elimTLF || elimTM) {
                 ordenCon[i][1] = sigFig;
                 orden = ordenCon[i];
-                ordenCon.splice(i - 1, 1);
+                if (!elimTLF) {
+                    ordenCon.splice(i - 1, 1);
+                }
             } else {
                 ordenCon[i - 1][2] = sigFig;
                 orden = ordenCon[i - 1];
@@ -6170,44 +6221,126 @@ function ordenEliminar(figId) {
 var elimEF = false;
 var elimSI = false;
 var elimSF = false;
+var elimTR = false;
+var elimTLF = false;
+var elimTLI = false;
+var elimTM = false;
 
 function valEliminar() {
     var inicia = false;
+    var idTI = -1;
     for (var i = 0; i < ordenFig.length; i++) {
         if (inicia) {
             console.log(ordenFig[i], "valida");
-            if (entra || sale || tray) {
-                initIn = true;
-                coor[1] += disFig;
-                if (entra) {
-                    if (ordenFig[i] == "EF") {
-                        if (ordenFig[i - 3] != "EI") {
-                            elimEF = true;
-                        } else {
-                            errorDiv("No puede quedar una linea secundaria vacia");
+            if (entra) {
+                if (ordenFig[i] == "EF") {
+                    if (ordenFig[i - 3] != "EI") {
+                        elimEF = true;
+                    } else {
+                        errorDiv("No puede quedar una linea secundaria vacia");
+                        return false;
+                    }
+                }
+            } else if (sale) {
+                if (ordenFig[i - 2] == "SI") {
+                    elimSI = true;
+                    if (ordenFig[i] == "SF") {
+                        errorDiv("No puede quedar una salida secundaria vacia");
+                        return false;
+                    }
+                } else if (ordenFig[i] == "SF") {
+                    elimSF = true;
+                }
+            } else if (tray) {
+                if (ordenFig[i] == "TLF") {
+                    elimTLF = true;
+                    if (ordenFig[i - 2] == "TLI") {
+                        elimTM = true;
+                        if (valTrayLV(idTI)) {
+                            errorDiv("Solo se permite una linea de Trayecto vacia");
                             return false;
                         }
                     }
-                } else if (sale) {
-                    if (ordenFig[i - 2] == "SI") {
-                        elimSI = true;
-                    } else if (ordenFig[i] == "SF") {
-                        elimSF = true;
+                } else {
+                    elimTR = true;
+                    if (ordenFig[i - 2] == "TLI") {
+                        elimTLI = true;
                     }
-                } else if (tray) {
-
                 }
             }
             break;
-            //Validar el ultimo proceso para que no lo borre
-            //Implementar un borrar condicionado a ultima pos, final entrada y salida
         } else if (ordenFig[i] == selectedFigureId) {
             inicia = true;
         } else if (isNaN(ordenFig[i])) {
             valOrden(ordenFig[i]);
+            if (ordenFig[i] == "TI") {
+                idTI = ordenFig[i - 1];
+            }
         }
     }
     return true;
+}
+
+function moverTrayElim() {
+    var oper = [];
+    var iniTray = false;
+    var posTF = 0;
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (ordenFig[i] == "TI") {
+            if (idTray == ordenFig[i - 1]) {
+                iniTray = true;
+            }
+        } else if (ordenFig[i] == "TF" && iniTray) {
+            posTF = STACK.figureGetById(ordenFig[i + 1]).rotationCoords[0].y;
+            break;
+        }
+        if (iniTray) {
+            if (ordenFig[i] == "TLF" && ordenFig[i - 1] != "TLI") {
+                oper.push(STACK.figureGetById(ordenFig[i - 1]).rotationCoords[0].y);
+            }
+        }
+    }
+    var cont = 0;
+    var dist = 0;
+    for (var i = 0; i < oper.length; i++) {
+        dist = posTF - oper[i];
+        if (dist > disFig) {
+            cont++;
+        }
+    }
+    if (cont == oper.length) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function valTrayLV(idTray) {
+    var iniTray = false;
+    var cont = 0;
+    var iniTLI = false;
+    for (var i = 0; i < ordenFig.length; i++) {
+        if (ordenFig[i] == "TI") {
+            if (idTray == ordenFig[i - 1]) {
+                iniTray = true;
+            }
+        } else if (ordenFig[i] == "TF" && iniTray) {
+            break;
+        }
+        if (iniTray) {
+            if (ordenFig[i] == "TLI") {
+                iniTLI = true;
+            } else if (ordenFig[i] == "TLF") {
+                if (cont == 0) {
+                    return true;
+                }
+                cont = 0;
+            } else if (iniTLI) {
+                cont++;
+            }
+        }
+    }
+    return false;
 }
 
 function renumFig(base) {
@@ -6296,6 +6429,16 @@ function redrawLine() {
     }
 }
 
+function cambioLV(idCon) {
+    for (var i = 0; i < redrawDel.length; i++) {
+        if (redrawDel[i][0] == idCon) {
+            redrawDel.splice(i, 1);
+            break;
+        }
+    }
+    redrawCon.push([idCon, "optNull"]);
+}
+
 function ordJagSwitch(caso, bool) {
     switch (caso) {
         case "finLS":
@@ -6335,20 +6478,18 @@ function genEntrada() {
     especial('newLE');
     canvasBuild(window.figure_Square);
     canvasBuild(window.figure_Square);
-    canvasBuild(window.figure_Square);
     especial('endLE');
     canvasBuild(window.figure_Square);
 }
 
 function genSalida() {
     canvasBuild(window.figure_Square);
+    canvasBuild(window.figure_Square);
     especial('newLS');
     canvasBuild(window.figure_Square);
     canvasBuild(window.figure_Square);
     especial('endLS');
     canvasBuild(window.figure_Square);
-    selectedFigureId = 7;
-    deleteFigure();
 }
 
 function genRepetir() {

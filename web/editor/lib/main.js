@@ -3821,7 +3821,7 @@ function init(diagramId) {
     window.addEventListener("mousemove", documentOnMouseMove, false);
     window.addEventListener("mouseup", documentOnMouseUp, false);
 
-    genOpcion(3);
+    genRepetir();
 }
 
 /**Flag to inform if to drew or not the diagram. Similar to "Dirty pattern" */
@@ -5219,6 +5219,9 @@ function especial(accion) {
  * @param {Number} figIni id de la figura desde donde inicia.
  * @param {Number} figFin id de la figura desde donde termina. */
 function buildRepetir(numR, figIni, figFin) {
+    //Usar el insertar para genera un multipoint
+    // para corregir la devolucion al mismo punto.
+    //Agregar insertar en repeticion.
     var repRI = [];
     var repRF = [];
     var inicia = false;
@@ -6026,6 +6029,9 @@ function deleteFigure() {
     } else if (figDel.name == "MultiPoint") {
         errorDiv("No se puede eliminar un punto de union");
         return;
+    } else if (selectedFigureId == ordenFig[ordenFig.length - 1] && ordenFig[ordenFig.length - 2] == "RF") {
+        errorDiv("No se puede eliminar un señalador de repeticion");
+        return;
     } else if (selectedFigureId == ordenFig[ordenFig.length - 1]) {
         sumDirect(figDel.id, true);
 
@@ -6066,7 +6072,7 @@ function deleteFigure() {
         var cmdDelCon = new ConnectorDeleteCommand(selectedConnectorId);
         cmdDelCon.execute();
         History.addUndo(cmdDelCon);
-        console.log(ordenFig);
+
         var orden = ordenEliminar(figId);
         console.log(orden, "Orden");
         if (orden != null) {
@@ -6170,7 +6176,6 @@ function deleteFigure() {
         cleanStates();
     }
     resetValOrden();
-
 }
 
 function ordenEliminar(figId) {
@@ -6225,10 +6230,14 @@ var elimTR = false;
 var elimTLF = false;
 var elimTLI = false;
 var elimTM = false;
+var elimRF = -1;
 
 function valEliminar() {
     var inicia = false;
     var idTI = -1;
+    var rept = false;
+    var contR = 0;
+    var passRF = false;
     for (var i = 0; i < ordenFig.length; i++) {
         if (inicia) {
             console.log(ordenFig[i], "valida");
@@ -6267,6 +6276,17 @@ function valEliminar() {
                         elimTLI = true;
                     }
                 }
+            } else if (rept) {
+                errorDiv("No se puede eliminar un proceso en repeticion");
+                return false;
+            } else if (passRF) {
+                if (ordenFig[i - 2] == "RF") {
+                    errorDiv("No se puede eliminar un proceso señalador de repeticion");
+                    return false;
+                } else if (ordenFig[i - 3] == "RF" && contR == 0) {
+                    console.log(ordenFig[i - 3], contR, ordenFig[i]);
+                    elimRF = i - 1;
+                }
             }
             break;
         } else if (ordenFig[i] == selectedFigureId) {
@@ -6275,6 +6295,14 @@ function valEliminar() {
             valOrden(ordenFig[i]);
             if (ordenFig[i] == "TI") {
                 idTI = ordenFig[i - 1];
+            } else if (ordenFig[i] == "RI") {
+                rept = true;
+                passRF = false;
+                contR++;
+            } else if (ordenFig[i] == "RF") {
+                contR--;
+                contR == 0 ? rept = false : rept = true;
+                contR == 0 ? passRF = true : passRF = false;
             }
         }
     }
@@ -6363,6 +6391,10 @@ function renumFig(base) {
                         }
                         var cont = parseInt(text.substring(2)) + add;
                         rept = false;
+                    }
+                    if (elimRF <= i && elimRF != -1) {
+                        cont--;
+                        elimRF = -1;
                     }
                     updateShape(ordenFig[i], prop[0], prop[1] + cont);
                     cont++;

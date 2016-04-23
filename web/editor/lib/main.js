@@ -3821,7 +3821,6 @@ function init(diagramId) {
     window.addEventListener("mousemove", documentOnMouseMove, false);
     window.addEventListener("mouseup", documentOnMouseUp, false);
 
-    genRepetir();
 }
 
 /**Flag to inform if to drew or not the diagram. Similar to "Dirty pattern" */
@@ -4482,14 +4481,7 @@ function touchCancel(event) {
 
 /*======================Diagramas de Procesos========================*/
 
-//TODO Arreglar la seleccion multiple.
-//TODO Corregir nivel de los conectores.
 //TODO Borrar los TODO que no digan un error.
-//TODO Verificar z-index de los conectores.
-//TODO Crear el remplazo de figuras (Gestionar renumeracion).
-//TODO Gestionar guardado temporal.
-//TODO Crear el manual de usuario en linea.
-//TODO Traducir el builder.
 
 /**Coordenada inicial en eje X
  * ajustada a la formula
@@ -4614,7 +4606,8 @@ function closeText() {
 /**Genera las figuras correspondientes y acomoda las figuras
  * especificas para el diagrama. Conectandolas de manera automatica
  * @param {Function} figureFunction funcion obtenida a partir de {figureSets}
- * @see builder.js */
+ * @see builder.js 
+ * */
 function canvasBuild(figureFunction) {
     createFigureFunction = figureFunction;
     lineaPrincipal();
@@ -4634,7 +4627,8 @@ function canvasBuild(figureFunction) {
 }
 
 /**Construye los conectores entre figuras a partir de las
- * coordenadas actuales de {coor} y los gatillos activos*/
+ * coordenadas actuales de {coor} y los gatillos activos
+ * */
 function conectorBuild() {
     connectorType = Connector.TYPE_JAGGED;
     if (finLS) {
@@ -4670,7 +4664,8 @@ function conectorBuild() {
  * @param {Boolean} jagg determina si es lineal o cuadrado
  * @param {Array} xy1 primer juego de coordenadas
  * @param {Array} xy2 segundo juego de coordenadas
- * @param {Boolean} filled determina si tendra punta*/
+ * @param {Boolean} filled determina si tendra punta
+ * */
 function conectorBuildFull(jagg, xy1, xy2, filled) {
     jagg ? connectorType = Connector.TYPE_JAGGED : connectorType = Connector.TYPE_STRAIGHT;
     connectorPickFirst(xy1[0], xy1[1]);
@@ -4707,7 +4702,8 @@ function figureBuild(figureFunction, x, y) {
 /**Limpia y dibuja el lienzo de cualquier cambio realizado
  * Agrega distancia al vector {coor} en el eje
  * Ejecuta la @function growCanvas para crecer el lienzo si es nesesario
- * Limpia el texto de error si esta presnte*/
+ * Limpia el texto de error si esta presnte
+ * */
 function cleanStates() {
     coor[1] += disFig;
     if (selTray) {
@@ -4764,8 +4760,8 @@ function dropFigure() {
 }
 
 /**Ordena los puntos de giro {turningPoints} de los conectores cuadrados
- * @param {Numeric} pos coordenada de referencia final para acomodar los puntos.
- * @param {Numeric} optY coordenada de referencia usada por el condicional de opciones.
+ * @param {Number} pos coordenada de referencia final para acomodar los puntos.
+ * @param {Number} optY coordenada de referencia usada por el condicional de opciones.
  * @param {Bolean} loop validador de reuso para la @function redrawLine().
  * @see connections.js @param turningPoints
  * */
@@ -4860,7 +4856,8 @@ var selectEspecial = 'entrada';
 /**Cambia los divs visibles a partir del selector de especiales
  * y recarga las el listado de figuras presentes
  * @param {String} nombre Determina el nombre del Id del div
- * @see editor.php*/
+ * @see editor.php
+ * */
 function setEspecial(nombre) {
     var div = document.getElementById(nombre);
     if (div != null) {
@@ -4921,7 +4918,6 @@ var btnFin = 'Siguiente';
  * une las lineas seleccionadas.
  * @see editor.php para obtener los Id de cada caso.
  * */
-
 function especial(accion) {
     var clean = true;
     if (primer) {
@@ -5214,14 +5210,15 @@ function especial(accion) {
     }
 }
 
-/**Genera los procescos de repeticion.
+/**Genera los procescos de repeticion y repeticion interna.
  * @param {Number} numR numero de repeticiones a realizar
  * @param {Number} figIni id de la figura desde donde inicia.
- * @param {Number} figFin id de la figura desde donde termina. */
+ * @param {Number} figFin id de la figura desde donde termina.
+ * */
 function buildRepetir(numR, figIni, figFin) {
-    //Usar el insertar para genera un multipoint
-    // para corregir la devolucion al mismo punto.
-    //Agregar insertar en repeticion.
+    /**Usar el insertar para genera un multipoint
+     * para corregir la devolucion al mismo punto.
+     * Agregar insertar en repeticion.*/
     var repRI = [];
     var repRF = [];
     var inicia = false;
@@ -5251,6 +5248,10 @@ function buildRepetir(numR, figIni, figFin) {
     }
 }
 
+/**Genera los indicadores internos de repeticion.
+ * @param {Number} figIni id de la figura desde donde inicia.
+ * @param {Number} figFin id de la figura desde donde termina.
+ * */
 function addOrdenRept(figIni, figFin) {
     for (var i = 0; i < ordenFig.length; i++) {
         if (ordenFig[i] == figIni) {
@@ -5263,6 +5264,11 @@ function addOrdenRept(figIni, figFin) {
     }
 }
 
+/**Genera los procescos de repeticion.
+ * @param {Number} numR numero de repeticiones a realizar
+ * @param {Number} figIni id de la figura desde donde inicia.
+ * @param {Number} figFin id de la figura desde donde termina.
+ * */
 function addCicloRept(numR, figIni, figFin) {
     var inicia = false;
     for (var j = 0; j < numR; j++) {
@@ -5281,7 +5287,9 @@ function addCicloRept(numR, figIni, figFin) {
 }
 
 /**Suma los directamente las figuras a partir de tipo
- * @param {Number} id identificador que tiene la figura en {STACK} */
+ * @param {Number} id identificador que tiene la figura en {STACK} 
+ * @param {Boolean} selector de accion, {true} resta, {false} suma.
+ * */
 function sumDirect(id, rest) {
     var name = "";
     var fig = STACK.figureGetById(id);
@@ -5340,7 +5348,8 @@ var stackSelct = -1;
 var stackFigure = -1;
 
 /**Gestiona la carga de figuras selecionables para los selectores
- * @param {String} selectId El id del selector que se va cargar*/
+ * @param {String} selectId El id del selector que se va cargar
+ * */
 function cargarFiguras(selectId) {
     var select = document.getElementById(selectId);
     if (select.length != stackSelct || stackFigure != STACK.figures.length) {
@@ -5370,7 +5379,8 @@ function cargarFiguras(selectId) {
 
 /** Valida el nombre de la figura
  * @param {String} str Nombre de la figura
- * @return {Boolean} Devuelve si es valida la figura*/
+ * @return {Boolean} Devuelve si es valida la figura
+ * */
 function valFigName(str) {
     if (str == "LineInit" || str == "LineDouble" || str == "LineOut" || str == "LineIn") {
         return false;
@@ -5380,7 +5390,8 @@ function valFigName(str) {
 }
 
 /**Gestiona el cambio del selector de diagramas
- * @param {String} id El id del selector del diagramas*/
+ * @param {String} id El id del selector del diagramas
+ * */
 function cambiarVista(id) {
     if (id == "analitico") {
         displayDivs('block', 'none', 'block', 'none', 'none', 'none');
@@ -5442,7 +5453,8 @@ function cambiarVista(id) {
  * @param {String} esp Cambia el panel de especiales
  * @param {String} img Cambia el panel de imagen de recorrido
  * @param {String} bim Cambia el panel de bimanual
- * @param {String} hmaq Cambia el panel de hombre-maquina*/
+ * @param {String} hmaq Cambia el panel de hombre-maquina
+ * */
 function displayDivs(right, tools, esp, img, bim, hmaq) {
     document.getElementById('right').style.display = right;
     document.getElementById('aTools').style.display = tools;
@@ -5605,10 +5617,11 @@ function paintUD(value) {
 }
 
 /**Gestiona la impresion del diagrama
- * @augments Requiere objetos DOM para poder imprimirlos
- * no se pueden creados con Jquery.
+ * @requires Requiere objetos DOM para poder imprimirlos
+ * no pueden creados con Jquery.
  * @param {String} media gestiona el tipo del proposito del pop-up.
- * @see printArea.js*/
+ * @see printArea.js
+ * */
 function printDiagram(media) {
     resetToNoneState();
     $("#media").html(media);
@@ -5637,17 +5650,97 @@ function printDiagram(media) {
     $("#media").html('');
 }
 
+/** Guarda el orden interno de las figuras y el sistema de marcas
+ * de identificacion de procesos especiales, para que sea gestionado
+ * de forma lineal segun aparescan.
+ * @argument {String} EI marca el incio de una entrada secundaria.
+ * @argument {String} EF marca el final de una entrada secundaria.
+ * @argument {String} SI marca el incio de una salida secundaria.
+ * @argument {String} SF marca el final de una salida secundaria.
+ * @argument {String} RI marca el incio de una repeticion.
+ * @argument {String} RF marca el final de una repeticion.
+ * @argument {String} TI marca el incio de opciones de trayecto.
+ * @argument {String} TLI marca el incio de una linea de opciones de trayecto.
+ * @argument {String} TLF marca el final de una linea de opciones de trayecto.
+ * @argument {String} TF marca el final de opciones de trayecto.
+ * @extends Gestores de orden.
+ * */
 var ordenFig = [];
+
+/** Guarda el orden de los conectores, asi como la figura al inicio
+ * y final de cada punta del conector su estructura esta basada de 
+ * la siguiente manera {[idConector,idFiguraSup,idFiguraInf]}.
+ * */
 var ordenCon = [];
+
+/** Crea la estructura del vector insertar en {ordenCon}.
+ * @param {Number} idCon ID del conector que se agrega al orden.
+ * @return {Array} devuelte el array que se agregara al ordenCon.
+ * */
+function addOrdenCon(idCon) {
+    var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(idCon);
+    var figIni = obtenPosXY(cps[0]);
+    var figFin = obtenPosXY(cps[1]);
+    var orden = [idCon, figIni, figFin];
+    return orden;
+}
+
+/** Obtiene las figura a las cuales esta enlazado el conenctor.
+ * @param {Object} cps Los puntos de conecion del Conector.
+ * @return {Numeric} Devuelve el Id de la figura.
+ * @deprecated Verificar si existe directamente en los metodos de 
+ * connectionManagers.js y connections.js si ya esta implentado.
+ * */
+function obtenPosXY(cps) {
+    var xy = [
+        [0, 0],
+        [0, tamFig / 2],
+        [0, -tamFig / 2],
+        [tamFig, 0],
+        [-tamFig, 0],
+        [-tamFig, -tamFig * 0.75]
+    ];
+    var fig = -1;
+    for (var i = 0; i < xy.length; i++) {
+        fig = STACK.figureGetByXY(cps.point.x + xy[i][0], cps.point.y + xy[i][1]);
+        if (fig != -1) {
+            break;
+        }
+    }
+    return fig;
+}
+
+/** Gestor de orden, marca si esta activa una entrada.*/
 var entra = false;
+
+/** Gestor de orden, marca si esta activa una salida.*/
 var sale = false;
+
+/** Gestor de orden, marca si esta activa una opcion de trayecto.*/
 var tray = false;
+
+/** Gestor de orden, marca si esta activa una linea de trayecto.*/
 var trayLin = false;
+
+/** Gestor de orden, marca si inicio dentro de un estado orden.*/
 var initIn = false;
+
+/** Gestor de orden, marca si inicio en un multiPoint
+ * @see @function figure_MultiPoint.
+ */
 var initMul = false;
+
+/** Gestor de orden, guarda el ID de inicio un trayecto.*/
 var idTray = -1;
+
+/** Gestor de orden, guarda el ID de una linea de trayecto.*/
 var idLineTray = -1;
 
+/** Inserta una nueva figura al sistema debajo de la figura 
+ * que se encuentre seleccionada.
+ * @param {Function} figure_funcion el nombre de la funcion a generar.
+ * @requires selectedFigureId.
+ * */
 function insertFigure(figure_funcion) {
     selAP = true;
     var fig = STACK.figureGetById(selectedFigureId);
@@ -5772,9 +5865,20 @@ function insertFigure(figure_funcion) {
     resetValOrden();
 }
 
+/** Gestor de orden, validador de accion dentro de un trayecto 
+ * depues de salir de una linea de trayecto.
+ * */
 var valTLF = false;
+
+/** Gestor de orden, validador de accion de movimiento del punto
+ *  de reunion de una opcion de trayecto.
+ *  */
 var valMovTF = false;
 
+/** Validador de los gestores de orden, activa y desactiva 
+ * los estados gestores de orden y resta {coor[1]} segun caso 
+ * @param {String} orden Marca de estado dentro de {ordenFig}
+ * */
 function valOrden(orden) {
     if (orden == "EI") {
         entra = true;
@@ -5816,6 +5920,11 @@ function valOrden(orden) {
     }
 }
 
+/** Validador de movimiento, determina si se mueve una figura 
+ * segun los gestores de orden activos.
+ * @param {Number} id El ID de la figuras en {ordenFig}.
+ * @returns {Boolean} Si activa o no la accion.
+ * */
 function valMoverFig(id) {
     if (entra) {
         if (!initIn) {
@@ -5839,6 +5948,10 @@ function valMoverFig(id) {
     return true;
 }
 
+/** Validador de movimiento, determina si se mueve el punto 
+ * de reunion de una opcion de trayecto en {@function insertFigure}.
+ * @returns {Boolean} Si activa o no la accion.
+ * */
 function moverTray() {
     var contTray = -1;
     var contLine = -1;
@@ -5890,6 +6003,10 @@ function moverTray() {
     }
 }
 
+/** Validador de movimiento, determina si se mueve una figura 
+ * de una opcion de trayecto que inserto en {@function figure_MultiPoint.}
+ * @returns {Boolean} Si activa o no la accion.
+ * */
 function moverTrayTM(fig) {
     var contTM = 0;
     var contTL = -1;
@@ -5919,54 +6036,14 @@ function moverTrayTM(fig) {
     }
 }
 
-function resetValOrden() {
-    entra = false;
-    sale = false;
-    tray = false;
-    trayLin = false;
-    initIn = false;
-    initMul = false;
-    idLineTray = -1;
-    idTray = -1;
-    valTLF = false;
-    valMovTF = false;
-    elimEF = false;
-    elimSI = false;
-    elimSF = false;
-    elimTR = false;
-    elimTLF = false;
-    elimTLI = false;
-    elimTM = false;
-}
-
-function addOrdenCon(idCon) {
-    var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(idCon);
-    var figIni = obtenPosXY(cps[0]);
-    var figFin = obtenPosXY(cps[1]);
-    var orden = [idCon, figIni, figFin];
-    return orden;
-}
-
-function obtenPosXY(cps) {
-    var xy = [
-        [0, 0],
-        [0, tamFig / 2],
-        [0, -tamFig / 2],
-        [tamFig, 0],
-        [-tamFig, 0],
-        [-tamFig, -tamFig * 0.75]
-    ];
-    var fig = -1;
-    for (var i = 0; i < xy.length; i++) {
-        fig = STACK.figureGetByXY(cps.point.x + xy[i][0], cps.point.y + xy[i][1]);
-        if (fig != -1) {
-            break;
-        }
-    }
-    return fig;
-}
-
-
+/**Reasignador de orden, reordena e inserta en {ordenFig} y {ordenCon}
+ * la nueva figura y conector generado en @function insertFigure().
+ * @param {Number} pri Id de la figura anterior a la nueva.
+ * @param {Number} sig Id de la figura nueva a insertar.
+ * @param {Number} con Id del conector nuevo a insertar.
+ * @param {Boolean} mulFig Selector de caso especial para {OrdenFig}.
+ * @param {Boolean} mulCon Selector de caso especial para {OrdenCon}.
+ * */
 function ordenInsertar(pri, sig, con, mulFig, mulCon) {
     for (var i = 0; i < ordenCon.length; i++) {
         if (mulCon && ordenCon[i][1] == pri) {
@@ -5998,6 +6075,10 @@ function ordenInsertar(pri, sig, con, mulFig, mulCon) {
     }
 }
 
+/** Validador de posicion, obtiene la posicion de la figura 
+ * segun el id del {@function figure_MultiPoint}.
+ * @returns {Number} Posicion en {ordenFig}.
+ * */
 function obtenerTLI(mulId) {
     var line = 0;
     var entro = false;
@@ -6021,6 +6102,9 @@ function obtenerTLI(mulId) {
     }
 }
 
+/** Elimina la figura que se encuentre seleccionada.
+ * @requires selectedFigureId.
+ * */
 function deleteFigure() {
     var figDel = STACK.figureGetById(selectedFigureId);
     if (figDel.name == "LineInit") {
@@ -6074,7 +6158,7 @@ function deleteFigure() {
         History.addUndo(cmdDelCon);
 
         var orden = ordenEliminar(figId);
-        console.log(orden, "Orden");
+
         if (orden != null) {
             selectedConnectorId = orden[0];
             selectedFigureId = elimEF || elimTR || elimTLF ? orden[1] : orden[2];
@@ -6125,22 +6209,16 @@ function deleteFigure() {
             for (var i = 0; i < ordenFig.length; i++) {
                 if (inicia) {
                     if (isNaN(ordenFig[i])) {
-                        console.log(ordenFig[i], "Estado");
                         if ((initIn && !elimSI && !tray) || (elimSI && ordenFig[i] == "SF")) {
-                            console.log(ordenFig[i], "Break");
                             break;
                         }
                         valOrden(ordenFig[i]);
                     } else if (valMoverFig(ordenFig[i])) {
-                        console.log(ordenFig[i], "Mueve");
                         var moveFigure = new FigureTranslateCommand(ordenFig[i], moveMatrix);
                         History.addUndo(moveFigure);
                         moveFigure.execute();
-                    } else {
-                        console.log(ordenFig[i], "Dentro");
                     }
                 } else if (ordenFig[i] == fig.id) {
-                    console.log(ordenFig[i], "Encontro");
                     inicia = true;
                     if (entra || sale || tray) {
                         coor[1] += disFig;
@@ -6178,6 +6256,12 @@ function deleteFigure() {
     resetValOrden();
 }
 
+/**Reasignador de orden, reordena y elimina en {ordenFig} y {ordenCon}
+ * la figura selecionada en @function deleteFigure().
+ * @param {Number} figId Id de la figura que se va a eliminar.
+ * @return {Array} Devuelve un vector que contiene el conector 
+ * siguiende del que fue eliminado que es usado en @function deleteFigure().
+ * */
 function ordenEliminar(figId) {
     var sigFig = -1;
     var orden = null;
@@ -6223,15 +6307,35 @@ function ordenEliminar(figId) {
     return orden;
 }
 
+/**Gestor de orden, marca si se elimino dentro de una entrada.*/
 var elimEF = false;
+
+/**Gestor de orden, marca si se elimino al inicio de una salida.*/
 var elimSI = false;
+
+/**Gestor de orden, marca si se elimino al final de una salida.*/
 var elimSF = false;
+
+/**Gestor de orden, marca si se elimino dentro de una linea de trayecto.*/
 var elimTR = false;
+
+/**Gestor de orden, marca si se elimino al final de una linea de trayecto.*/
 var elimTLF = false;
+
+/**Gestor de orden, marca si se elimino al inicio de una linea de trayecto.*/
 var elimTLI = false;
+
+/**Gestor de orden, marca si se elimino dentro de una linea
+ * de trayecto y quedara vacia.*/
 var elimTM = false;
+
+/**Gestor de orden, guarda la posicion en {ordenFig}, si se 
+ * elimina la figura siguiente a una repeticion.*/
 var elimRF = -1;
 
+/**Validador de orden, valida los casos especiales y activa casos de orden
+ * y si el eliminar la figura selecionada es posible segun los estados de orden.
+ * @return {Boolean} Retorna si es posible la eliminacion.*/
 function valEliminar() {
     var inicia = false;
     var idTI = -1;
@@ -6240,7 +6344,6 @@ function valEliminar() {
     var passRF = false;
     for (var i = 0; i < ordenFig.length; i++) {
         if (inicia) {
-            console.log(ordenFig[i], "valida");
             if (entra) {
                 if (ordenFig[i] == "EF") {
                     if (ordenFig[i - 3] != "EI") {
@@ -6284,7 +6387,6 @@ function valEliminar() {
                     errorDiv("No se puede eliminar un proceso señalador de repeticion");
                     return false;
                 } else if (ordenFig[i - 3] == "RF" && contR == 0) {
-                    console.log(ordenFig[i - 3], contR, ordenFig[i]);
                     elimRF = i - 1;
                 }
             }
@@ -6309,6 +6411,9 @@ function valEliminar() {
     return true;
 }
 
+/**Validador de movimento, valida si el punto de reunion de una 
+ * opcion de trayecto debe ser movido.
+ * @return {Boolean} Si debe o no mover*/
 function moverTrayElim() {
     var oper = [];
     var iniTray = false;
@@ -6371,12 +6476,35 @@ function valTrayLV(idTray) {
     return false;
 }
 
+/**Gestor de orden, reinicializa todas la variables de orden*/
+function resetValOrden() {
+    entra = false;
+    sale = false;
+    tray = false;
+    trayLin = false;
+    initIn = false;
+    initMul = false;
+    idLineTray = -1;
+    idTray = -1;
+    valTLF = false;
+    valMovTF = false;
+    elimEF = false;
+    elimSI = false;
+    elimSF = false;
+    elimTR = false;
+    elimTLF = false;
+    elimTLI = false;
+    elimTM = false;
+}
+
+/**Renumera todas las figura afectadas por el @function insertFigure()
+ * y @function deleteFigure().
+ * @param {STACK} base Instancia del tipo de figura que fue afectado.*/
 function renumFig(base) {
-    var tipo = base.name;
-    var cont = 1;
-    var prop = genFigureProp(tipo);
+    var cont = 1;    
     var rept = false;
     var add = 0;
+    var prop = genFigureProp(base.name);
     if (prop.length != 0) {
         for (var i = 0; i < ordenFig.length; i++) {
             if (!isNaN(ordenFig[i])) {
@@ -6409,6 +6537,10 @@ function renumFig(base) {
     }
 }
 
+/**Genera un Array segun el tipo de figura sumintrado.
+ * @param {String} tipo Nombre de una figura.
+ * @return {Array} Devuelve un array con las propiedades segun la figura,
+ * para la renumeracion*/
 function genFigureProp(tipo) {
     var props = [];
     if (tipo == "Circle") {
@@ -6427,9 +6559,19 @@ function genFigureProp(tipo) {
     return props;
 }
 
+/**Guarda los conectores que fueron afectado en @function ordenarJagged(),
+ * para ser redibujados, estructura {[IdConector, caso]}, donde {caso} 
+ * es sobre el cual se reordeno el conector.*/
 var redrawCon = [];
+
+/**Guarda los conectores que fueron afectado en @function ordenarDelta(),
+ * para ser redibujados, estructura {[IdConector, align, delta, index]}, 
+ * donde las variables esta definidas en @function ordenarDelta().*/
 var redrawDel = [];
 
+/**Redibuja o reacomoda los arreglos efectudaos en las funciones a los 
+ * conectores almacenados en {redrawCon} y {redrawDel}.
+ * */
 function redrawLine() {
     for (var i = 0; i < redrawCon.length; i++) {
         selectedConnectorId = redrawCon[i][0];
@@ -6461,6 +6603,10 @@ function redrawLine() {
     }
 }
 
+/**Intercambia de {redrawDel} a {redrawCon} un conector que haya 
+ * quedado vacio en una linea de trayecto en el eliminar.
+ * @param {Numer} idCon Id del conector a convertir.
+ * */
 function cambioLV(idCon) {
     for (var i = 0; i < redrawDel.length; i++) {
         if (redrawDel[i][0] == idCon) {
@@ -6471,6 +6617,10 @@ function cambioLV(idCon) {
     redrawCon.push([idCon, "optNull"]);
 }
 
+/**Activa y desactiva, los gatillos usados en @function ordenarJagged()
+ * @param {String} caso El nombre del gatillo que se afectara.
+ * @param {Boolean} bool Determina el estado al que pasara.
+ * */
 function ordJagSwitch(caso, bool) {
     switch (caso) {
         case "finLS":
@@ -6486,55 +6636,4 @@ function ordJagSwitch(caso, bool) {
             optNull = !bool;
             break;
     }
-}
-
-function genOpcion(num) {
-    canvasBuild(window.figure_Square);
-    document.getElementById("trayNum").value = num;
-    especial('trayGen');
-    for (var i = 0; i < num; i++) {
-        canvasBuild(window.figure_Square);
-        especial('trayFin');
-    }
-    var checks = document.getElementsByName("opcion");
-    for (var i = 0; i < checks.length; i++) {
-        checks[i].checked = true;
-    }
-    especial('trayUnir');
-    canvasBuild(window.figure_Square);
-}
-
-function genEntrada() {
-    canvasBuild(window.figure_Square);
-    canvasBuild(window.figure_Square);
-    especial('newLE');
-    canvasBuild(window.figure_Square);
-    canvasBuild(window.figure_Square);
-    especial('endLE');
-    canvasBuild(window.figure_Square);
-}
-
-function genSalida() {
-    canvasBuild(window.figure_Square);
-    canvasBuild(window.figure_Square);
-    especial('newLS');
-    canvasBuild(window.figure_Square);
-    canvasBuild(window.figure_Square);
-    especial('endLS');
-    canvasBuild(window.figure_Square);
-}
-
-function genRepetir() {
-    canvasBuild(window.figure_Square);
-    canvasBuild(window.figure_Square);
-    canvasBuild(window.figure_Square);
-    cargarFiguras('repOut');
-    document.getElementById('repOut').value = 3;
-    document.getElementById('repNum').value = 2;
-    especial('repetir');
-    canvasBuild(window.figure_Square);
-    document.getElementById('repOut').value = 1;
-    especial('repetir');
-    canvasBuild(window.figure_Square);
-    canvasBuild(window.figure_Square);
 }

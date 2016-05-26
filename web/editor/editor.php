@@ -84,14 +84,17 @@ $page = 'editor';
                 <a href="javascript:refCabecera();"  title="Refrescar Cabecera"><img  src="assets/images/rotate.png" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
                 
-                <a href="javascript:printDiagram('pdf')" title="Guardar como PDF"><img src="assets/images/icon_save_pdf.png" border="0" width="16" height="16"/></a>          
+                <? if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') == FALSE){ echo'
+                <a href="javascript:printDiagram(\'pdf\')" title="Guardar como PDF"><img src="assets/images/icon_save_pdf.png" border="0" width="16" height="16"/></a>          
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                ';}?>
                 
-                <a href="javascript:printDiagram('');"  title="Imprimir"><img  src="assets/images/icon_print.png" border="0" height ="16"/></a>
+                <a href="javascript:printDiagram('print');"  title="Imprimir"><img  src="assets/images/icon_print.png" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
-                <a href="javascript:action('undo');" title="Deshacer (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>           
+                <a href="javascript:action('undo');" title="Deshacer (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0" height ="16"/></a>           
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                
             </div>
             <div id="aTools" style="float: left; display: none;">
                 <a href="javascript:action('connector-straight');"  title="Conector lineal"><img src="assets/images/icon_connector_straight.gif" border="0"/></a>
@@ -133,6 +136,15 @@ $page = 'editor';
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
                 <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Agregar comentario"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            </div>
+            <div id="aInfo" style="float: right;">
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                
+                <a href="javascript:action('ayuda');" title="Ayuda"><img src="assets/images/icon_help.png" border="0" height ="16"/></a>           
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                
+                <a href="javascript:action('acerca');" title="Acerca De "><img src="assets/images/icon-about.png" border="0" height ="16"/></a>           
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
         </div>
@@ -820,6 +832,20 @@ $page = 'editor';
         </div>
 
         <div id="imgCanvas" style="display: none"></div>
+        
+        <div id="acerca" style="display: none">
+            <p>DiagraMet Version 1.5.1-beta</p>
+            <p>Basado: Diagramo 2.3 <a href="http://www.diagramo.com" target="_blank">Link</a></p>
+            <p>Desarrollado: Universidad de la Costa 2016</p>
+            <p>Desarrolladores:</p>
+            <ul>
+                <li>Josue Pastrana </li>
+                <li>Miguel Jimenez</li>
+                <li>Aida Hyuke</li>
+                <li>Marlon Mendoza</li>
+                <li>Edward Rangel</li>
+            </ul>
+        </div>
 
         <script type="text/javascript">
             "use strict";

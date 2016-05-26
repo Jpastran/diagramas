@@ -62,7 +62,7 @@ function Connector(startPoint, endPoint, type, id) {
     /**The {Style} this connector will have*/
     this.style = new Style();
     this.style.strokeStyle = "#000000";
-    this.style.lineWidth = 1.005;   // fixes connector's display in Chrome for now
+    this.style.lineWidth = 2.005;   // fixes connector's display in Chrome for now
     this.style.lineStyle = Style.LINE_STYLE_CONTINOUS;
 
     /**The text that will appear in the middle of the connector*/

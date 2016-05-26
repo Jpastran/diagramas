@@ -2900,7 +2900,7 @@ Figure.prototype = {
         //Agregar texto de leyenda
         context.save();
         context.fillStyle = '#000000';
-        context.font = "12px sans-serif";
+        context.font = "12px Verdana";
         context.fillText(this.info, this.rotationCoords[0].x + tamFig / 2 + 5, this.rotationCoords[0].y - 10);
         if (this.time != '')
             context.fillText(this.time + " " + valTiempo, this.rotationCoords[0].x + tamFig / 2 + 5, this.rotationCoords[0].y + 5);

@@ -64,7 +64,7 @@
 
         PrintArea.write( PrintAreaWindow.doc, $printSource );
         
-        if ($("#media").html() != "pdf"){
+        if ($("#media").html() == "print"){
             setTimeout( function () { PrintArea.print( PrintAreaWindow ); }, 1000 );
         }
     };

@@ -4252,6 +4252,19 @@ function action(action) {
             }
             break;
 
+        case 'acerca':
+            $("#acerca").printArea({
+                popHt: "400",
+                popWd: "400",
+                popX: "400",
+                popTitle: "Acerca de"
+            });
+            break;
+
+        case 'ayuda':
+
+            break;
+
     }//end switch
 
     if (redraw) {
@@ -4701,7 +4714,7 @@ function figureBuild(figureFunction, x, y) {
 
 /**Limpia y dibuja el lienzo de cualquier cambio realizado
  * Agrega distancia al vector {coor} en el eje
- * Ejecuta la @function growCanvas para crecer el lienzo si es nesesario
+ * Ejecuta la funcion growCanvas para crecer el lienzo si es nesesario
  * Limpia el texto de error si esta presnte
  * */
 function cleanStates() {
@@ -4762,7 +4775,7 @@ function dropFigure() {
 /**Ordena los puntos de giro {turningPoints} de los conectores cuadrados
  * @param {Number} pos coordenada de referencia final para acomodar los puntos.
  * @param {Number} optY coordenada de referencia usada por el condicional de opciones.
- * @param {Bolean} loop validador de reuso para la @function redrawLine().
+ * @param {Bolean} loop validador de reuso para la funcion redrawLine().
  * @see connections.js @param turningPoints
  * */
 function ordenarJagged(pos, optY, loop) {
@@ -4823,7 +4836,7 @@ function ordenarJagged(pos, optY, loop) {
  * forma vertical y {'h'} manera horizontal.
  * @param {Int} delta distancia que se movera el conector.
  * @param {Int} index posicion en el array de turing point a mover.
- * @param {Bolean} loop validador de reuso para la @function redrawLine().
+ * @param {Bolean} loop validador de reuso para la funcion redrawLine().
  * @see connections.js @param userChanges
  * */
 function ordenarDelta(align, delta, index, loop) {
@@ -5668,7 +5681,7 @@ function printDiagram(media) {
 var ordenFig = [];
 
 /** Guarda el orden de los conectores, asi como la figura al inicio
- * y final de cada punta del conector su estructura esta basada de 
+ * y final de cada punta, su estructura esta basada de 
  * la siguiente manera {[idConector,idFiguraSup,idFiguraInf]}.
  * */
 var ordenCon = [];
@@ -5726,7 +5739,7 @@ var trayLin = false;
 var initIn = false;
 
 /** Gestor de orden, marca si inicio en un multiPoint
- * @see @function figure_MultiPoint.
+ * @see funcion figure_MultiPoint.
  */
 var initMul = false;
 
@@ -5949,7 +5962,7 @@ function valMoverFig(id) {
 }
 
 /** Validador de movimiento, determina si se mueve el punto 
- * de reunion de una opcion de trayecto en {@function insertFigure}.
+ * de reunion de una opcion de trayecto en la funcion insertFigure.
  * @returns {Boolean} Si activa o no la accion.
  * */
 function moverTray() {
@@ -6004,7 +6017,7 @@ function moverTray() {
 }
 
 /** Validador de movimiento, determina si se mueve una figura 
- * de una opcion de trayecto que inserto en {@function figure_MultiPoint.}
+ * de una opcion de trayecto que inserto en un {figure_MultiPoint}.
  * @returns {Boolean} Si activa o no la accion.
  * */
 function moverTrayTM(fig) {
@@ -6037,7 +6050,7 @@ function moverTrayTM(fig) {
 }
 
 /**Reasignador de orden, reordena e inserta en {ordenFig} y {ordenCon}
- * la nueva figura y conector generado en @function insertFigure().
+ * la nueva figura y conector generado en la funcion insertFigure().
  * @param {Number} pri Id de la figura anterior a la nueva.
  * @param {Number} sig Id de la figura nueva a insertar.
  * @param {Number} con Id del conector nuevo a insertar.
@@ -6076,7 +6089,7 @@ function ordenInsertar(pri, sig, con, mulFig, mulCon) {
 }
 
 /** Validador de posicion, obtiene la posicion de la figura 
- * segun el id del {@function figure_MultiPoint}.
+ * segun el id del {figure_MultiPoint}.
  * @returns {Number} Posicion en {ordenFig}.
  * */
 function obtenerTLI(mulId) {
@@ -6257,10 +6270,10 @@ function deleteFigure() {
 }
 
 /**Reasignador de orden, reordena y elimina en {ordenFig} y {ordenCon}
- * la figura selecionada en @function deleteFigure().
+ * la figura selecionada en la funcion deleteFigure().
  * @param {Number} figId Id de la figura que se va a eliminar.
  * @return {Array} Devuelve un vector que contiene el conector 
- * siguiende del que fue eliminado que es usado en @function deleteFigure().
+ * siguiende del que fue eliminado que es usado en la funcion deleteFigure().
  * */
 function ordenEliminar(figId) {
     var sigFig = -1;
@@ -6448,6 +6461,8 @@ function moverTrayElim() {
     }
 }
 
+/**Validador de movimento, valida si una linea de trayecto a quedado vacia.
+ * @return {Boolean} Si quedo vacia o no*/
 function valTrayLV(idTray) {
     var iniTray = false;
     var cont = 0;
@@ -6497,14 +6512,15 @@ function resetValOrden() {
     elimTM = false;
 }
 
-/**Renumera todas las figura afectadas por el @function insertFigure()
- * y @function deleteFigure().
+/**Renumera todas las figura afectadas por la funcion insertFigure()
+ * y la funcion deleteFigure().
  * @param {STACK} base Instancia del tipo de figura que fue afectado.*/
 function renumFig(base) {
-    var cont = 1;    
+    var cont = 1;
     var rept = false;
     var add = 0;
-    var prop = genFigureProp(base.name);
+    var tipo = base.name;
+    var prop = genFigureProp(tipo);
     if (prop.length != 0) {
         for (var i = 0; i < ordenFig.length; i++) {
             if (!isNaN(ordenFig[i])) {
@@ -6559,14 +6575,14 @@ function genFigureProp(tipo) {
     return props;
 }
 
-/**Guarda los conectores que fueron afectado en @function ordenarJagged(),
+/**Guarda los conectores que fueron afectado en la funcion ordenarJagged(),
  * para ser redibujados, estructura {[IdConector, caso]}, donde {caso} 
  * es sobre el cual se reordeno el conector.*/
 var redrawCon = [];
 
-/**Guarda los conectores que fueron afectado en @function ordenarDelta(),
+/**Guarda los conectores que fueron afectado en la funcion ordenarDelta(),
  * para ser redibujados, estructura {[IdConector, align, delta, index]}, 
- * donde las variables esta definidas en @function ordenarDelta().*/
+ * donde las variables esta definidas en la funcion ordenarDelta().*/
 var redrawDel = [];
 
 /**Redibuja o reacomoda los arreglos efectudaos en las funciones a los 
@@ -6617,7 +6633,7 @@ function cambioLV(idCon) {
     redrawCon.push([idCon, "optNull"]);
 }
 
-/**Activa y desactiva, los gatillos usados en @function ordenarJagged()
+/**Activa y desactiva, los gatillos usados en la funcion ordenarJagged()
  * @param {String} caso El nombre del gatillo que se afectara.
  * @param {Boolean} bool Determina el estado al que pasara.
  * */

@@ -392,7 +392,7 @@ Text.prototype = {
         //paint lines
 
         context.fillStyle = this.style.fillStyle;
-        context.font = this.size + "px " + this.font;
+        context.font =  this.size + "px " + this.font;
         context.textAlign = this.align;
         context.textBaseline = "middle";
 

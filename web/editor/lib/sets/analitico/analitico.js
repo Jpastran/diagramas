@@ -58,7 +58,7 @@ var FigureDefaults = {
     /**Text label*/
     textStr: "Text",
     /**Text font*/
-    textFont: "Arial",
+    textFont: "Verdana",
     /**Color of text*/
     textColor: "#000000"
 };

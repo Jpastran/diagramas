@@ -4254,15 +4254,16 @@ function action(action) {
 
         case 'acerca':
             $("#acerca").printArea({
-                popHt: "400",
+                popHt: "300",
                 popWd: "400",
                 popX: "400",
-                popTitle: "Acerca de"
+                popTitle: "Acerca de",
+                extraHead: ("")
             });
             break;
 
         case 'ayuda':
-
+                window.open('manual.php','Manual de Usuario') ; 
             break;
 
     }//end switch

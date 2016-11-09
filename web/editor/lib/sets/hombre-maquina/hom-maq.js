@@ -180,7 +180,7 @@ function cleanResum() {
 }
 
 function colspan(n) {
-    $("#resum").attr('colspan', (n * 3) + 1)
+    $("#resum").attr('colspan', (n * 3) + 1);
     $("#pre").attr('colspan', n);
     $("#pro").attr('colspan', n);
     $("#gan").attr('colspan', n);

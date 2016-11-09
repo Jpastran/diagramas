@@ -74,13 +74,13 @@ DIAGRAMO.switchDebug = function(value) {
  **/
 if (false) {
     /**@see http://stackoverflow.com/questions/10197895/ipad-javascript-error-not-helpful*/
-    window.onerror = function(desc, page, line, chr) {
-        alert('Description: ' + desc
-                + ' Page: ' + page
-                + ' Line: ' + line
-                + ' Position: ' + chr
-                );
-    };
+//    window.onerror = function(desc, page, line, chr) {
+//        alert('Description: ' + desc
+//                + ' Page: ' + page
+//                + ' Line: ' + line
+//                + ' Position: ' + chr
+//                );
+//    };
 }
 
 
@@ -206,6 +206,7 @@ function toSVG() {
 
 /**
  *Supposelly stop any selection from happening
+ *@param {event} ev event
  */
 function stopselection(ev) {
 
@@ -389,7 +390,7 @@ function setFigureSet(id) {
  *@param {String} property - (or an {Array} of {String}s). The 'id' under which the property is stored
  *TODO: is there any case where we are using property as an array ?
  *@param {String} newValue - the new value of the property
- *@param {Boolean} [skipCommand = false] - if true than current {Command} won't be added to the {History}
+ *@param {Boolean} skipCommand [skipCommand = false] - if true than current {Command} won't be added to the {History}
  *@param {String} [previousValue] - the previous value of the property
  *@author Zack, Alex, Artyom
  **/
@@ -765,8 +766,8 @@ function showGrid() {
 
 
 /**Click is disabled because we need to handle mouse down and mouse up....etc etc etc*/
-function onClick(ev) {
-    var coords = getCanvasXY(ev);
+function onClick() {
+    var coords = getCanvasXY();
     var x = coords[0];
     var y = coords[1];
 
@@ -789,8 +790,8 @@ function onClick(ev) {
 /**
  * @deprecated Does not seem to be used
  * */
-function onDoubleClick(ev) {
-    var coords = getCanvasXY(ev);
+function onDoubleClick() {
+    var coords = getCanvasXY();
     var HTMLCanvas = getCanvas();
     var x = coords[0];
     var y = coords[1];
@@ -1068,7 +1069,7 @@ function onKeyDown(ev) {
         case KEY.S:
             if (CNTRL_PRESSED) {
                 //Log.info("CTRL-S pressed  ");
-                save();
+                quickSave();
                 ev.preventDefault();
             }
             break;
@@ -3834,6 +3835,10 @@ function action(action) {
     redraw = false;
     switch (action) {
 
+        case 'new':
+            cambiarVista(currentSetId);
+            break;
+
         case 'undo':
             if (currentSetId == "hom-maq") {
                 doUndoHM();
@@ -4263,7 +4268,7 @@ function action(action) {
             break;
 
         case 'ayuda':
-                window.open('manual.php','Manual de Usuario') ; 
+            window.open('manual.php', 'Manual de Usuario');
             break;
 
     }//end switch
@@ -4728,6 +4733,7 @@ function cleanStates() {
     createFigureFunction = null;
     CONNECTOR_MANAGER.connectionPointsResetColor();
     growCanvas();
+    canvasMovePos();
     errorDiv('');
     admHist.push(contAH);
     contAH = 0;
@@ -4757,10 +4763,23 @@ function growCanvas() {
         cmdCanvasFit.execute();
         History.addUndo(cmdCanvasFit);
         coor[0] += distLine;
+        redrawLine();
         for (var i = 0; i < savePos.length; i++) {
             savePos[i][0] += distLine;
         }
     }
+}
+
+/** Mantiene la el lienzo centrado de manera que se encuentre en  centrado 
+ * al contenedor un 50% horisontal y a un 20% vertical desde abajo a partir
+ * de {coor} o centrado en la ultima figura insertada */
+function canvasMovePos() {
+    var canvas = $('#container');
+    var coors = STACK.figures[STACK.figures.length - 1].rotationCoords;
+    canvas.animate({
+        scrollLeft: coors[0].x - canvas.width() / 2,
+        scrollTop: coors[0].y - canvas.height() * 0.8
+    }, 400);
 }
 
 /**Limpia figura que esta siendo arrastrada si no se coloca en el lienzo*/
@@ -4777,7 +4796,7 @@ function dropFigure() {
  * @param {Number} pos coordenada de referencia final para acomodar los puntos.
  * @param {Number} optY coordenada de referencia usada por el condicional de opciones.
  * @param {Bolean} loop validador de reuso para la funcion redrawLine().
- * @see connections.js @param turningPoints
+ * @see connections.js @type {object} turningPoints
  * */
 function ordenarJagged(pos, optY, loop) {
     var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
@@ -4838,7 +4857,7 @@ function ordenarJagged(pos, optY, loop) {
  * @param {Int} delta distancia que se movera el conector.
  * @param {Int} index posicion en el array de turing point a mover.
  * @param {Bolean} loop validador de reuso para la funcion redrawLine().
- * @see connections.js @param userChanges
+ * @see connections.js @type {object} userChanges
  * */
 function ordenarDelta(align, delta, index, loop) {
     var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
@@ -4917,18 +4936,18 @@ var btnFin = 'Siguiente';
 
 /**Ejecuta los metodos especiales del diagrama.
  * @param {String} accion Determina el tipo accion especial a realizar.
- * @argument {Function} newLE Crea una linea de entrada secundaria.
- * @argument {Function} endLE Termina una linea de entrada secundaria.
- * @argument {Function} newLS Crea una linea de salida secundaria.
- * @argument {Function} endLS Termina una linea de salida secundaria.
- * @argument {Function} repetir Genera un bucle de repeticion.
+ * @example {Case} newLE - Crea una linea de entrada secundaria.
+ * @example {Case} endLE - Termina una linea de entrada secundaria.
+ * @example {Case} newLS - Crea una linea de salida secundaria.
+ * @example {Case} endLS - Termina una linea de salida secundaria.
+ * @example {Case} repetir - Genera un bucle de repeticion.
  * a partir de una figura y un numero de ciclos.
- * @argument {Function} repro Genera un reproceso a partir de la ultima
+ * @example {Case} repro - Genera un reproceso a partir de la ultima
  * figura hasta la figura selecionada.
- * @argument {Function} trayGen Genera lineas de opciones de trayecto
+ * @example {Case} trayGen - Genera lineas de opciones de trayecto
  * segun el numero obtenido.
- * @argument {Function} trayFin Mueve la posicion actual de las lineas.
- * @argument {Function} trayUnir Termina las opciones de trayecto y
+ * @example {Case} trayFin - Mueve la posicion actual de las lineas.
+ * @example {Case} trayUnir - Termina las opciones de trayecto y
  * une las lineas seleccionadas.
  * @see editor.php para obtener los Id de cada caso.
  * */
@@ -5055,7 +5074,7 @@ function especial(accion) {
                     if (coorIn[0] == coorOut[0]) {
                         selAP = true;
                         conectorBuildFull(true, coorIn, coorOut, true);
-                        var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId)
+                        var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
                         con.middleText.str = "Text";
                         con.updateMiddleText();
                         ordenCon.pop();
@@ -5098,7 +5117,7 @@ function especial(accion) {
                         if (!centro)
                             ordenarJagged();
                         trayecto[i][1] -= tamFig / 2;
-                        var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId)
+                        var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
                         con.middleText.str = "Text";
                         con.updateMiddleText();
                     }
@@ -5140,7 +5159,7 @@ function especial(accion) {
                         clean = true;
                         opciones = true;
                         especialSelect(true);
-                        trayName = 'Opcion ' + (lineas[4] - lineas[3])
+                        trayName = 'Opcion ' + (lineas[4] - lineas[3]);
                         document.getElementById('trayName').innerHTML = trayName;
                         if (lineas[3] == 0)
                             document.getElementById('btnFin').value = (btnFin = 'Terminar');
@@ -5302,7 +5321,7 @@ function addCicloRept(numR, figIni, figFin) {
 
 /**Suma los directamente las figuras a partir de tipo
  * @param {Number} id identificador que tiene la figura en {STACK} 
- * @param {Boolean} selector de accion, {true} resta, {false} suma.
+ * @param {Boolean} rest selector de accion, {true} resta, {false} suma.
  * */
 function sumDirect(id, rest) {
     var name = "";
@@ -5337,14 +5356,16 @@ function sumDirect(id, rest) {
     }
 }
 
-/**Gestion la innabilidad del selector de especiales*/
+/**Gestion la innabilidad del selector de especiales
+ * @param {Boolean} bool gestor del estado*/
 function especialSelect(bool) {
     var select = document.getElementById('espSelect');
     bool ? select.disabled = (disEspSel = true) :
             select.disabled = (disEspSel = false);
 }
 
-/**Gestiona el div de error*/
+/**Gestiona el div de error
+ * @param {string} textError si el texto es '' oculta el div */
 function errorDiv(textError) {
     var div = document.getElementById('error');
     if (textError != '') {
@@ -5410,17 +5431,17 @@ function cambiarVista(id) {
     if (id == "analitico") {
         displayDivs('block', 'none', 'block', 'none', 'none', 'none');
         cambiaCtab(tab1, ctab1);
-        tabs(tab1, ctab1);
+        tabs(tab1, ctab2);
         resetAnalitico();
     } else if (id == "sinoptico") {
         displayDivs('block', 'none', 'block', 'none', 'none', 'none');
         cambiaCtab(tab1, ctab3);
-        tabs(tab1, ctab3);
+        tabs(tab1, ctab2);
         resetSinoptico();
     } else if (id == "recorrido") {
         displayDivs('block', 'block', 'none', 'block', 'none', 'none');
         cambiaCtab(tab1, ctab4);
-        tabs(tab1, ctab4);
+        tabs(tab1, ctab2);
         resetRecorrido();
     } else if (id == "bimanual") {
         displayDivs('none', 'none', 'none', 'none', 'block', 'none');
@@ -5444,12 +5465,16 @@ function cambiarVista(id) {
         CONNECTOR_MANAGER.reset();
         resetToNoneState();
         setUpEditPanel(canvasProps);
+        canvasProps = new CanvasProps(CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT, CanvasProps.DEFAULT_FILL_COLOR);
+        canvasProps.sync();
+        lienzo = [CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT];
         draw();
         coor = [iniX, iniY];
         lineas = [0, 0, 0, 0, 0];
         savePos = [];
         trayecto = [];
         historial = [];
+        admHist = [];
         sumRepet = [];
         primer = false;
         finLS = false;
@@ -5558,42 +5583,44 @@ function addHistory() {
 /**Devuelve el ultimo estado guardado en {historial}*/
 function backHistory() {
     var hist = historial.pop();
-    if (currentSetId == 'analitico' || currentSetId == 'sinoptico') {
-        coor = hist[0];
-        var esp = hist[1];
-        lineas = esp[0];
-        savePos = esp[1];
-        trayecto = esp[2];
-        sumRepet = esp[3];
-        reptAdm = esp[4];
-        var estado = hist[2];
-        var bool = estado[0];
-        primer = bool[0];
-        finLS = bool[1];
-        finSS = bool[2];
-        opciones = bool[3];
-        document.getElementById('btnLE').disabled = disbtnLE = bool[4];
-        document.getElementById('btnLS').disabled = disbtnLS = bool[5];
-        document.getElementById('espSelect').disabled = disEspSel = bool[6];
-        var tray = estado[1];
-        document.getElementById('trayGen').style.display = trayGen = tray[0];
-        document.getElementById('traySig').style.display = traySig = tray[1];
-        document.getElementById('trayUnir').style.display = trayUnir = tray[2];
-        document.getElementById('trayName').innerHTML = trayName = tray[3];
-        document.getElementById('btnFin').value = btnFin = tray[4];
-        selTray = tray[5];
-        if (currentSetId == 'analitico') {
-            desAnalit(hist[3]);
+    if (hist !== undefined) {
+        if (currentSetId == 'analitico' || currentSetId == 'sinoptico') {
+            coor = hist[0];
+            var esp = hist[1];
+            lineas = esp[0];
+            savePos = esp[1];
+            trayecto = esp[2];
+            sumRepet = esp[3];
+            reptAdm = esp[4];
+            var estado = hist[2];
+            var bool = estado[0];
+            primer = bool[0];
+            finLS = bool[1];
+            finSS = bool[2];
+            opciones = bool[3];
+            document.getElementById('btnLE').disabled = disbtnLE = bool[4];
+            document.getElementById('btnLS').disabled = disbtnLS = bool[5];
+            document.getElementById('espSelect').disabled = disEspSel = bool[6];
+            var tray = estado[1];
+            document.getElementById('trayGen').style.display = trayGen = tray[0];
+            document.getElementById('traySig').style.display = traySig = tray[1];
+            document.getElementById('trayUnir').style.display = trayUnir = tray[2];
+            document.getElementById('trayName').innerHTML = trayName = tray[3];
+            document.getElementById('btnFin').value = btnFin = tray[4];
+            selTray = tray[5];
+            if (currentSetId == 'analitico') {
+                desAnalit(hist[3]);
+            } else {
+                desSinop(hist[3]);
+            }
+            var orden = hist[4];
+            ordenFig = orden[0];
+            ordenCon = orden[1];
+            redrawCon = orden[2];
+            redrawDel = orden[3];
         } else {
-            desSinop(hist[3]);
+            desRecorr(hist);
         }
-        var orden = hist[4];
-        ordenFig = orden[0];
-        ordenCon = orden[1];
-        redrawCon = orden[2];
-        redrawDel = orden[3];
-    } else {
-        desRecorr(hist);
     }
 }
 
@@ -5618,13 +5645,15 @@ var valTiempo = 'seg';
 /**Guarda la unidad de distancia de las figuras*/
 var valDistan = 'm';
 
-/**Cambia el tipo unidad de tiempo de {valTiempo}*/
+/**Cambia el tipo unidad de tiempo de {valTiempo}
+ * @param {String} value*/
 function paintUT(value) {
     valTiempo = value;
     $(".time").text(value);
 }
 
-/**Cambia el tipo unidad de distancia de {valDistan}*/
+/**Cambia el tipo unidad de distancia de {valDistan}
+ * @param {String} value*/
 function paintUD(value) {
     valDistan = value;
     $(".dist").text(value);
@@ -5658,10 +5687,71 @@ function printDiagram(media) {
     if (id != "bimanual" && id != "hom-maq") {
         var img = renderedCanvas();
         $("#imgCanvas").html("").append($('<img src="' + img + '"/>'));
-        str += ",#imgCanvas"
+        str += ",#imgCanvas";
     }
     $(str).printArea();
     $("#media").html('');
+}
+
+var saveSnap = [];
+
+function quickSave() {
+
+    var sAP = selAP;
+    selAP = true;
+    addHistory();
+    var states = historial.pop();
+
+    var diagram = {c: canvasProps, s: STACK, m: CONNECTOR_MANAGER, p: CONTAINER_MANAGER, a: states, v: DIAGRAMO.fileVersion};
+    var serialized = JSON.stringify(diagram);
+    var time = new Date();
+    var snap = {data: serialized, time: time};
+
+    saveSnap.push(snap);
+    console.log(saveSnap);
+    genSnapDiv();
+    selAP = sAP;
+}
+
+function quickLoad(pos) {
+
+    admHist = [];
+    historial = [];
+    STACK.reset();
+    CONNECTOR_MANAGER.reset();
+    resetToNoneState();
+
+    var snap = JSON.parse(saveSnap[pos].data);
+
+    STACK = Stack.load(snap['s']);
+    canvasProps = CanvasProps.load(snap['c']);
+    canvasProps.sync();
+    lienzo = [canvasProps.width, canvasProps.height];
+    setUpEditPanel(canvasProps);
+
+    CONNECTOR_MANAGER = ConnectorManager.load(snap['m']);
+    CONTAINER_MANAGER = ContainerFigureManager.load(snap['p']);
+
+    historial.push(snap['a']);
+    backHistory();
+    draw();
+}
+
+function genSnapDiv() {
+    var snapDiv = $('#snaps');
+    snapDiv.html('<hr>');
+    for (var i = 0; i < saveSnap.length; i++) {
+        var line = $('<div class="line">');
+        var label = $('<button class="label" value="' + i + '">');
+        var time = "" + saveSnap[i].time;
+        label.html(time.substring(0, 24));
+        label.click(function() {
+            if (window.confirm('Desea cargar el siguiente guardado. \n\n\Perdera toda la informacion actual si no la ha guardado.')) {
+                quickLoad($(this).attr('value'));
+            }
+        });
+        snapDiv.append(line.append(label));
+    }
 }
 
 /** Guarda el orden interno de las figuras y el sistema de marcas
@@ -6019,6 +6109,7 @@ function moverTray() {
 
 /** Validador de movimiento, determina si se mueve una figura 
  * de una opcion de trayecto que inserto en un {figure_MultiPoint}.
+ * @param {numeric} fig el numero del id de la figura.
  * @returns {Boolean} Si activa o no la accion.
  * */
 function moverTrayTM(fig) {
@@ -6091,6 +6182,7 @@ function ordenInsertar(pri, sig, con, mulFig, mulCon) {
 
 /** Validador de posicion, obtiene la posicion de la figura 
  * segun el id del {figure_MultiPoint}.
+ * @param {numeric} mulId id a validar.
  * @returns {Number} Posicion en {ordenFig}.
  * */
 function obtenerTLI(mulId) {
@@ -6463,6 +6555,7 @@ function moverTrayElim() {
 }
 
 /**Validador de movimento, valida si una linea de trayecto a quedado vacia.
+ * @param {numeric} idTray id a validar.
  * @return {Boolean} Si quedo vacia o no*/
 function valTrayLV(idTray) {
     var iniTray = false;

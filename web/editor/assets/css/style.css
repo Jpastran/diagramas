@@ -192,7 +192,7 @@ input[type="button"] {
     /*overflow: scroll;*/
 }
 
-#medidas {
+#medidas, #snaps {
     width: 240px;
     background-color: #F6F6F6;
     padding: 10px 10px 0 10px;

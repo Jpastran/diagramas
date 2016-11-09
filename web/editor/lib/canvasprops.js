@@ -70,7 +70,7 @@ CanvasProps.load = function(o) {
     canvasprops.fillColor = o.fillColor;
 
     return canvasprops;
-}
+};
 
 
 CanvasProps.prototype = {

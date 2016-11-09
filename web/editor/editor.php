@@ -67,34 +67,37 @@ $page = 'editor';
         <div style="display: none"><? require_once dirname(__FILE__) . '/header.php'; ?></div>
         <div id="actions" >           
             <div style="float: left">
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                <!-- 
-                 <a style="text-decoration: none;" href="#" onclick="return save();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
-                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                 <a style="text-decoration: none;" href="./myDiagrams.php" title="Abrir diagrama"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
-                 <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
-                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                 <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Imprimir diagrama"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
-                 <?}?>
-                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                -->
-                <a href="./common/controller.php?action=newDiagramExe" title="Nuevo"><img src="assets/images/icon_new.jpg" border="0" height="16"></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>               
+
+                <a href="javascript:action('new');" title="Nuevo"><img src="assets/images/icon_new.jpg" border="0" height="16"></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
+                <!--
+                <a href="./myDiagrams.php" title="Abrir diagrama"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+
+                <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
+                <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Imprimir diagrama"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <?}?>
+                -->
+                <a href="#" onclick="return quickSave();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>              
+
                 <a href="javascript:refCabecera();"  title="Refrescar Cabecera"><img  src="assets/images/rotate.png" border="0" height ="16"/></a>
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                
-                <? if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') == FALSE){ echo'
-                <a href="javascript:printDiagram(\'pdf\')" title="Guardar como PDF"><img src="assets/images/icon_save_pdf.png" border="0" width="16" height="16"/></a>          
-                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                ';}?>
-                
-                <a href="javascript:printDiagram('print');"  title="Imprimir"><img  src="assets/images/icon_print.png" border="0" height ="16"/></a>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
                 <a href="javascript:action('undo');" title="Deshacer (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0" height ="16"/></a>           
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                
+
+                <? if(strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') == FALSE){ echo'
+                <a href="javascript:printDiagram(\'pdf\')" title="Guardar como PDF"><img src="assets/images/icon_save_pdf.png" border="0" width="16" height="16"/></a>          
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                ';}?>
+
+                <a href="javascript:printDiagram('print');"  title="Imprimir"><img  src="assets/images/icon_print.png" border="0" height ="16"/></a>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+
             </div>
             <div id="aTools" style="float: left; display: none;">
                 <a href="javascript:action('connector-straight');"  title="Conector lineal"><img src="assets/images/icon_connector_straight.gif" border="0"/></a>
@@ -140,10 +143,10 @@ $page = 'editor';
             </div>
             <div id="aInfo" style="float: right;">
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                
+
                 <a href="javascript:action('ayuda');" title="Ayuda"><img src="assets/images/icon_help.png" border="0" height ="16"/></a>           
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-                
+
                 <a href="javascript:action('acerca');" title="Acerca De "><img src="assets/images/icon-about.png" border="0" height ="16"/></a>           
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             </div>
@@ -787,6 +790,9 @@ $page = 'editor';
                         </select>
                     </div>
                 </div>
+                <div id="snaps">
+                    <hr>
+                </div>
             </div>
         </div>
 
@@ -832,7 +838,7 @@ $page = 'editor';
         </div>
 
         <div id="imgCanvas" style="display: none"></div>
-        
+
         <div id="acerca" style="display: none">
             <p>DiagraMet Version 1.5.2-beta</p>
             <p>Basado: Diagramo 2.3beta4 Commit <a href="https://github.com/alexgheorghiu/diagramo" target="_blank">60e0f32</a></p>

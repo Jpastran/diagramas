@@ -12,7 +12,7 @@ web/editor/data/imported/*.gif*.class
 *.pyc
 *.pyo
 documents
-/nbproject/private/
+nbproject/private/
 .externalToolBuilders
 .settings
-/web/editor/test/
+web/editor/test/

@@ -313,7 +313,7 @@ var selectedConnectionPointId = -1;
 var dragging = false;
 
 /**Currently inserted image filename*/
-var insertedImageFileName = null;
+var insertedImageFileSrc = null;
 
 /**Holds a wrapper around canvas object*/
 var canvasProps = null;
@@ -379,7 +379,7 @@ function setFigureSet(id) {
         }
         div.style.display = 'block';
         currentSetId = id;
-        cambiarVista(id);
+        cambiarVista(id, true);
         //}
     }
 }
@@ -616,7 +616,7 @@ function showInsertImageDialog() {
 
     draw();
 
-    setUploadedImagesList();
+//    setUploadedImagesList();
 
     var dialogContent = document.getElementById('insert-image-dialog');
     $.modal(dialogContent, {minWidth: '450px', containerId: 'upload-image-dialog', overlayClose: true});
@@ -624,8 +624,33 @@ function showInsertImageDialog() {
     $.modal.setPosition();
 
     // empty upload errors in dialog
-    var errorDiv = document.getElementById(uploadImageErrorDivId);
-    errorDiv.innerHTML = '';
+//    var errorDiv = document.getElementById(uploadImageErrorDivId);
+//    errorDiv.innerHTML = '';
+}
+
+function previewFile() {
+    var preview = document.getElementById('img-preview');
+    var file = document.getElementById('img-File').files[0];
+    var reader = new FileReader();
+
+    reader.addEventListener("load", function() {
+        preview.src = reader.result;
+    }, false);
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+}
+
+function uploadImg() {
+    var img = document.getElementById("img-preview");
+    if (img.src == window.location) {
+        insertedImageFileSrc = img.src;
+        action('insertImage');
+        $.modal.close();
+    }else{
+        alert('Debe selecionar una imagen');
+    }
 }
 
 function insertAjax(e) {
@@ -642,7 +667,7 @@ function insertAjax(e) {
         var resp = JSON.parse(array);
         if (resp[0] == "s") {
             $.modal.close();
-            insertedImageFileName = resp[1];
+            insertedImageFileSrc = resp[1];
             action('insertImage');
         } else {
             var errorDiv = document.getElementById(uploadImageErrorDivId);
@@ -720,7 +745,7 @@ function insertImage(imageFileName, errorMessage) {
         // close current insert image dialog
         $.modal.close();
 
-        insertedImageFileName = imageFileName;
+        insertedImageFileSrc = imageFileName;
         action('insertImage');
     }
 }
@@ -3836,7 +3861,7 @@ function action(action) {
     switch (action) {
 
         case 'new':
-            cambiarVista(currentSetId);
+            cambiarVista(currentSetId, false);
             break;
 
         case 'undo':
@@ -3921,7 +3946,7 @@ function action(action) {
             }
             //creates a container
             if (currentSetId == "recorrido") {
-                var cmdFigureCreate = new InsertedImageFigureCreateCommand(insertedImageFileName, 100, 100);
+                var cmdFigureCreate = new InsertedImageFigureCreateCommand(insertedImageFileSrc, 100, 100);
                 cmdFigureCreate.execute();
                 History.addUndo(cmdFigureCreate);
                 setTimeout(function() {
@@ -3938,7 +3963,7 @@ function action(action) {
                 }, 1000);
                 redraw = true;
             } else if (currentSetId == "bimanual") {
-                bimInsertImg(insertedImageFileName);
+                bimInsertImg(insertedImageFileSrc);
             }
             break;
 
@@ -5427,7 +5452,7 @@ function valFigName(str) {
 /**Gestiona el cambio del selector de diagramas
  * @param {String} id El id del selector del diagramas
  * */
-function cambiarVista(id) {
+function cambiarVista(id, snap) {
     if (id == "analitico") {
         displayDivs('block', 'none', 'block', 'none', 'none', 'none');
         cambiaCtab(tab1, ctab1);
@@ -5483,6 +5508,11 @@ function cambiarVista(id) {
         disbtnLE = true;
         disbtnLS = true;
         disEspSel = false;
+    }
+
+    if (snap) {
+        saveSnap = [];
+        genSnapDiv();
     }
 }
 

@@ -10,7 +10,8 @@ $(window).load(function() {
     tabs(tab2, ctab2);
     editable();
     $("#upload_target").on("submit", function(e) {
-        insertAjax(e);
+        e.preventDefault()
+//        insertAjax(e);
     });
 });
 

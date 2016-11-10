@@ -287,8 +287,8 @@ function bimImg() {
 }
 
 function bimInsertImg(imgSrc) {
-    var imageURL = appURL + '/editor/data/import/' + imgSrc;
-    var img = $('<img src="' + imageURL + '" alt="Image" border="0">');
+//    var imageURL = appURL + '/editor/data/import/' + imgSrc;
+    var img = $('<img src="' + imgSrc + '" alt="Image" border="0">');
     img.css('max-width', '400px');
     img.css('max-height', '300px');
     var link = $("#td175").find('a');

@@ -48,7 +48,8 @@ InsertedImageFigureCreateCommand.prototype = {
         if (this.firstExecute) {
             //create figure
             //Log.info("InsertedImageFigureCreateCommand> execute> factoryFunction=" + this.factoryFunction);
-            var imageURL = appURL + '/editor/data/import/' + this.imgFileName;
+//            var imageURL = appURL + '/editor/data/import/' + this.imgFileName;
+            var imageURL = this.imgFileName;
             var createdFigure = ImageFrame.figure_InsertedImage(imageURL, this.x, this.y);
 //            var createdFigure = this.factoryFunction(this.imgFileName, this.x, this.y);
 

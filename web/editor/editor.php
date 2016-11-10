@@ -810,29 +810,18 @@ $page = 'editor';
 
         <!--Insert Image dialog content-->
         <div id="insert-image-dialog">
-            <h2>Insert Image</h2>
+            <h2>Vista previa de imagen</h2>
             <form method="POST" id="upload_target" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="insertImage"/>
                 <div class="insert-image-line">
-                    <input type="radio" name="image-group" value="URL" checked>
-                    <label>Desde URL:</label>
-                    <input type="text" class="url-input" name="imageURL" id="imageURL"/>
-                </div>
-                <div class="insert-image-line">
-                    <input type="radio" name="image-group" value="Upload">
                     <label>Subir:</label>
-                    <input type="file" class="right-offset" name="imageFile" id="imageFile"/>
+                    <input type="file" onchange="previewFile()" id="img-File"/>
                 </div>
-                <div class="insert-image-line">
-                    <input type="radio" name="image-group" value="Reuse" id="insert-image-reuse-group">
-                    <label>Reusar:</label>
-                    <select id="insert-image-reuse"  name="reuseImageFile">
-                    </select>
-                </div>
-                <div id="upload-image-error">
+                <div class="img-preview-contaniner">
+                    <img id="img-preview" src="" alt="Image preview...">
                 </div>
                 <div class="submit-container">
-                    <input type="submit" value="Insert" />
+                    <input type="button" value="Insertar" onClick="uploadImg()"/>
                 </div>
             </form>
         </div>
@@ -840,7 +829,7 @@ $page = 'editor';
         <div id="imgCanvas" style="display: none"></div>
 
         <div id="acerca" style="display: none">
-            <p>DiagraMet Version 1.5.2-beta</p>
+            <p>DiagraMet Version 1.5.3-beta</p>
             <p>Basado: Diagramo 2.3beta4 Commit <a href="https://github.com/alexgheorghiu/diagramo" target="_blank">60e0f32</a></p>
             <p>Desarrollado: Universidad de la Costa 2016</p>
             <p>Desarrolladores:</p>

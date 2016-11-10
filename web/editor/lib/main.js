@@ -628,6 +628,8 @@ function showInsertImageDialog() {
 //    errorDiv.innerHTML = '';
 }
 
+/** Permite la precarga de una imagen con vista previa
+ * para el modal de carga de imagen en forma de dataUrl */
 function previewFile() {
     var preview = document.getElementById('img-preview');
     var file = document.getElementById('img-File').files[0];
@@ -642,13 +644,15 @@ function previewFile() {
     }
 }
 
+/** Valida la imagen seleccionada y obtiene su src en forma de dataUrl */
 function uploadImg() {
-    var img = document.getElementById("img-preview");
-    if (img.src == window.location) {
+    var file = document.getElementById("img-File").files.length;
+    if (file == 1) {
+        var img = document.getElementById("img-preview");
         insertedImageFileSrc = img.src;
         action('insertImage');
         $.modal.close();
-    }else{
+    } else {
         alert('Debe selecionar una imagen');
     }
 }
@@ -5450,7 +5454,8 @@ function valFigName(str) {
 }
 
 /**Gestiona el cambio del selector de diagramas
- * @param {String} id El id del selector del diagramas
+ * @param {String} id El id del selector del diagramas.
+ * @param {Boolean} snap condiciona la limpieza de {saveSnap}. 
  * */
 function cambiarVista(id, snap) {
     if (id == "analitico") {
@@ -5723,8 +5728,10 @@ function printDiagram(media) {
     $("#media").html('');
 }
 
+/** Guarda las instantaneas generadas*/
 var saveSnap = [];
 
+/** Genera el guardado de una instantanea del sistema. */
 function quickSave() {
 
     var sAP = selAP;
@@ -5743,6 +5750,9 @@ function quickSave() {
     selAP = sAP;
 }
 
+
+/** Permite la carga rapida de una instantanea creada anteriormente
+ * @param {Number} pos determina la posision a restaurar */
 function quickLoad(pos) {
 
     admHist = [];
@@ -5767,6 +5777,8 @@ function quickLoad(pos) {
     draw();
 }
 
+/** Genera en el div de snaps, botones segun la cantidad de {saveSnap}
+ *  que permite la cargar de las instantanea*/
 function genSnapDiv() {
     var snapDiv = $('#snaps');
     snapDiv.html('<hr>');

@@ -829,7 +829,7 @@ $page = 'editor';
         <div id="imgCanvas" style="display: none"></div>
 
         <div id="acerca" style="display: none">
-            <p>DiagraMet Version 1.5.3-beta</p>
+            <p>DiagraMet Version 1.5.4-beta</p>
             <p>Basado: Diagramo 2.3beta4 Commit <a href="https://github.com/alexgheorghiu/diagramo" target="_blank">60e0f32</a></p>
             <p>Desarrollado: Universidad de la Costa 2016</p>
             <p>Desarrolladores:</p>

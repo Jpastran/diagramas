@@ -5706,8 +5706,8 @@ function printDiagram(media) {
     refCabecera();
     var id = currentSetId;
     var diag = $('#selDiag option:selected').text();
-    $('#diagName').text(diag.toUpperCase());
-    var str = "#headDiv,";
+    $('.diagName').text(diag.toUpperCase());
+    var str = "#headDiv,.page-header,";
     if (id == 'analitico') {
         str += "#ctab1";
     } else if (id == 'sinoptico') {
@@ -5724,6 +5724,8 @@ function printDiagram(media) {
         $("#imgCanvas").html("").append($('<img src="' + img + '"/>'));
         str += ",#imgCanvas";
     }
+    
+    
     $(str).printArea();
     $("#media").html('');
 }

@@ -2,12 +2,18 @@ $(document).ready(function() {
     noEditable();
     var hex = idGen();
     $("#valId").text(hex);
-    console.log(decodeId(hex));
+    genPages();
+    //console.log(decodeId(hex));
 });
 
+/** Trabajar sobre width 765px heigth 990px que se
+ *  basa en que el width es el 77.3% del heigth 
+ *  basado en en la proporcion de tamaño carta.*/
+
 function noEditable() {
-    var media = $("#media")
+    var media = $("#media");
     media.css('display', 'none');
+    $(".page-header").css('display', 'none');
     var tds = $("table td");
     for (var i = 0; i < tds.length; i++) {
         $(tds[i]).removeAttr('contenteditable');
@@ -28,6 +34,45 @@ function noEditable() {
     }
 }
 
+var pagePx = 990;
+var headerPx = 100;
+
+function genPages() {
+    if ($('#analitico').length != 0 || $('#sinoptico').length != 0) {
+        var body = $('body');
+        var divP = $('<div class="div-page">');
+        if (body.height() < pagePx) {
+            $('.page-header').remove();
+            divP.html(body.html());
+            body.html('').append(divP);
+        } else {
+            var diag = $('#imgCanvas img');
+            var header = $('.page-header').css('display', 'block');
+            var hImg = diag.height();
+
+            $('#imgCanvas').remove();
+            $('.page-header').remove();
+
+            var divImg = $('<div class="div-img">').css("background-image", "url(" + diag.attr('src') + ")");
+            var hDiv = pagePx - body.height();
+            var hAsig = -hDiv;
+
+            divP.html(body.html());
+            divP.append(divImg.css("height", hDiv).css('background-position', '0px 0px'));
+            body.html('').append(divP);
+
+            while (hImg + hAsig >= 0) {
+                divP = $('<div class="div-page">');
+                divP.append(header.clone());
+                divP.append(divImg.clone().css("height", pagePx - headerPx).css('background-position', '0px ' + hAsig + 'px'));
+                hAsig -= pagePx - headerPx;
+                body.append(divP);
+            }
+        }
+    }
+}
+
+
 function idGen() {
     var time = new Date().getTime();
     var hex = time.toString(16);
@@ -44,7 +89,7 @@ function genPDF() {
     html2canvas(document.body, {
         onrendered: function(canvas) {
             var oldgetContext = canvas.getContext;
-            
+
             // get a context, set it to smoothed if it was a 2d context, and return it.
             function getSmoothContext(contextType) {
                 var resCtx = oldgetContext.apply(this, arguments);
@@ -56,7 +101,7 @@ function genPDF() {
                 }
                 return resCtx;
             }
-            
+
             function setToFalse(obj, prop) {
                 if (obj[prop] !== undefined)
                     obj[prop] = false;
@@ -64,7 +109,7 @@ function genPDF() {
 
             // inject new smoothed getContext
             canvas.getContext = getSmoothContext;
-            
+
             var imgData = canvas.toDataURL();
             var filename = "diagrama";
             /*
@@ -91,7 +136,7 @@ function genPDF() {
             }
             doc.save(filename + '.pdf');
         }
-    })
+    });
 }
 
 //function generarPDF() {

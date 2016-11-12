@@ -81,7 +81,7 @@ $page = 'editor';
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
                 <?}?>
                 -->
-                <a href="#" onclick="return quickSave();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
+                <a href="javascript:quickSave();" title="Guardar diagrama (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>          
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>              
 
                 <a href="javascript:refCabecera();"  title="Refrescar Cabecera"><img  src="assets/images/rotate.png" border="0" height ="16"/></a>
@@ -155,13 +155,42 @@ $page = 'editor';
         <!--Cabecera de Impresion-->
         <div id="headDiv" style="display: none">
             <div id="logoCuc"><img src="assets/images/logo_CUC.png"></div>
-            <div id="textHead">
+            <div class="textHead">
                 <p>FACULTAD DE INGENIERIAS</p>
                 <p>PROGRAMA DE INGENIERIA INDUSTRIAL</p>
-                <p id="diagName"></p>
+                <p class="diagName"></p>
             </div>
             <div id="valId"></div>
             <div id="media"></div>
+        </div>
+
+        <div class="page-header" style="display: none">
+            <div class="logo-header">
+                <div class="logoCuc">
+                    <img src="assets/images/logo_CUC.png">
+                </div>
+                <div class="textHead">
+                    <p class="diagName"></p>
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <td>Carta No:</td>
+                    <td></td>
+                    <td>Fecha:</td>                        
+                    <td></td>
+                    <td style="text-align: right">Hoja No:</td>
+                    <td></td>
+                    <td style="text-align: right">De:</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Analista</td>
+                    <td colspan="2"></td>
+                    <td>Observaciones:</td>
+                    <td colspan="4"></td>
+                </tr>
+            </table>
         </div>
 
         <div id="editor">

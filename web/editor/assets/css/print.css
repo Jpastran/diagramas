@@ -1,26 +1,58 @@
 body {
-    border: 2px solid #888;
+
     font: 14px Verdana;
 }
 
-#headDiv{
+/* width y height basado en el tamaño del popup 800px*/
+.div-page{
+    border: 2px solid #888;
+    width: 765px;
+    height: 990px;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+}
+
+.div-page:last-child{
+    margin-bottom: 0;
+}
+
+.page-header{
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.div-img{
+    background-repeat: no-repeat;
+}
+
+#headDiv, .logo-header{
     width: 80%;
     margin: 0 auto;
     text-align: center;
 }
-#logoCuc{
+
+.logo-header{
+    height: 45px;    
+}
+
+#logoCuc, .logoCuc{
     float: left;
     padding-right: 50px;
     width: 10%;
 }
-#textHead{
+
+.logoCuc img{
+    height: 40px
+}
+
+.textHead{
     float: left;
     font-weight: bold;
     margin: auto;
     width: 70%;
 }
 
-#textHead p{
+.textHead p{
     margin: 5px;
 }
 #valId {
@@ -44,7 +76,7 @@ td, th{
     min-width: 30px;
     max-width: 150px;
     line-height: 1.42857143;
-    padding: 5px;
+    padding: 2px;
 }
 tr {
     height: 20.85px;
